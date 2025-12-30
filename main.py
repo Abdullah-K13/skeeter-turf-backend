@@ -12,10 +12,11 @@ app = FastAPI(title="Skeeter Backend")
 
 # Configure CORS
 origins = [
-    "http://localhost:5173",  # Vite default
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "*", # Temporary allow all for testing; we can narrow this down later
 ]
 
 app.add_middleware(
