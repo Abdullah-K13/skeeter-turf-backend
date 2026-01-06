@@ -46,11 +46,15 @@ def get_admin_stats(
         return StatsResponse(active_subscribers=_stats_cache["count"])
 
     from utils.square_client import search_subscriptions
-    res = search_subscriptions(status="ACTIVE")
+    # Fetch all subscriptions to ensure we don't miss any due to Square filtering issues
+    res = search_subscriptions()
     
     count = 0
     if res.get("success"):
-        count = res.get("count", 0)
+        subscriptions = res.get("subscriptions", [])
+        # Count only those with ACTIVE status
+        count = sum(1 for sub in subscriptions if sub.get("status") == "ACTIVE")
+        
         # Cache for 5 minutes
         _stats_cache = {
             "count": count,

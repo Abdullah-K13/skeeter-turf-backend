@@ -156,38 +156,111 @@ def update_square_customer(customer_id: str, **kwargs) -> Dict[str, Any]:
 # --- Card Operations ---
 
 def create_card_on_file(source_id: str, customer_id: str, idempotency_key: Optional[str] = None) -> Dict[str, Any]:
-    """Create a card on file for a customer."""
+    """
+    Create a card on file using Square Cards API.
+    This saves a payment method for future use and returns a card_id that can be used for subscriptions.
+    """
     try:
+        if not customer_id:
+            raise ValueError("customer_id is required to create a card on file")
+        
+        if not source_id or not source_id.strip():
+            raise ValueError("source_id is required and cannot be blank")
+        
         url = f"{get_square_base_url()}/v2/cards"
         headers = get_square_headers()
+        
+        # Generate idempotency key if not provided
+        if not idempotency_key:
+            import uuid
+            idempotency_key = str(uuid.uuid4())
+        
         payload = {
-            "idempotency_key": idempotency_key or str(uuid.uuid4()),
+            "idempotency_key": idempotency_key,
             "source_id": source_id,
-            "card": {"customer_id": customer_id}
+            "card": {
+                "customer_id": customer_id
+            }
         }
+        
         response = requests.post(url, json=payload, headers=headers, timeout=10)
+        
+        if response.status_code not in [200, 201]:
+            error_text = response.text
+            logger.error(f"Square Create Card API error: {response.status_code} - {error_text}")
+            try:
+                error_data = response.json()
+                errors = error_data.get("errors", [])
+                error_messages = [error.get("detail", error.get("code", "Unknown error")) for error in errors]
+                return {
+                    "success": False,
+                    "error": ', '.join(error_messages),
+                    "card_id": None,
+                    "http_status": response.status_code,
+                    "errors": errors
+                }
+            except:
+                return {
+                    "success": False,
+                    "error": error_text,
+                    "card_id": None,
+                    "http_status": response.status_code
+                }
+        
         data = response.json()
+        
         if "card" in data:
             card = data["card"]
+            card_id = card.get("id")
+            card_customer_id = card.get("customer_id")
+            
+            # Verify association
+            if not card_customer_id or card_customer_id != customer_id:
+                logger.error(f"CRITICAL: Card {card_id} created but not associated with customer {customer_id}")
+                return {
+                    "success": False,
+                    "error": f"Card created but not associated with customer. Expected {customer_id}, got {card_customer_id}",
+                    "card_id": None
+                }
+            
             return {
                 "success": True,
-                "card_id": card["id"],
+                "card_id": card_id,
                 "last_4": card.get("last_4"),
                 "brand": card.get("card_brand"),
                 "exp_month": card.get("exp_month"),
-                "exp_year": card.get("exp_year")
+                "exp_year": card.get("exp_year"),
+                "customer_id": card_customer_id,
+                "card": card
             }
-        return {"success": False, "error": str(data.get("errors", "Unknown error"))}
+        return {"success": False, "error": "No card data in response"}
+            
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        logger.error(f"Error creating card on file: {str(e)}")
+        return {"success": False, "error": str(e), "card_id": None}
 
 def get_customer_cards(customer_id: str) -> Dict[str, Any]:
     """Fetch all cards on file for a customer."""
     try:
-        url = f"{get_square_base_url()}/v2/cards"
+        # Try the newer Cards Search API first
+        url = f"{get_square_base_url()}/v2/cards/search"
         headers = get_square_headers()
-        params = {"customer_id": customer_id}
-        response = requests.get(url, params=params, headers=headers, timeout=10)
+        
+        payload = {
+            "query": {
+                "filter": {
+                    "customer_id": {
+                        "exact": customer_id
+                    }
+                }
+            }
+        }
+        
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        
+        if response.status_code not in [200, 201]:
+            return {"success": False, "error": response.text, "cards": []}
+        
         data = response.json()
         return {"success": True, "cards": data.get("cards", [])}
     except Exception as e:
@@ -283,47 +356,48 @@ def create_subscription(
         data = response.json()
         if "subscription" in data:
             return {"success": True, "subscription": data["subscription"], "subscription_id": data["subscription"]["id"]}
-        return {"success": False, "error": str(data.get("errors", "Unknown error"))}
+        
+        errors = data.get("errors", [])
+        return {"success": False, "error": str(errors)}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-def get_subscriptions(customer_id: Optional[str] = None) -> Dict[str, Any]:
-    """Fetch subscriptions from Square."""
+def get_subscriptions(customer_id: Optional[str] = None, status: Optional[str] = None, cursor: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Fetch active subscriptions from Square Subscriptions API.
+    """
     try:
         url = f"{get_square_base_url()}/v2/subscriptions/search"
         headers = get_square_headers()
-        payload = {"query": {"filter": {"customer_ids": [customer_id]}}} if customer_id else {}
+        
+        payload = {"query": {"filter": {}}}
+        if customer_id:
+            payload["query"]["filter"]["customer_ids"] = [customer_id]
+        if status:
+            payload["query"]["filter"]["statuses"] = [status]
+        if cursor:
+            payload["cursor"] = cursor
+        
         response = requests.post(url, json=payload, headers=headers, timeout=10)
+        
+        if response.status_code != 200:
+            return {"success": False, "error": response.text, "subscriptions": []}
+        
         data = response.json()
-        return {"success": True, "subscriptions": data.get("subscriptions", [])}
+        return {
+            "success": True, 
+            "subscriptions": data.get("subscriptions", []), 
+            "cursor": data.get("cursor")
+        }
     except Exception as e:
+        logger.error(f"Error fetching subscriptions: {str(e)}")
         return {"success": False, "error": str(e)}
 
 def search_subscriptions(status: Optional[str] = None) -> Dict[str, Any]:
-    """Search for subscriptions in Square with optional status filter."""
-    try:
-        url = f"{get_square_base_url()}/v2/subscriptions/search"
-        headers = get_square_headers()
-        
-        payload = {}
-        if status:
-            payload = {
-                "query": {
-                    "filter": {
-                        "statuses": [status]
-                    }
-                }
-            }
-        
-        response = requests.post(url, json=payload, headers=headers, timeout=15)
-        data = response.json()
-        
-        if "subscriptions" in data:
-            return {"success": True, "subscriptions": data["subscriptions"], "count": len(data["subscriptions"])}
-        return {"success": True, "subscriptions": [], "count": 0}
-    except Exception as e:
-        logger.error(f"Error searching subscriptions: {str(e)}")
-        return {"success": False, "error": str(e)}
+    """
+    Compatibility wrapper for admin.py using get_subscriptions.
+    """
+    return get_subscriptions(status=status)
 
 def cancel_subscription(subscription_id: str) -> Dict[str, Any]:
     """Cancel a subscription in Square."""
@@ -387,14 +461,42 @@ def resume_subscription(subscription_id: str) -> Dict[str, Any]:
 
 # --- Invoice Operations ---
 
-def get_customer_invoices(customer_id: str) -> Dict[str, Any]:
-    """Fetch invoices for a customer."""
+def get_customer_invoices(customer_id: str, location_id: Optional[str] = None, limit: Optional[int] = None) -> Dict[str, Any]:
+    """Fetch invoices for a customer using robust search."""
     try:
         url = f"{get_square_base_url()}/v2/invoices/search"
         headers = get_square_headers()
-        payload = {"query": {"filter": {"customer_ids": [customer_id]}}}
+        
+        loc_id = location_id or SQUARE_LOCATION_ID
+        
+        payload = {
+            "query": {
+                "filter": {
+                    "customer_ids": [customer_id]
+                },
+                "sort": {
+                    "field": "INVOICE_SORT_DATE",
+                    "order": "DESC"
+                }
+            }
+        }
+        
+        if loc_id:
+             payload["query"]["filter"]["location_ids"] = [loc_id]
+        if limit:
+            payload["limit"] = limit
+            
         response = requests.post(url, json=payload, headers=headers, timeout=10)
+        
+        if response.status_code != 200:
+            return {"success": False, "error": response.text, "invoices": []}
+        
         data = response.json()
-        return {"success": True, "invoices": data.get("invoices", [])}
+        return {
+            "success": True, 
+            "invoices": data.get("invoices", []), 
+            "errors": data.get("errors", [])
+        }
     except Exception as e:
+        logger.error(f"Error fetching invoices: {str(e)}")
         return {"success": False, "error": str(e)}

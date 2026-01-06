@@ -207,7 +207,51 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
 def get_my_subs(user: Customer = Depends(get_db_user)):
     if not user.square_customer_id:
         return {"success": True, "subscriptions": []}
-    return get_subscriptions(customer_id=user.square_customer_id)
+    
+    # Fetch user's subscriptions
+    subs_res = get_subscriptions(customer_id=user.square_customer_id)
+    if not subs_res.get("success"):
+        return subs_res
+        
+    subscriptions = subs_res.get("subscriptions", [])
+    
+    # Fetch all plans to map names and amounts
+    plans_res = get_subscription_plans()
+    plans_map = {}
+    if plans_res.get("success"):
+        for p in plans_res.get("plans", []):
+            for v in p.get("variations", []):
+                # Try to get price from the first phase
+                price = 0
+                if v.get("phases") and len(v["phases"]) > 0:
+                    price = int(v["phases"][0].get("recurring_price_money", {}).get("amount", 0))
+                
+                plans_map[v["id"]] = {
+                    "name": f"{p['name']} - {v['name']}",
+                    "amount": price
+                }
+    
+    # Enrich subscriptions
+    enriched_subs = []
+    for sub in subscriptions:
+        # Create a copy to modify
+        s = sub.copy()
+        var_id = s.get("plan_variation_id")
+        
+        # Map fields
+        if var_id in plans_map:
+            s["plan_name"] = plans_map[var_id]["name"]
+            s["amount"] = plans_map[var_id]["amount"]
+        else:
+            s["plan_name"] = "Unknown Plan"
+            s["amount"] = 0
+            
+        # Map next_billing_date from charged_through_date
+        s["next_billing_date"] = s.get("charged_through_date")
+        
+        enriched_subs.append(s)
+        
+    return {"success": True, "subscriptions": enriched_subs}
 
 @router.post("/pause-subscription")
 def pause_sub(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
@@ -285,4 +329,32 @@ def change_plan(request: ChangePlanRequest, user: Customer = Depends(get_db_user
 def billing_history(user: Customer = Depends(get_db_user)):
     if not user.square_customer_id:
         return {"success": True, "invoices": []}
-    return get_customer_invoices(user.square_customer_id)
+    
+    res = get_customer_invoices(user.square_customer_id)
+    if not res.get("success"):
+        return res
+        
+    invoices = res.get("invoices", [])
+    enriched_invoices = []
+    
+    for inv in invoices:
+        i = inv.copy()
+        
+        # Determine amount
+        # Usually looking for primary_recipient.computed_amount_money or payment_requests
+        amount = 0
+        if "payment_requests" in i and i["payment_requests"]:
+            # Sum up all requests or just take the first one? Usually just one for sub.
+            for req in i["payment_requests"]:
+                 amount += int(req.get("computed_amount_money", {}).get("amount", 0))
+        
+        i["amount"] = amount
+        i["description"] = i.get("title") or i.get("description") or "Subscription Payment"
+        
+        # Ensure created_at exists (Square usually returns it, but fallback to invoice_date)
+        if "created_at" not in i and "invoice_date" in i:
+             i["created_at"] = i["invoice_date"]
+             
+        enriched_invoices.append(i)
+        
+    return {"success": True, "invoices": enriched_invoices}

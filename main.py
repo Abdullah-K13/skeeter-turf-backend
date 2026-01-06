@@ -16,6 +16,8 @@ origins = [
     "http://127.0.0.1:5173",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "https://api1.protownnetwork.com"
+
     "*", # Temporary allow all for testing; we can narrow this down later
 ]
 
