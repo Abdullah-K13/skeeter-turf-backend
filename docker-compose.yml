@@ -10,7 +10,7 @@ services:
       - .env
     environment:
       # Using the Docker bridge IP to reach the VPS host, then port 5433 to reach the existing DB container
-      DATABASE_URL: postgresql+psycopg2://postgres_user:123456@172.17.0.1:5433/Skeeter
+      DATABASE_URL: postgresql+psycopg2://postgres_user:123456@db:5432/Skeeter
     deploy:
       resources:
         limits:
