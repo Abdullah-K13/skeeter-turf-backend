@@ -10,3 +10,4 @@ squareup
 boto3
 python-multipart
 pydantic[email]
+fpdf2

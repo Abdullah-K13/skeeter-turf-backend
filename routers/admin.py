@@ -1,14 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from typing import List
+import os
+import tempfile
+from fpdf import FPDF
+from datetime import datetime, date, timedelta
+from pydantic import BaseModel
+
 from db.init import get_db
 from models.user import Customer, Admin
-from models.subscription import SubscriptionPlan
+from models.subscription import SubscriptionPlan, SubscriptionLog, Invoice
 from utils.deps import get_current_user
-from pydantic import BaseModel
-from datetime import datetime
-
-from datetime import datetime, timedelta
 
 # Simple in-memory cache for stats
 _stats_cache = {"count": 0, "expires": datetime.min}
@@ -28,43 +32,162 @@ class CustomerListItem(BaseModel):
     city: str
     zip: str
 
-class StatsResponse(BaseModel):
-    active_subscribers: int
 
-@router.get("/stats", response_model=StatsResponse)
+class PlanDistributionItem(BaseModel):
+    name: str
+    value: int
+    color: str
+
+class GrowthItem(BaseModel):
+    date: str
+    customers: int
+
+class AnalyticsResponse(BaseModel):
+    mrr: float
+    active_subscribers: int
+    total_customers: int
+    plan_distribution: List[PlanDistributionItem]
+    revenue_distribution: List[PlanDistributionItem]
+    growth_history: List[GrowthItem]
+
+@router.get("/stats")
 def get_admin_stats(
+    db: Session = Depends(get_db),
     current_user: Admin = Depends(get_current_user)
 ):
     if current_user.get("role") != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can access this resource"
-        )
+        raise HTTPException(status_code=403, detail="Forbidden")
     
-    global _stats_cache
-    if datetime.now() < _stats_cache["expires"]:
-        return StatsResponse(active_subscribers=_stats_cache["count"])
-
+    # We can reuse the logic or just return basic stats.
+    # For now, let's return the active subscriber count from Square.
     from utils.square_client import search_subscriptions
-    # Fetch all subscriptions to ensure we don't miss any due to Square filtering issues
-    res = search_subscriptions()
+    subs_res = search_subscriptions(status="ACTIVE")
+    active_subs = subs_res.get("subscriptions", [])
     
-    count = 0
-    if res.get("success"):
-        subscriptions = res.get("subscriptions", [])
-        # Count only those with ACTIVE status
-        count = sum(1 for sub in subscriptions if sub.get("status") == "ACTIVE")
+    return {
+        "active_subscribers": len(active_subs)
+    }
+
+@router.get("/analytics", response_model=AnalyticsResponse)
+def get_admin_analytics(
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    # 1. Active Subscribers & MRR & Plan Distribution via Square API
+    from utils.square_client import search_subscriptions, get_subscription_plans
+    
+    # Fetch all active subscriptions from Square
+    subs_res = search_subscriptions(status="ACTIVE")
+    active_subs = subs_res.get("subscriptions", [])
+    active_sub_count = len(active_subs)
+    
+    # Fetch plan details to calculate MRR
+    plans_res = get_subscription_plans()
+    plans = plans_res.get("plans", [])
+    
+    # Create a map of variation_id -> price & name
+    # We need to flatten the structure: plan -> variations
+    variation_map = {}
+    for p in plans:
+        p_name = p.get("name", "Unknown Plan")
+        for v in p.get("variations", []):
+            var_id = v.get("id")
+            # Price is likely inside phases -> recurring_price_money -> amount
+            # Square structure can be complex. Let's try to find the price.
+            # Simplified assumption: first phase has the recurring price.
+            phases = v.get("phases", [])
+            price = 0.0
+            if phases:
+                amount_money = phases[0].get("recurring_price_money", {})
+                price = float(amount_money.get("amount", 0)) / 100.0
+            
+            variation_map[var_id] = {"name": p_name, "price": price}
+
+    mrr = 0.0
+    plan_counts = {} # plan_name -> count
+    plan_revenue = {} # plan_name -> total_revenue
+    
+    for sub in active_subs:
+        var_id = sub.get("plan_variation_id")
+        if var_id and var_id in variation_map:
+            details = variation_map[var_id]
+            price = details["price"]
+            p_name = details["name"]
+            
+            mrr += price
+            plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
+            plan_revenue[p_name] = plan_revenue.get(p_name, 0) + price
+        else:
+            # Fallback if plan not found in catalog but exists in sub
+            p_name = "Unknown Plan"
+            plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
+            plan_revenue[p_name] = plan_revenue.get(p_name, 0) + 0.0
+
+    # Format Plan Distribution & Revenue Distribution
+    colors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"]
+    plan_dist = []
+    rev_dist = []
+    
+    for i, name in enumerate(plan_counts.keys()):
+        color = colors[i % len(colors)]
         
-        # Cache for 5 minutes
-        _stats_cache = {
-            "count": count,
-            "expires": datetime.now() + timedelta(minutes=5)
-        }
-    else:
-        # Fallback to last known cache if Square fails
-        return StatsResponse(active_subscribers=_stats_cache["count"])
+        plan_dist.append(PlanDistributionItem(
+            name=name,
+            value=plan_counts[name],
+            color=color
+        ))
         
-    return StatsResponse(active_subscribers=count)
+        rev_dist.append(PlanDistributionItem(
+            name=name,
+            value=int(plan_revenue.get(name, 0)), # Cast to int for graph if needed, or keep and update model
+            color=color
+        ))
+        
+    # 2. Total Customers (Local DB - historically accurate for platform users)
+    total_customers = db.query(Customer).count()
+    
+    # 3. Growth History (Last 30 days - Local DB)
+    from sqlalchemy import func
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+    
+    daily_growth = db.query(
+        func.date(Customer.created_at).label('date'),
+        func.count(Customer.id)
+    ).filter(Customer.created_at >= thirty_days_ago)\
+     .group_by(func.date(Customer.created_at))\
+     .order_by(func.date(Customer.created_at))\
+     .all()
+     
+    growth_map = {str(d): c for d, c in daily_growth}
+    
+    growth_history = []
+    # Get count before 30 days
+    count_before = db.query(Customer).filter(Customer.created_at < thirty_days_ago).count()
+    current_total = count_before
+    
+    for i in range(31):
+        d = thirty_days_ago + timedelta(days=i)
+        d_str = d.strftime("%Y-%m-%d")
+        daily_new = growth_map.get(d_str, 0)
+        current_total += daily_new
+        growth_history.append(GrowthItem(date=d_str, customers=current_total))
+
+    # Debug logs
+    print(f"DEBUG: Square Active Subs: {active_sub_count}")
+    print(f"DEBUG: Square MRR: {mrr}")
+    print(f"DEBUG: Plan Distribution: {plan_counts}")
+
+    return AnalyticsResponse(
+        mrr=mrr,
+        active_subscribers=active_sub_count,
+        total_customers=total_customers,
+        plan_distribution=plan_dist,
+        revenue_distribution=rev_dist,
+        growth_history=growth_history
+    )
 
 @router.get("/customers", response_model=List[CustomerListItem])
 def list_customers(
@@ -264,3 +387,138 @@ def get_customer_payments(
         raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
     
     return res
+
+class ChangeSubscriptionRequest(BaseModel):
+    new_plan_variation_id: str
+
+@router.post("/change-subscription/{customer_id}")
+def admin_change_subscription(
+    customer_id: int,
+    request: ChangeSubscriptionRequest,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    customer = db.query(Customer).get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+        
+    if not customer.square_subscription_id:
+        raise HTTPException(status_code=400, detail="Customer has no active subscription")
+    
+    from utils.square_client import update_subscription
+    res = update_subscription(customer.square_subscription_id, request.new_plan_variation_id)
+    
+    if not res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
+        
+    # Update local DB if necessary? 
+    # Usually Square webhook or next sync updates it, but we can try to update plan_id if we know it.
+    # We can try to find the plan by variation_id
+    plan = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_variation_id == request.new_plan_variation_id).first()
+    if plan:
+        customer.plan_id = str(plan.id)
+        customer.plan_variation_id = request.new_plan_variation_id
+        db.commit()
+    
+    return {"success": True, "message": "Subscription updated successfully"}
+@router.post("/sync-invoices/{customer_id}")
+def sync_customer_invoices(
+    customer_id: int,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    customer = db.query(Customer).get(customer_id)
+    if not customer or not customer.square_customer_id:
+        raise HTTPException(status_code=404, detail="Customer not found or no Square ID")
+    
+    from utils.square_client import search_invoices
+    res = search_invoices(customer.square_customer_id)
+    
+    if not res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
+    
+    sq_invoices = res.get("invoices", [])
+    synced_count = 0
+    
+    for sq_inv in sq_invoices:
+        inv_id = sq_inv.get("id")
+        
+        # Robust amount extraction
+        amount_data = {}
+        if sq_inv.get("payment_requests"):
+            amount_data = sq_inv.get("payment_requests")[0].get("computed_amount_money", {})
+        if not amount_data.get("amount") and sq_inv.get("next_payment_amount_money"):
+             amount_data = sq_inv.get("next_payment_amount_money")
+             
+        amount = float(amount_data.get("amount", 0)) / 100.0
+        
+        # Check if already exists
+        existing = db.query(Invoice).filter(Invoice.square_invoice_id == inv_id).first()
+        
+        # Date parsing
+        due_date_str = sq_inv.get("scheduled_at") or sq_inv.get("created_at", datetime.now().isoformat())
+        try:
+            # Square dates can be ISO formats
+            if "T" in due_date_str:
+                due_date = datetime.fromisoformat(due_date_str.replace("Z", "+00:00")).date()
+            else:
+                due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+        except:
+            due_date = datetime.now().date()
+
+        if not existing:
+            new_inv = Invoice(
+                square_invoice_id=inv_id,
+                customer_id=customer.id,
+                subscription_id=sq_inv.get("subscription_id"),
+                amount=amount,
+                status=sq_inv.get("status"),
+                due_date=due_date,
+                public_url=sq_inv.get("public_url")
+            )
+            db.add(new_inv)
+            synced_count += 1
+        else:
+            # Update status and URL if changed
+            existing.status = sq_inv.get("status")
+            existing.public_url = sq_inv.get("public_url")
+            existing.amount = amount # Keep amount updated too
+    
+    db.commit()
+    return {"success": True, "synced": synced_count}
+
+@router.get("/invoice-pdf/{square_invoice_id}")
+def download_invoice_pdf(
+    square_invoice_id: str,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+        
+    invoice = db.query(Invoice).filter(Invoice.square_invoice_id == square_invoice_id).first()
+    if not invoice:
+        # Try to sync first? Or just error. 
+        # Better to error and expect sync happened.
+        raise HTTPException(status_code=404, detail="Invoice not found in local records. Please sync first.")
+        
+    customer = db.query(Customer).get(invoice.customer_id)
+    
+    # Get plan name
+    plan_name = "Subscription Service"
+    if customer.plan_id:
+        try:
+            plan = db.query(SubscriptionPlan).get(int(customer.plan_id))
+            if plan:
+                plan_name = plan.plan_name
+        except:
+            pass
+            
+    from utils.pdf_generator import generate_invoice_pdf
+    return generate_invoice_pdf(invoice, customer, plan_name)

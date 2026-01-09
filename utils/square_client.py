@@ -439,6 +439,26 @@ def update_subscription(subscription_id: str, plan_variation_id: str) -> Dict[st
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def update_subscription_card(subscription_id: str, card_id: str) -> Dict[str, Any]:
+    """Update the payment card for a subscription in Square."""
+    try:
+        url = f"{get_square_base_url()}/v2/subscriptions/{subscription_id}"
+        headers = get_square_headers()
+        payload = {
+            "subscription": {
+                "card_id": card_id
+            }
+        }
+        # Note: According to Square API, this is a PUT to update the subscription
+        response = requests.put(url, json=payload, headers=headers, timeout=10)
+        data = response.json()
+        if "subscription" in data:
+            return {"success": True, "subscription": data["subscription"]}
+        return {"success": False, "error": str(data.get("errors", "Unknown error"))}
+    except Exception as e:
+        logger.error(f"Error updating subscription card: {str(e)}")
+        return {"success": False, "error": str(e)}
+
 def pause_subscription(subscription_id: str) -> Dict[str, Any]:
     """Pause a subscription in Square."""
     try:
@@ -499,4 +519,34 @@ def get_customer_invoices(customer_id: str, location_id: Optional[str] = None, l
         }
     except Exception as e:
         logger.error(f"Error fetching invoices: {str(e)}")
+        return {"success": False, "error": str(e)}
+def search_invoices(customer_id: str, location_id: Optional[str] = None) -> Dict[str, Any]:
+    """Search for invoices belonging to a specific customer using Square Invoices API."""
+    try:
+        url = f"{get_square_base_url()}/v2/invoices/search"
+        headers = get_square_headers()
+        curr_location_id = location_id or SQUARE_LOCATION_ID
+        
+        payload = {
+            "query": {
+                "filter": {
+                    "location_ids": [curr_location_id],
+                    "customer_ids": [customer_id]
+                },
+                "sort": {
+                    "field": "INVOICE_SORT_DATE",
+                    "order": "DESC"
+                }
+            }
+        }
+        
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        data = response.json()
+        
+        if response.status_code == 200:
+            return {"success": True, "invoices": data.get("invoices", [])}
+        
+        return {"success": False, "error": str(data.get("errors", "Unknown error fetching invoices"))}
+    except Exception as e:
+        logger.error(f"Error searching invoices: {str(e)}")
         return {"success": False, "error": str(e)}
