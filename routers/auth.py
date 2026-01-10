@@ -47,7 +47,22 @@ def signup(request: SignUpRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_customer)
     
-    return {"message": "User created successfully", "user_id": new_customer.id}
+    # Generate token so they are logged in after signup
+    access_token = create_access_token(data={"sub": new_customer.email, "id": new_customer.id})
+    
+    return {
+        "message": "User created successfully", 
+        "user_id": new_customer.id,
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": new_customer.id,
+            "email": new_customer.email,
+            "firstName": new_customer.first_name,
+            "lastName": new_customer.last_name,
+            "role": "customer"
+        }
+    }
 
 @router.post("/login")
 def login(request: LoginRequest, db: Session = Depends(get_db)):

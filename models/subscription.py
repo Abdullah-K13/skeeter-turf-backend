@@ -42,9 +42,11 @@ class SubscriptionLog(Base):
 class Invoice(Base):
     __tablename__ = "invoices"
     id = Column(Integer, primary_key=True, index=True)
+    square_invoice_id = Column(String(255), unique=True, nullable=True)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
-    subscription_plan_id = Column(Integer, ForeignKey("subscription_plans.id"), nullable=True)
+    subscription_id = Column(String(255), nullable=True) # Square Subscription ID
     amount = Column(Float, nullable=False)
-    status = Column(String(50), default="PENDING") # PAID, PENDING, FAILED
-    invoice_date = Column(Date, server_default=text("CURRENT_DATE"))
+    status = Column(String(50), default="PENDING") # PAID, UNPAID, CANCELLED, etc.
+    due_date = Column(Date, nullable=True)
+    public_url = Column(String(500), nullable=True) # Link to Square hosted invoice
     created_at = Column(TIMESTAMP, server_default=text("NOW()"))

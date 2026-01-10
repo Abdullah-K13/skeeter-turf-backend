@@ -9,10 +9,13 @@ from utils.square_client import (
     get_subscription_plans,
     create_square_customer,
     create_card_on_file,
+    get_customer_cards,
+    disable_card,
     create_subscription,
     get_subscriptions,
     cancel_subscription,
     update_subscription,
+    update_subscription_card,
     pause_subscription,
     resume_subscription,
     get_customer_invoices
@@ -49,6 +52,9 @@ class ActivateSubscriptionRequest(BaseModel):
 class ChangePlanRequest(BaseModel):
     new_plan_variation_id: str
 
+class SaveCardRequest(BaseModel):
+    source_id: str
+
 # --- Endpoints ---
 
 @router.get("/square-config")
@@ -83,10 +89,14 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
     if request.customer_id:
         customer = db.query(Customer).get(request.customer_id)
     
+    print(f"DEBUG: validate_card called with: {request}")
+    
     # If no local customer found, we might be in a guest checkout or first step
     # But usually, we want to link it to a local user.
     
     sq_customer_id = customer.square_customer_id if customer else None
+    print(f"DEBUG: Local customer found: {customer}")
+    print(f"DEBUG: Existing Square customer ID: {sq_customer_id}")
     
     if not sq_customer_id:
         # Create Square Customer
@@ -94,12 +104,15 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
         family_name = request.family_name or (customer.last_name if customer else "User")
         email = request.email or (customer.email if customer else f"guest_{uuid.uuid4().hex[:8]}@example.com")
         
+        print(f"DEBUG: Creating Square customer for {email}")
         res = create_square_customer(
             given_name=given_name,
             family_name=family_name,
             email=email,
             phone_number=request.phone_number or (customer.phone_number if customer else None)
         )
+        print(f"DEBUG: create_square_customer result: {res}")
+        
         if not res.get("success"):
             raise HTTPException(status_code=400, detail=f"Square customer creation failed: {res.get('error')}")
         sq_customer_id = res.get("customer_id")
@@ -109,10 +122,12 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
             db.commit()
 
     # Attach Card
+    print(f"DEBUG: Attaching card source_id: {request.source_id} to customer: {sq_customer_id}")
     card_res = create_card_on_file(
         source_id=request.source_id,
         customer_id=sq_customer_id
     )
+    print(f"DEBUG: create_card_on_file result: {card_res}")
     
     if not card_res.get("success"):
         raise HTTPException(status_code=400, detail=f"Card validation failed: {card_res.get('error')}")
@@ -139,6 +154,135 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
         "customer_id": sq_customer_id,
         "card_details": card_res
     }
+
+@router.get("/my-cards")
+def get_my_cards(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    """Fetch saved payment methods for the authenticated customer."""
+    if not user.square_customer_id:
+        return {"success": True, "cards": []}
+    
+    # 1. Fetch from local DB
+    db_methods = db.query(PaymentMethod).filter(PaymentMethod.customer_id == user.id).all()
+    db_card_map = {pm.square_card_id: pm for pm in db_methods}
+    
+    # 2. Fetch from Square to ensure sync
+    sq_res = get_customer_cards(user.square_customer_id)
+    sq_cards = sq_res.get("cards", []) if sq_res.get("success") else []
+    
+    # 3. Merge: Start with Square cards and enrich with DB info if available
+    final_cards = []
+    sq_card_ids_in_list = set()
+    
+    for sq_c in sq_cards:
+        card_id = sq_c.get("id")
+        sq_card_ids_in_list.add(card_id)
+        
+        db_pm = db_card_map.get(card_id)
+        
+        final_cards.append({
+            "id": card_id,
+            "last_4": sq_c.get("last_4") or (db_pm.last_4_digits if db_pm else ""),
+            "brand": sq_c.get("card_brand") or (db_pm.card_brand if db_pm else "Unknown"),
+            "exp_month": sq_c.get("exp_month") or (db_pm.exp_month if db_pm else 0),
+            "exp_year": sq_c.get("exp_year") or (db_pm.exp_year if db_pm else 0),
+            "is_default": db_pm.is_default if db_pm else False,
+            "is_active_in_square": True
+        })
+    
+    # Also add any cards from DB that might not have been in Square response (though unlikely if sq sync is on)
+    for card_id, pm in db_card_map.items():
+        if card_id not in sq_card_ids_in_list:
+            final_cards.append({
+                "id": pm.square_card_id,
+                "last_4": pm.last_4_digits,
+                "brand": pm.card_brand,
+                "exp_month": pm.exp_month,
+                "exp_year": pm.exp_year,
+                "is_default": pm.is_default,
+                "is_active_in_square": False
+            })
+    
+    return {
+        "success": True,
+        "cards": final_cards
+    }
+
+@router.post("/save-card")
+def save_card(request: SaveCardRequest, user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    """
+    Save a new payment method for the logged-in customer.
+    If they have an active subscription, update it to use this new card.
+    """
+    if not user.square_customer_id:
+        # Should ideally have one by now if they reached dashboard, but let's be safe
+        res = create_square_customer(
+            given_name=user.first_name,
+            family_name=user.last_name,
+            email=user.email,
+            phone_number=user.phone_number
+        )
+        if not res.get("success"):
+            raise HTTPException(status_code=400, detail=f"Failed to create Square customer: {res.get('error')}")
+        user.square_customer_id = res.get("customer_id")
+        db.commit()
+
+    # 1. Create Card in Square
+    card_res = create_card_on_file(
+        source_id=request.source_id,
+        customer_id=user.square_customer_id
+    )
+    
+    if not card_res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Failed to save card: {card_res.get('error')}")
+        
+    card_id = card_res.get("card_id")
+    
+    # 2. Save to Local DB
+    # Disable previous default
+    db.query(PaymentMethod).filter(PaymentMethod.customer_id == user.id).update({"is_default": False})
+    
+    new_method = PaymentMethod(
+        customer_id=user.id,
+        square_card_id=card_id,
+        last_4_digits=card_res.get("last_4"),
+        card_brand=card_res.get("brand"),
+        exp_month=card_res.get("exp_month"),
+        exp_year=card_res.get("exp_year"),
+        is_default=True
+    )
+    db.add(new_method)
+    
+    # 3. Update active subscription if exists
+    subscription_updated = False
+    if user.square_subscription_id and user.subscription_active:
+        logger.info(f"Updating subscription {user.square_subscription_id} to use new card {card_id}")
+        update_subscription_card(user.square_subscription_id, card_id)
+    
+    db.commit()
+    
+    return {
+        "success": True,
+        "message": "Payment method saved successfully",
+        "card_id": card_id
+    }
+
+@router.delete("/remove-card/{card_id}")
+def remove_card(card_id: str, user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    """Disable a card in Square and remove from local DB."""
+    # 1. Disable in Square
+    sq_res = disable_card(card_id)
+    
+    # 2. Remove from Local DB (or mark as inactive)
+    method = db.query(PaymentMethod).filter(
+        PaymentMethod.customer_id == user.id,
+        PaymentMethod.square_card_id == card_id
+    ).first()
+    
+    if method:
+        db.delete(method)
+        db.commit()
+        
+    return {"success": True, "message": "Card removed successfully"}
 
 def dummy_create_subscription(customer_id: str, location_id: str, plan_variation_id: str, card_id: str, **kwargs) -> Dict[str, Any]:
     """Helper for testing to skip real Square call"""
@@ -351,10 +495,39 @@ def billing_history(user: Customer = Depends(get_db_user)):
         i["amount"] = amount
         i["description"] = i.get("title") or i.get("description") or "Subscription Payment"
         
-        # Ensure created_at exists (Square usually returns it, but fallback to invoice_date)
-        if "created_at" not in i and "invoice_date" in i:
-             i["created_at"] = i["invoice_date"]
+        # Prioritize the official invoice date or scheduled date over the creation timestamp
+        i["created_at"] = i.get("invoice_date") or i.get("scheduled_at") or i.get("created_at")
              
         enriched_invoices.append(i)
         
     return {"success": True, "invoices": enriched_invoices}
+@router.get("/my-invoice-pdf/{square_invoice_id}")
+def download_my_invoice_pdf(
+    square_invoice_id: str,
+    db: Session = Depends(get_db),
+    user: Customer = Depends(get_db_user)
+):
+    from models.subscription import Invoice, SubscriptionPlan
+    from utils.pdf_generator import generate_invoice_pdf
+    
+    invoice = db.query(Invoice).filter(Invoice.square_invoice_id == square_invoice_id).first()
+    if not invoice:
+        # If not in local DB, it might be in Square.
+        # For simplicity, we expect sync or we can fetch details from Square here.
+        # But let's check local first.
+        raise HTTPException(status_code=404, detail="Invoice not found. If this is a new payment, please wait a moment.")
+        
+    if invoice.customer_id != user.id:
+        raise HTTPException(status_code=403, detail="You do not have access to this invoice.")
+        
+    # Get plan name
+    plan_name = "Subscription Service"
+    if user.plan_id:
+        try:
+            plan = db.query(SubscriptionPlan).get(int(user.plan_id))
+            if plan:
+                plan_name = plan.plan_name
+        except:
+            pass
+            
+    return generate_invoice_pdf(invoice, user, plan_name)
