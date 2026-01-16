@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from db.init import get_db
 from models.user import Customer, Admin
-from models.subscription import SubscriptionPlan, SubscriptionLog, Invoice
+from models.subscription import SubscriptionPlan, SubscriptionLog, Invoice, Payment, PaymentMethod
 from utils.deps import get_current_user
 
 # Simple in-memory cache for stats
@@ -31,6 +31,7 @@ class CustomerListItem(BaseModel):
     address: str
     city: str
     zip: str
+    skeeterman_number: str
 
 
 class PlanDistributionItem(BaseModel):
@@ -237,12 +238,13 @@ def list_customers(
             email=c.email,
             phone=c.phone_number or "",
             plan=plan_name,
-            status="Active" if c.subscription_active else "Inactive",
+            status=c.subscription_status.capitalize() if c.subscription_status else ("Active" if c.subscription_active else "Inactive"),
             amount=plan_cost,
             lastPayment=last_payment_str,
             address=c.address or "",
             city=c.city or "",
-            zip=c.zip_code or ""
+            zip=c.zip_code or "",
+            skeeterman_number=c.skeeterman_number or ""
         ))
     
     return result
@@ -283,16 +285,57 @@ def get_customer_cards(
         raise HTTPException(status_code=403, detail="Forbidden")
     
     customer = db.query(Customer).get(customer_id)
-    if not customer or not customer.square_customer_id:
-        raise HTTPException(status_code=404, detail="Square customer not found")
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
     
-    from utils.square_client import get_customer_cards
-    res = get_customer_cards(customer.square_customer_id)
+    if not customer.square_customer_id:
+        return {"success": True, "cards": []}
     
-    if not res.get("success"):
-        raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
+    # 1. Fetch from local DB
+    db_methods = db.query(PaymentMethod).filter(PaymentMethod.customer_id == customer.id).all()
+    db_card_map = {pm.square_card_id: pm for pm in db_methods}
     
-    return res
+    # 2. Fetch from Square
+    from utils.square_client import get_customer_cards as get_sq_cards
+    sq_res = get_sq_cards(customer.square_customer_id)
+    sq_cards = sq_res.get("cards", []) if sq_res.get("success") else []
+    
+    # 3. Merge and format for frontend
+    final_cards = []
+    sq_card_ids_in_list = set()
+    
+    for sq_c in sq_cards:
+        if not sq_c.get("enabled", True):
+            continue
+            
+        card_id = sq_c.get("id")
+        sq_card_ids_in_list.add(card_id)
+        db_pm = db_card_map.get(card_id)
+        
+        final_cards.append({
+            "id": card_id,
+            "last_4": sq_c.get("last_4") or (db_pm.last_4_digits if db_pm else ""),
+            "brand": sq_c.get("card_brand") or (db_pm.card_brand if db_pm else "Unknown"),
+            "exp_month": sq_c.get("exp_month") or (db_pm.exp_month if db_pm else 0),
+            "exp_year": sq_c.get("exp_year") or (db_pm.exp_year if db_pm else 0),
+            "is_default": db_pm.is_default if db_pm else False,
+            "is_active_in_square": True
+        })
+    
+    # Add any cards from DB not in Square response
+    for card_id, pm in db_card_map.items():
+        if card_id not in sq_card_ids_in_list:
+            final_cards.append({
+                "id": pm.square_card_id,
+                "last_4": pm.last_4_digits,
+                "brand": pm.card_brand,
+                "exp_month": pm.exp_month,
+                "exp_year": pm.exp_year,
+                "is_default": pm.is_default,
+                "is_active_in_square": False
+            })
+    
+    return {"success": True, "cards": final_cards}
 
 @router.post("/remove-card/{customer_id}/{card_id}")
 def remove_customer_card(
@@ -310,7 +353,80 @@ def remove_customer_card(
     if not res.get("success"):
         raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
     
+    # Remove from Local DB
+    db.query(PaymentMethod).filter(
+        PaymentMethod.customer_id == customer_id,
+        PaymentMethod.square_card_id == card_id
+    ).delete()
+    db.commit()
+    
     return {"success": True, "message": "Card removed"}
+
+class AddCardRequest(BaseModel):
+    source_id: str
+
+@router.post("/save-card/{customer_id}")
+def admin_save_card(
+    customer_id: int,
+    request: AddCardRequest,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    customer = db.query(Customer).get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    # Ensure Square Customer exists
+    if not customer.square_customer_id:
+        from utils.square_client import create_square_customer
+        res = create_square_customer(
+            given_name=customer.first_name,
+            family_name=customer.last_name,
+            email=customer.email,
+            phone_number=customer.phone_number
+        )
+        if not res.get("success"):
+            raise HTTPException(status_code=400, detail=f"Square customer error: {res.get('error')}")
+        customer.square_customer_id = res.get("customer_id")
+        db.commit()
+
+    # Create Card in Square
+    from utils.square_client import create_card_on_file
+    card_res = create_card_on_file(
+        source_id=request.source_id,
+        customer_id=customer.square_customer_id
+    )
+    
+    if not card_res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Failed to save card: {card_res.get('error')}")
+        
+    card_id = card_res.get("card_id")
+    
+    # Save to Local DB
+    # Disable previous default
+    db.query(PaymentMethod).filter(PaymentMethod.customer_id == customer.id).update({"is_default": False})
+    
+    new_method = PaymentMethod(
+        customer_id=customer.id,
+        square_card_id=card_id,
+        last_4_digits=card_res.get("last_4"),
+        card_brand=card_res.get("brand"),
+        exp_month=card_res.get("exp_month"),
+        exp_year=card_res.get("exp_year"),
+        is_default=True
+    )
+    db.add(new_method)
+    
+    # Update active subscription if exists
+    if customer.square_subscription_id and customer.subscription_active:
+        from utils.square_client import update_subscription_card
+        update_subscription_card(customer.square_subscription_id, card_id)
+    
+    db.commit()
+    return {"success": True, "message": "Card saved successfully"}
 
 class UpdateCustomerRequest(BaseModel):
     first_name: str
@@ -320,6 +436,7 @@ class UpdateCustomerRequest(BaseModel):
     address: str
     city: str
     zip_code: str
+    skeeterman_number: str
 
 @router.put("/customer-details/{customer_id}")
 def update_customer_details(
@@ -363,6 +480,7 @@ def update_customer_details(
     customer.address = request.address
     customer.city = request.city
     customer.zip_code = request.zip_code
+    customer.skeeterman_number = request.skeeterman_number
     
     db.commit()
     return {"success": True, "message": "Customer details updated"}

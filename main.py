@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-from routers import auth, payment, admin
+from routers import auth, payment, admin, webhooks
 
 app = FastAPI(title="Skeeter Backend")
 
@@ -37,6 +37,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(payment.router, prefix="/payments", tags=["Payments"])
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
+app.include_router(webhooks.router, prefix="/webhooks", tags=["Webhooks"])
 
 @app.get("/health")
 def health_check():

@@ -174,6 +174,9 @@ def get_my_cards(user: Customer = Depends(get_db_user), db: Session = Depends(ge
     sq_card_ids_in_list = set()
     
     for sq_c in sq_cards:
+        if not sq_c.get("enabled", True):
+            continue
+            
         card_id = sq_c.get("id")
         sq_card_ids_in_list.add(card_id)
         
@@ -348,41 +351,32 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
     return res
 
 @router.get("/my-subscriptions")
-def get_my_subs(user: Customer = Depends(get_db_user)):
+def get_my_subs(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
     if not user.square_customer_id:
         return {"success": True, "subscriptions": []}
     
-    # Fetch user's subscriptions
+    # Fetch user's subscriptions from Square
     subs_res = get_subscriptions(customer_id=user.square_customer_id)
     if not subs_res.get("success"):
         return subs_res
         
     subscriptions = subs_res.get("subscriptions", [])
     
-    # Fetch all plans to map names and amounts
-    plans_res = get_subscription_plans()
+    # FETCH FROM LOCAL DB - MUCH FASTER
+    plans = db.query(SubscriptionPlan).all()
     plans_map = {}
-    if plans_res.get("success"):
-        for p in plans_res.get("plans", []):
-            for v in p.get("variations", []):
-                # Try to get price from the first phase
-                price = 0
-                if v.get("phases") and len(v["phases"]) > 0:
-                    price = int(v["phases"][0].get("recurring_price_money", {}).get("amount", 0))
-                
-                plans_map[v["id"]] = {
-                    "name": f"{p['name']} - {v['name']}",
-                    "amount": price
-                }
+    for p in plans:
+        plans_map[p.plan_variation_id] = {
+            "name": p.plan_name,
+            "amount": int(p.plan_cost * 100)
+        }
     
     # Enrich subscriptions
     enriched_subs = []
     for sub in subscriptions:
-        # Create a copy to modify
         s = sub.copy()
         var_id = s.get("plan_variation_id")
         
-        # Map fields
         if var_id in plans_map:
             s["plan_name"] = plans_map[var_id]["name"]
             s["amount"] = plans_map[var_id]["amount"]
@@ -390,9 +384,7 @@ def get_my_subs(user: Customer = Depends(get_db_user)):
             s["plan_name"] = "Unknown Plan"
             s["amount"] = 0
             
-        # Map next_billing_date from charged_through_date
         s["next_billing_date"] = s.get("charged_through_date")
-        
         enriched_subs.append(s)
         
     return {"success": True, "subscriptions": enriched_subs}
@@ -470,7 +462,27 @@ def change_plan(request: ChangePlanRequest, user: Customer = Depends(get_db_user
     return res
 
 @router.get("/billing-history")
-def billing_history(user: Customer = Depends(get_db_user)):
+def billing_history(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    """Fetch billing history from local records first, then Square."""
+    from models.subscription import Invoice
+    
+    # 1. Start with local invoices
+    local_invoices = db.query(Invoice).filter(Invoice.customer_id == user.id).order_by(Invoice.due_date.desc()).all()
+    
+    if local_invoices:
+        return {
+            "success": True, 
+            "invoices": [{
+                "id": inv.square_invoice_id,
+                "amount": int(inv.amount * 100),
+                "status": inv.status,
+                "created_at": inv.due_date.isoformat(),
+                "description": "Subscription Payment",
+                "public_url": inv.public_url
+            } for inv in local_invoices]
+        }
+
+    # 2. Fallback to Square if no local records found
     if not user.square_customer_id:
         return {"success": True, "invoices": []}
     
@@ -480,27 +492,40 @@ def billing_history(user: Customer = Depends(get_db_user)):
         
     invoices = res.get("invoices", [])
     enriched_invoices = []
-    
     for inv in invoices:
         i = inv.copy()
-        
-        # Determine amount
-        # Usually looking for primary_recipient.computed_amount_money or payment_requests
         amount = 0
         if "payment_requests" in i and i["payment_requests"]:
-            # Sum up all requests or just take the first one? Usually just one for sub.
             for req in i["payment_requests"]:
                  amount += int(req.get("computed_amount_money", {}).get("amount", 0))
         
         i["amount"] = amount
         i["description"] = i.get("title") or i.get("description") or "Subscription Payment"
-        
-        # Prioritize the official invoice date or scheduled date over the creation timestamp
         i["created_at"] = i.get("invoice_date") or i.get("scheduled_at") or i.get("created_at")
-             
         enriched_invoices.append(i)
         
     return {"success": True, "invoices": enriched_invoices}
+
+@router.get("/dashboard-data")
+def get_dashboard_data(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    """Unified endpoint for faster dashboard loading."""
+    # This combines multiple calls into one to reduce latency and overhead
+    try:
+        subs = get_my_subs(user, db)
+        history = billing_history(user, db)
+        plans = get_db_plans(db)
+        
+        return {
+            "success": True,
+            "subscriptions": subs.get("subscriptions", []),
+            "billing_history": history.get("invoices", []),
+            "available_plans": plans.get("plans", []),
+            "failed_attempts": user.failed_payment_attempts,
+            "status": user.subscription_status
+        }
+    except Exception as e:
+        logger.error(f"Error fetching dashboard data: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to load dashboard data.")
 @router.get("/my-invoice-pdf/{square_invoice_id}")
 def download_my_invoice_pdf(
     square_invoice_id: str,
