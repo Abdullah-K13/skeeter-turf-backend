@@ -12,7 +12,7 @@ if not DATABASE_URL:
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
-    pool_recycle=3600
+    pool_recycle=300
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -37,30 +37,6 @@ def seed_db():
     from utils.security import hash_password
     db = SessionLocal()
     try:
-        # Check if plans exist
-        if not db.query(SubscriptionPlan).first():
-            plans = [
-                SubscriptionPlan(
-                    plan_name="Mosquito Control",
-                    plan_cost=79.0,
-                    plan_variation_id="mosquito_plan_id", # Placeholder
-                    plan_description="Monthly mosquito barrier treatment"
-                ),
-                SubscriptionPlan(
-                    plan_name="Lawn Care",
-                    plan_cost=99.0,
-                    plan_variation_id="lawn_plan_id", # Placeholder
-                    plan_description="Complete lawn maintenance program"
-                ),
-                SubscriptionPlan(
-                    plan_name="Complete Bundle",
-                    plan_cost=149.0,
-                    plan_variation_id="bundle_plan_id", # Placeholder
-                    plan_description="Best value - All services included"
-                )
-            ]
-            db.add_all(plans)
-        
         # Database seeding with admins
         admin_data = [
             {"name": "Admin User", "email": "admin@skeeter.com", "password": "admin123", "phone": "1234567890"},

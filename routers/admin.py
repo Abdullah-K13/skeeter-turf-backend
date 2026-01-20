@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from db.init import get_db
 from models.user import Customer, Admin
-from models.subscription import SubscriptionPlan, SubscriptionLog, Invoice
+from models.subscription import SubscriptionPlan, SubscriptionLog, Invoice, Payment, PaymentMethod
 from utils.deps import get_current_user
 
 # Simple in-memory cache for stats
@@ -31,6 +31,7 @@ class CustomerListItem(BaseModel):
     address: str
     city: str
     zip: str
+    skeeterman_number: str
 
 
 class PlanDistributionItem(BaseModel):
@@ -77,61 +78,54 @@ def get_admin_analytics(
         raise HTTPException(status_code=403, detail="Forbidden")
     
     # 1. Active Subscribers & MRR & Plan Distribution via Square API
-    from utils.square_client import search_subscriptions, get_subscription_plans
+    from utils.square_client import search_subscriptions, get_catalog_prices
+    from models.subscription import SubscriptionPlan
     
+    # Fetch local plans to filter out ProTown or other unrelated plans
+    local_plans = db.query(SubscriptionPlan).all()
+    local_variation_ids = {p.plan_variation_id for p in local_plans if p.plan_variation_id}
+    variation_name_map = {p.plan_variation_id: p.plan_name for p in local_plans if p.plan_variation_id}
+
     # Fetch all active subscriptions from Square
     subs_res = search_subscriptions(status="ACTIVE")
-    active_subs = subs_res.get("subscriptions", [])
+    all_active_subs = subs_res.get("subscriptions", [])
+    
+    # Filter to only contain subscriptions for our local plans
+    active_subs = [sub for sub in all_active_subs if sub.get("plan_variation_id") in local_variation_ids]
     active_sub_count = len(active_subs)
     
-    # Fetch plan details to calculate MRR
-    plans_res = get_subscription_plans()
-    plans = plans_res.get("plans", [])
-    
-    # Create a map of variation_id -> price & name
-    # We need to flatten the structure: plan -> variations
-    variation_map = {}
-    for p in plans:
-        p_name = p.get("name", "Unknown Plan")
-        for v in p.get("variations", []):
-            var_id = v.get("id")
-            # Price is likely inside phases -> recurring_price_money -> amount
-            # Square structure can be complex. Let's try to find the price.
-            # Simplified assumption: first phase has the recurring price.
-            phases = v.get("phases", [])
-            price = 0.0
-            if phases:
-                amount_money = phases[0].get("recurring_price_money", {})
-                price = float(amount_money.get("amount", 0)) / 100.0
-            
-            variation_map[var_id] = {"name": p_name, "price": price}
-
+    # Calculate MRR and Plan counts
     mrr = 0.0
-    plan_counts = {} # plan_name -> count
-    plan_revenue = {} # plan_name -> total_revenue
+    plan_counts = {p.plan_name: 0 for p in local_plans} # Initialize with 0 for all local plans
+    plan_revenue = {p.plan_name: 0.0 for p in local_plans}
     
+    # Get all plan variation IDs to fetch prices
+    variation_ids = set()
+    for sub in active_subs:
+        if sub.get("plan_variation_id"):
+            variation_ids.add(sub.get("plan_variation_id"))
+            
+    # Fetch prices from catalog
+    prices_map = get_catalog_prices(list(variation_ids))
+
     for sub in active_subs:
         var_id = sub.get("plan_variation_id")
-        if var_id and var_id in variation_map:
-            details = variation_map[var_id]
-            price = details["price"]
-            p_name = details["name"]
-            
-            mrr += price
-            plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
-            plan_revenue[p_name] = plan_revenue.get(p_name, 0) + price
-        else:
-            # Fallback if plan not found in catalog but exists in sub
-            p_name = "Unknown Plan"
-            plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
-            plan_revenue[p_name] = plan_revenue.get(p_name, 0) + 0.0
+        
+        price = prices_map.get(var_id, 0.0)
+        p_name = variation_name_map.get(var_id, "Unknown Plan")
+        
+        mrr += price
+        plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
+        plan_revenue[p_name] = plan_revenue.get(p_name, 0) + price
 
     # Format Plan Distribution & Revenue Distribution
     colors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"]
     plan_dist = []
     rev_dist = []
     
-    for i, name in enumerate(plan_counts.keys()):
+    sorted_plans = sorted(plan_counts.keys())
+    
+    for i, name in enumerate(sorted_plans):
         color = colors[i % len(colors)]
         
         plan_dist.append(PlanDistributionItem(
@@ -142,15 +136,14 @@ def get_admin_analytics(
         
         rev_dist.append(PlanDistributionItem(
             name=name,
-            value=int(plan_revenue.get(name, 0)), # Cast to int for graph if needed, or keep and update model
+            value=int(plan_revenue.get(name, 0)),
             color=color
         ))
         
-    # 2. Total Customers (Local DB - historically accurate for platform users)
+    # 2. Total Customers (Local DB)
     total_customers = db.query(Customer).count()
     
     # 3. Growth History (Last 30 days - Local DB)
-    from sqlalchemy import func
     thirty_days_ago = datetime.now() - timedelta(days=30)
     
     daily_growth = db.query(
@@ -176,9 +169,8 @@ def get_admin_analytics(
         growth_history.append(GrowthItem(date=d_str, customers=current_total))
 
     # Debug logs
-    print(f"DEBUG: Square Active Subs: {active_sub_count}")
-    print(f"DEBUG: Square MRR: {mrr}")
-    print(f"DEBUG: Plan Distribution: {plan_counts}")
+    print(f"DEBUG: Active Subs (Local): {active_sub_count}")
+    print(f"DEBUG: MRR: {mrr}")
 
     return AnalyticsResponse(
         mrr=mrr,
@@ -237,12 +229,13 @@ def list_customers(
             email=c.email,
             phone=c.phone_number or "",
             plan=plan_name,
-            status="Active" if c.subscription_active else "Inactive",
+            status=c.subscription_status.capitalize() if c.subscription_status else ("Active" if c.subscription_active else "Inactive"),
             amount=plan_cost,
             lastPayment=last_payment_str,
             address=c.address or "",
             city=c.city or "",
-            zip=c.zip_code or ""
+            zip=c.zip_code or "",
+            skeeterman_number=c.skeeterman_number or ""
         ))
     
     return result
@@ -283,16 +276,57 @@ def get_customer_cards(
         raise HTTPException(status_code=403, detail="Forbidden")
     
     customer = db.query(Customer).get(customer_id)
-    if not customer or not customer.square_customer_id:
-        raise HTTPException(status_code=404, detail="Square customer not found")
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
     
-    from utils.square_client import get_customer_cards
-    res = get_customer_cards(customer.square_customer_id)
+    if not customer.square_customer_id:
+        return {"success": True, "cards": []}
     
-    if not res.get("success"):
-        raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
+    # 1. Fetch from local DB
+    db_methods = db.query(PaymentMethod).filter(PaymentMethod.customer_id == customer.id).all()
+    db_card_map = {pm.square_card_id: pm for pm in db_methods}
     
-    return res
+    # 2. Fetch from Square
+    from utils.square_client import get_customer_cards as get_sq_cards
+    sq_res = get_sq_cards(customer.square_customer_id)
+    sq_cards = sq_res.get("cards", []) if sq_res.get("success") else []
+    
+    # 3. Merge and format for frontend
+    final_cards = []
+    sq_card_ids_in_list = set()
+    
+    for sq_c in sq_cards:
+        if not sq_c.get("enabled", True):
+            continue
+            
+        card_id = sq_c.get("id")
+        sq_card_ids_in_list.add(card_id)
+        db_pm = db_card_map.get(card_id)
+        
+        final_cards.append({
+            "id": card_id,
+            "last_4": sq_c.get("last_4") or (db_pm.last_4_digits if db_pm else ""),
+            "brand": sq_c.get("card_brand") or (db_pm.card_brand if db_pm else "Unknown"),
+            "exp_month": sq_c.get("exp_month") or (db_pm.exp_month if db_pm else 0),
+            "exp_year": sq_c.get("exp_year") or (db_pm.exp_year if db_pm else 0),
+            "is_default": db_pm.is_default if db_pm else False,
+            "is_active_in_square": True
+        })
+    
+    # Add any cards from DB not in Square response
+    for card_id, pm in db_card_map.items():
+        if card_id not in sq_card_ids_in_list:
+            final_cards.append({
+                "id": pm.square_card_id,
+                "last_4": pm.last_4_digits,
+                "brand": pm.card_brand,
+                "exp_month": pm.exp_month,
+                "exp_year": pm.exp_year,
+                "is_default": pm.is_default,
+                "is_active_in_square": False
+            })
+    
+    return {"success": True, "cards": final_cards}
 
 @router.post("/remove-card/{customer_id}/{card_id}")
 def remove_customer_card(
@@ -310,7 +344,80 @@ def remove_customer_card(
     if not res.get("success"):
         raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
     
+    # Remove from Local DB
+    db.query(PaymentMethod).filter(
+        PaymentMethod.customer_id == customer_id,
+        PaymentMethod.square_card_id == card_id
+    ).delete()
+    db.commit()
+    
     return {"success": True, "message": "Card removed"}
+
+class AddCardRequest(BaseModel):
+    source_id: str
+
+@router.post("/save-card/{customer_id}")
+def admin_save_card(
+    customer_id: int,
+    request: AddCardRequest,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    customer = db.query(Customer).get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    # Ensure Square Customer exists
+    if not customer.square_customer_id:
+        from utils.square_client import create_square_customer
+        res = create_square_customer(
+            given_name=customer.first_name,
+            family_name=customer.last_name,
+            email=customer.email,
+            phone_number=customer.phone_number
+        )
+        if not res.get("success"):
+            raise HTTPException(status_code=400, detail=f"Square customer error: {res.get('error')}")
+        customer.square_customer_id = res.get("customer_id")
+        db.commit()
+
+    # Create Card in Square
+    from utils.square_client import create_card_on_file
+    card_res = create_card_on_file(
+        source_id=request.source_id,
+        customer_id=customer.square_customer_id
+    )
+    
+    if not card_res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Failed to save card: {card_res.get('error')}")
+        
+    card_id = card_res.get("card_id")
+    
+    # Save to Local DB
+    # Disable previous default
+    db.query(PaymentMethod).filter(PaymentMethod.customer_id == customer.id).update({"is_default": False})
+    
+    new_method = PaymentMethod(
+        customer_id=customer.id,
+        square_card_id=card_id,
+        last_4_digits=card_res.get("last_4"),
+        card_brand=card_res.get("brand"),
+        exp_month=card_res.get("exp_month"),
+        exp_year=card_res.get("exp_year"),
+        is_default=True
+    )
+    db.add(new_method)
+    
+    # Update active subscription if exists
+    if customer.square_subscription_id and customer.subscription_active:
+        from utils.square_client import update_subscription_card
+        update_subscription_card(customer.square_subscription_id, card_id)
+    
+    db.commit()
+    return {"success": True, "message": "Card saved successfully"}
 
 class UpdateCustomerRequest(BaseModel):
     first_name: str
@@ -320,6 +427,7 @@ class UpdateCustomerRequest(BaseModel):
     address: str
     city: str
     zip_code: str
+    skeeterman_number: str
 
 @router.put("/customer-details/{customer_id}")
 def update_customer_details(
@@ -363,6 +471,7 @@ def update_customer_details(
     customer.address = request.address
     customer.city = request.city
     customer.zip_code = request.zip_code
+    customer.skeeterman_number = request.skeeterman_number
     
     db.commit()
     return {"success": True, "message": "Customer details updated"}

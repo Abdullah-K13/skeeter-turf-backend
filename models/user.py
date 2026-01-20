@@ -13,6 +13,7 @@ class Customer(Base):
     city = Column(String)
     state = Column(String)
     zip_code = Column(String)
+    skeeterman_number = Column(String(50), nullable=True)
     
     # Square Integration Fields
     square_customer_id = Column(String(255), nullable=True)
@@ -21,6 +22,8 @@ class Customer(Base):
     subscription_status = Column(String(50), nullable=True) # ACTIVE, PAUSED, CANCELED, etc.
     plan_id = Column(String(50), nullable=True) # mosquito, lawn, bundle
     plan_variation_id = Column(String(255), nullable=True) # Square Variation ID
+    order_template_id = Column(String(255), nullable=True) # Square Order Template ID
+    failed_payment_attempts = Column(Integer, default=0)
     
     created_at = Column(TIMESTAMP, server_default=text("NOW()"))
 

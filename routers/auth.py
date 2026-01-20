@@ -18,6 +18,7 @@ class SignUpRequest(BaseModel):
     zip: str
     plan: str
     planVariationId: str
+    skeetermanNumber: str
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -40,7 +41,8 @@ def signup(request: SignUpRequest, db: Session = Depends(get_db)):
         city=request.city,
         zip_code=request.zip,
         plan_id=request.plan,
-        plan_variation_id=request.planVariationId
+        plan_variation_id=request.planVariationId,
+        skeeterman_number=request.skeetermanNumber
     )
     
     db.add(new_customer)
