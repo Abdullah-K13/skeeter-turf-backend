@@ -79,16 +79,25 @@ def get_admin_analytics(
     
     # 1. Active Subscribers & MRR & Plan Distribution via Square API
     from utils.square_client import search_subscriptions, get_catalog_prices
+    from models.subscription import SubscriptionPlan
     
+    # Fetch local plans to filter out ProTown or other unrelated plans
+    local_plans = db.query(SubscriptionPlan).all()
+    local_variation_ids = {p.plan_variation_id for p in local_plans if p.plan_variation_id}
+    variation_name_map = {p.plan_variation_id: p.plan_name for p in local_plans if p.plan_variation_id}
+
     # Fetch all active subscriptions from Square
     subs_res = search_subscriptions(status="ACTIVE")
-    active_subs = subs_res.get("subscriptions", [])
+    all_active_subs = subs_res.get("subscriptions", [])
+    
+    # Filter to only contain subscriptions for our local plans
+    active_subs = [sub for sub in all_active_subs if sub.get("plan_variation_id") in local_variation_ids]
     active_sub_count = len(active_subs)
     
     # Calculate MRR and Plan counts
     mrr = 0.0
-    plan_counts = {} # plan_name -> count
-    plan_revenue = {} # plan_name -> total_revenue
+    plan_counts = {p.plan_name: 0 for p in local_plans} # Initialize with 0 for all local plans
+    plan_revenue = {p.plan_name: 0.0 for p in local_plans}
     
     # Get all plan variation IDs to fetch prices
     variation_ids = set()
@@ -98,21 +107,6 @@ def get_admin_analytics(
             
     # Fetch prices from catalog
     prices_map = get_catalog_prices(list(variation_ids))
-    
-    # We also need plan NAMES. 
-    # Option 1: Fetch all plans and map.
-    # Option 2: Use local DB mapping if available (hybrid approach is safer for names).
-    # Let's use local DB for names but Square for prices/existence to be "pure" Square?
-    # Or just use Square catalog fetch.
-    from utils.square_client import get_subscription_plans
-    plans_res = get_subscription_plans()
-    sq_plans = plans_res.get("plans", [])
-    
-    variation_name_map = {}
-    for p in sq_plans:
-        p_name = p.get("name", "Unknown Plan")
-        for v in p.get("variations", []):
-            variation_name_map[v.get("id")] = p_name
 
     for sub in active_subs:
         var_id = sub.get("plan_variation_id")
