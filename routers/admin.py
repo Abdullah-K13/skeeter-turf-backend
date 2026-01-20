@@ -78,61 +78,60 @@ def get_admin_analytics(
         raise HTTPException(status_code=403, detail="Forbidden")
     
     # 1. Active Subscribers & MRR & Plan Distribution via Square API
-    from utils.square_client import search_subscriptions, get_subscription_plans
+    from utils.square_client import search_subscriptions, get_catalog_prices
     
     # Fetch all active subscriptions from Square
     subs_res = search_subscriptions(status="ACTIVE")
     active_subs = subs_res.get("subscriptions", [])
     active_sub_count = len(active_subs)
     
-    # Fetch plan details to calculate MRR
-    plans_res = get_subscription_plans()
-    plans = plans_res.get("plans", [])
-    
-    # Create a map of variation_id -> price & name
-    # We need to flatten the structure: plan -> variations
-    variation_map = {}
-    for p in plans:
-        p_name = p.get("name", "Unknown Plan")
-        for v in p.get("variations", []):
-            var_id = v.get("id")
-            # Price is likely inside phases -> recurring_price_money -> amount
-            # Square structure can be complex. Let's try to find the price.
-            # Simplified assumption: first phase has the recurring price.
-            phases = v.get("phases", [])
-            price = 0.0
-            if phases:
-                amount_money = phases[0].get("recurring_price_money", {})
-                price = float(amount_money.get("amount", 0)) / 100.0
-            
-            variation_map[var_id] = {"name": p_name, "price": price}
-
+    # Calculate MRR and Plan counts
     mrr = 0.0
     plan_counts = {} # plan_name -> count
     plan_revenue = {} # plan_name -> total_revenue
     
+    # Get all plan variation IDs to fetch prices
+    variation_ids = set()
+    for sub in active_subs:
+        if sub.get("plan_variation_id"):
+            variation_ids.add(sub.get("plan_variation_id"))
+            
+    # Fetch prices from catalog
+    prices_map = get_catalog_prices(list(variation_ids))
+    
+    # We also need plan NAMES. 
+    # Option 1: Fetch all plans and map.
+    # Option 2: Use local DB mapping if available (hybrid approach is safer for names).
+    # Let's use local DB for names but Square for prices/existence to be "pure" Square?
+    # Or just use Square catalog fetch.
+    from utils.square_client import get_subscription_plans
+    plans_res = get_subscription_plans()
+    sq_plans = plans_res.get("plans", [])
+    
+    variation_name_map = {}
+    for p in sq_plans:
+        p_name = p.get("name", "Unknown Plan")
+        for v in p.get("variations", []):
+            variation_name_map[v.get("id")] = p_name
+
     for sub in active_subs:
         var_id = sub.get("plan_variation_id")
-        if var_id and var_id in variation_map:
-            details = variation_map[var_id]
-            price = details["price"]
-            p_name = details["name"]
-            
-            mrr += price
-            plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
-            plan_revenue[p_name] = plan_revenue.get(p_name, 0) + price
-        else:
-            # Fallback if plan not found in catalog but exists in sub
-            p_name = "Unknown Plan"
-            plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
-            plan_revenue[p_name] = plan_revenue.get(p_name, 0) + 0.0
+        
+        price = prices_map.get(var_id, 0.0)
+        p_name = variation_name_map.get(var_id, "Unknown Plan")
+        
+        mrr += price
+        plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
+        plan_revenue[p_name] = plan_revenue.get(p_name, 0) + price
 
     # Format Plan Distribution & Revenue Distribution
     colors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"]
     plan_dist = []
     rev_dist = []
     
-    for i, name in enumerate(plan_counts.keys()):
+    sorted_plans = sorted(plan_counts.keys())
+    
+    for i, name in enumerate(sorted_plans):
         color = colors[i % len(colors)]
         
         plan_dist.append(PlanDistributionItem(
@@ -143,15 +142,14 @@ def get_admin_analytics(
         
         rev_dist.append(PlanDistributionItem(
             name=name,
-            value=int(plan_revenue.get(name, 0)), # Cast to int for graph if needed, or keep and update model
+            value=int(plan_revenue.get(name, 0)),
             color=color
         ))
         
-    # 2. Total Customers (Local DB - historically accurate for platform users)
+    # 2. Total Customers (Local DB)
     total_customers = db.query(Customer).count()
     
     # 3. Growth History (Last 30 days - Local DB)
-    from sqlalchemy import func
     thirty_days_ago = datetime.now() - timedelta(days=30)
     
     daily_growth = db.query(
@@ -177,9 +175,8 @@ def get_admin_analytics(
         growth_history.append(GrowthItem(date=d_str, customers=current_total))
 
     # Debug logs
-    print(f"DEBUG: Square Active Subs: {active_sub_count}")
-    print(f"DEBUG: Square MRR: {mrr}")
-    print(f"DEBUG: Plan Distribution: {plan_counts}")
+    print(f"DEBUG: Active Subs (Local): {active_sub_count}")
+    print(f"DEBUG: MRR: {mrr}")
 
     return AnalyticsResponse(
         mrr=mrr,

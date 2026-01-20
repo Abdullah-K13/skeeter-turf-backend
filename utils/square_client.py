@@ -42,11 +42,11 @@ def process_payment(
     source_id: str,
     amount: float,
     idempotency_key: str,
-    location_id: Optional[str] = None
+    location_id: Optional[str] = None,
+    customer_id: Optional[str] = None
 ) -> Dict[str, Any]:
     """Process a payment using Square Payments API."""
     location = location_id or SQUARE_LOCATION_ID
-    amount_cents = int(amount * 100)
     
     url = f"{get_square_base_url()}/v2/payments"
     headers = get_square_headers()
@@ -55,11 +55,16 @@ def process_payment(
         "source_id": source_id,
         "idempotency_key": idempotency_key,
         "amount_money": {
-            "amount": amount_cents,
+            "amount": round(amount * 100),
             "currency": "USD"
         },
-        "location_id": location
+        "autocomplete": True
     }
+    
+    if location:
+        payload["location_id"] = location
+    if customer_id:
+        payload["customer_id"] = customer_id
     
     try:
         response = requests.post(url, json=payload, headers=headers, timeout=10)
@@ -329,7 +334,66 @@ def get_subscription_plans() -> Dict[str, Any]:
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def get_catalog_prices(variation_ids: List[str]) -> Dict[str, float]:
+    """Fetch prices for a list of variation IDs from Square Catalog."""
+    try:
+        if not variation_ids:
+            return {}
+        url = f"{get_square_base_url()}/v2/catalog/batch-retrieve"
+        headers = get_square_headers()
+        payload = {"object_ids": variation_ids}
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        data = response.json()
+        
+        prices = {}
+        for obj in data.get("objects", []):
+            cost = 0.0
+            if obj["type"] == "ITEM_VARIATION" and "item_variation_data" in obj:
+                price_money = obj["item_variation_data"].get("price_money", {})
+                if price_money:
+                    cost = price_money.get("amount", 0) / 100.0
+            elif obj["type"] == "SUBSCRIPTION_PLAN_VARIATION" and "subscription_plan_variation_data" in obj:
+                phases = obj["subscription_plan_variation_data"].get("phases", [])
+                if phases:
+                    cost = phases[0].get("recurring_price_money", {}).get("amount", 0) / 100.0
+            
+            prices[obj["id"]] = cost
+        return prices
+    except Exception as e:
+        logger.error(f"Error fetching catalog prices: {str(e)}")
+        return {}
+
 # --- Subscription Operations ---
+
+def create_order(
+    location_id: str,
+    line_items: List[Dict[str, Any]],
+    idempotency_key: Optional[str] = None
+) -> Dict[str, Any]:
+    """Create an order (template) in Square."""
+    try:
+        url = f"{get_square_base_url()}/v2/orders"
+        headers = get_square_headers()
+        
+        payload = {
+            "idempotency_key": idempotency_key or str(uuid.uuid4()),
+            "order": {
+                "location_id": location_id,
+                "state": "DRAFT",
+                "line_items": line_items
+            }
+        }
+        
+        response = requests.post(url, json=payload, headers=headers, timeout=15)
+        data = response.json()
+        
+        if "order" in data:
+            return {"success": True, "order": data["order"], "order_id": data["order"]["id"]}
+        
+        return {"success": False, "error": str(data.get("errors", "Unknown error"))}
+    except Exception as e:
+        logger.error(f"Error creating order: {str(e)}")
+        return {"success": False, "error": str(e)}
 
 def create_subscription(
     customer_id: str,
@@ -337,7 +401,8 @@ def create_subscription(
     plan_variation_id: str,
     card_id: str,
     idempotency_key: Optional[str] = None,
-    start_date: Optional[str] = None
+    start_date: Optional[str] = None,
+    order_template_id: Optional[str] = None
 ) -> Dict[str, Any]:
     """Create a subscription in Square."""
     try:
@@ -351,6 +416,7 @@ def create_subscription(
             "card_id": card_id
         }
         if start_date: payload["start_date"] = start_date
+        if order_template_id: payload["order_template_id"] = order_template_id
         
         response = requests.post(url, json=payload, headers=headers, timeout=15)
         data = response.json()
@@ -373,8 +439,10 @@ def get_subscriptions(customer_id: Optional[str] = None, status: Optional[str] =
         payload = {"query": {"filter": {}}}
         if customer_id:
             payload["query"]["filter"]["customer_ids"] = [customer_id]
-        if status:
-            payload["query"]["filter"]["statuses"] = [status]
+        
+        # NOTE: "statuses" filter causes 400 Bad Request on some tokens/versions.
+        # We fetch all and filter in Python.
+        
         if cursor:
             payload["cursor"] = cursor
         
@@ -384,9 +452,16 @@ def get_subscriptions(customer_id: Optional[str] = None, status: Optional[str] =
             return {"success": False, "error": response.text, "subscriptions": []}
         
         data = response.json()
+        all_subs = data.get("subscriptions", [])
+        
+        # Filter by status if provided
+        filtered_subs = all_subs
+        if status:
+            filtered_subs = [s for s in all_subs if s.get("status") == status]
+            
         return {
             "success": True, 
-            "subscriptions": data.get("subscriptions", []), 
+            "subscriptions": filtered_subs, 
             "cursor": data.get("cursor")
         }
     except Exception as e:
