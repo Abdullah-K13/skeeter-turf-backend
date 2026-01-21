@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from typing import List
+from typing import List, Optional
 import os
+import uuid
 import tempfile
 from fpdf import FPDF
 from datetime import datetime, date, timedelta
@@ -32,6 +33,8 @@ class CustomerListItem(BaseModel):
     city: str
     zip: str
     skeeterman_number: str
+    selected_addons: Optional[List[str]] = None
+    plan_variation_id: Optional[str] = None
 
 
 class PlanDistributionItem(BaseModel):
@@ -213,10 +216,14 @@ def list_customers(
         plan_cost = 0.0
         
         try:
-            pid = int(c.plan_id) if c.plan_id else None
-            if pid and pid in all_plans:
-                plan_name = all_plans[pid].plan_name
-                plan_cost = all_plans[pid].plan_cost
+            if c.plan_id == "one-time":
+                plan_name = "One-Time Service"
+                plan_cost = 0.0 # Cost is usually calculated from the order, but for list display we can keep 0 or fetch from order
+            else:
+                pid = int(c.plan_id) if c.plan_id else None
+                if pid and pid in all_plans:
+                    plan_name = all_plans[pid].plan_name
+                    plan_cost = all_plans[pid].plan_cost
         except (ValueError, TypeError):
             pass
 
@@ -235,7 +242,9 @@ def list_customers(
             address=c.address or "",
             city=c.city or "",
             zip=c.zip_code or "",
-            skeeterman_number=c.skeeterman_number or ""
+            skeeterman_number=c.skeeterman_number or "",
+            selected_addons=c.selected_addons,
+            plan_variation_id=c.plan_variation_id
         ))
     
     return result
@@ -499,6 +508,7 @@ def get_customer_payments(
 
 class ChangeSubscriptionRequest(BaseModel):
     new_plan_variation_id: str
+    addons: Optional[List[str]] = None
 
 @router.post("/change-subscription/{customer_id}")
 def admin_change_subscription(
@@ -513,26 +523,84 @@ def admin_change_subscription(
     customer = db.query(Customer).get(customer_id)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-        
-    if not customer.square_subscription_id:
-        raise HTTPException(status_code=400, detail="Customer has no active subscription")
+
+    from utils.subscription_logic import prepare_subscription_order_items
+    from utils.square_client import create_order, update_subscription, create_subscription, get_catalog_prices
     
-    from utils.square_client import update_subscription
-    res = update_subscription(customer.square_subscription_id, request.new_plan_variation_id)
+    # Check if a card is available if they don't have a subscription or we need to activate one
+    from models.subscription import PaymentMethod
+    default_card = db.query(PaymentMethod).filter(
+        PaymentMethod.customer_id == customer.id,
+        PaymentMethod.is_default == True
+    ).first()
+
+    # 1. Prepare Order Template (Line Items)
+    order_data = prepare_subscription_order_items(db, request.new_plan_variation_id, request.addons)
+    if not order_data.get("success"):
+        raise HTTPException(status_code=400, detail=order_data.get("error"))
+
+    location_id = os.getenv("SQUARE_LOCATION_ID")
+    order_res = create_order(
+        location_id=location_id,
+        line_items=order_data["line_items"],
+        idempotency_key=f"admin-upd-order-{uuid.uuid4().hex}"
+    )
+    if not order_res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Failed to create order template: {order_res.get('error')}")
+    
+    order_id = order_res.get("order_id")
+
+    # 2. Update or Create Subscription
+    if customer.square_subscription_id:
+        # EXISTING SUBSCRIPTION -> UPDATE
+        res = update_subscription(
+            subscription_id=customer.square_subscription_id,
+            plan_variation_id=request.new_plan_variation_id,
+            order_template_id=order_id
+        )
+        action = "CHANGE_PLAN"
+    else:
+        # NO SUBSCRIPTION -> CREATE (One-time to Subscription conversion)
+        if not default_card:
+            raise HTTPException(status_code=400, detail="No saved payment method found for this customer. Please add a card first.")
+
+        res = create_subscription(
+            customer_id=customer.square_customer_id,
+            location_id=location_id,
+            plan_variation_id=request.new_plan_variation_id,
+            card_id=default_card.square_card_id,
+            order_template_id=order_id,
+            idempotency_key=f"admin-activ-{uuid.uuid4().hex}"
+        )
+        action = "ACTIVATE"
     
     if not res.get("success"):
         raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
         
-    # Update local DB if necessary? 
-    # Usually Square webhook or next sync updates it, but we can try to update plan_id if we know it.
-    # We can try to find the plan by variation_id
+    # 3. Update local DB
     plan = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_variation_id == request.new_plan_variation_id).first()
     if plan:
         customer.plan_id = str(plan.id)
         customer.plan_variation_id = request.new_plan_variation_id
+        customer.selected_addons = request.addons
+        customer.order_template_id = order_id
+        
+        if not customer.square_subscription_id:
+            customer.square_subscription_id = res.get("subscription_id")
+            customer.subscription_active = True
+            customer.subscription_status = "ACTIVE"
+            
+        # Log action
+        log = SubscriptionLog(
+            customer_id=customer.id,
+            subscription_id=customer.square_subscription_id,
+            action=action,
+            effective_date=date.today()
+        )
+        db.add(log)
         db.commit()
     
-    return {"success": True, "message": "Subscription updated successfully"}
+    return {"success": True, "message": "Subscription updated successfully", "action": action}
 @router.post("/sync-invoices/{customer_id}")
 def sync_customer_invoices(
     customer_id: int,
