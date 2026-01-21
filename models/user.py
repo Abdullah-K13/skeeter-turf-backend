@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, TIMESTAMP, text
+from sqlalchemy import Column, Integer, String, Boolean, TIMESTAMP, text, JSON
 from db.init import Base
 
 class Customer(Base):
@@ -23,7 +23,9 @@ class Customer(Base):
     plan_id = Column(String(50), nullable=True) # mosquito, lawn, bundle
     plan_variation_id = Column(String(255), nullable=True) # Square Variation ID
     order_template_id = Column(String(255), nullable=True) # Square Order Template ID
+    selected_addons = Column(JSON, nullable=True) # List of selected addon variation IDs
     failed_payment_attempts = Column(Integer, default=0)
+
     
     created_at = Column(TIMESTAMP, server_default=text("NOW()"))
 

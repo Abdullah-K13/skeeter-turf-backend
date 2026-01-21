@@ -560,6 +560,7 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
         customer.order_template_id = order_id # Store the order template ID
         customer.subscription_active = True
         customer.subscription_status = "ACTIVE"
+        customer.selected_addons = request.addons
         db.commit()
         
         # Log payment locally
@@ -620,6 +621,7 @@ def get_my_subs(user: Customer = Depends(get_db_user), db: Session = Depends(get
             s["amount"] = 0
             
         s["next_billing_date"] = s.get("charged_through_date")
+        s["selected_addons"] = user.selected_addons
         enriched_subs.append(s)
         
     return {"success": True, "subscriptions": enriched_subs}
@@ -718,7 +720,10 @@ def billing_history(user: Customer = Depends(get_db_user), db: Session = Depends
             "created_at": inv.due_date.isoformat(),
             "description": "Subscription Payment",
             "public_url": inv.public_url,
-            "type": "SUBSCRIPTION"
+            "type": "SUBSCRIPTION",
+            "skeeterman": user.skeeterman_number,
+            "customer_name": f"{user.first_name} {user.last_name}",
+            "phone": user.phone_number
         })
         
     # Add one-time orders
@@ -730,7 +735,10 @@ def billing_history(user: Customer = Depends(get_db_user), db: Session = Depends
             "created_at": order.created_at.isoformat(),
             "description": f"One-Time Service: {order.plan_name}",
             "public_url": f"/payments/one-time-order/{order.id}/pdf", # Local PDF download link
-            "type": "ONE_TIME"
+            "type": "ONE_TIME",
+            "skeeterman": user.skeeterman_number,
+            "customer_name": f"{user.first_name} {user.last_name}",
+            "phone": user.phone_number
         })
         
     if bill_history:

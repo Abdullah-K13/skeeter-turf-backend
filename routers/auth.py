@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Optional, List
 from sqlalchemy.orm import Session
 from db.init import get_db
 from models.user import Customer, Admin
@@ -19,6 +20,7 @@ class SignUpRequest(BaseModel):
     plan: str
     planVariationId: str
     skeetermanNumber: str
+    addons: Optional[List[str]] = None
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -42,7 +44,8 @@ def signup(request: SignUpRequest, db: Session = Depends(get_db)):
         zip_code=request.zip,
         plan_id=request.plan,
         plan_variation_id=request.planVariationId,
-        skeeterman_number=request.skeetermanNumber
+        skeeterman_number=request.skeetermanNumber,
+        selected_addons=request.addons
     )
     
     db.add(new_customer)
