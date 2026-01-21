@@ -445,94 +445,19 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
 
     location_id = request.location_id or os.getenv("SQUARE_LOCATION_ID")
     
-    # 1. Fetch Plan Details from DB to get the name
-    plan_db = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_variation_id == request.plan_variation_id).first()
-    if not plan_db:
-        raise HTTPException(status_code=404, detail="Subscription plan not found in database.")
+    # 1. Prepare Order Template (Line Items)
+    from utils.subscription_logic import prepare_subscription_order_items
+    order_data = prepare_subscription_order_items(db, request.plan_variation_id, request.addons)
+    if not order_data.get("success"):
+        raise HTTPException(status_code=400, detail=order_data.get("error"))
 
-    # 2. Fetch the corresponding Order Item Variation ID for this plan from ItemVariation
-    plan_item = db.query(ItemVariation).filter(
-        ItemVariation.item_type == "PLAN",
-        ItemVariation.name == plan_db.plan_name
-    ).first()
-    
-    if not plan_item:
-        raise HTTPException(status_code=400, detail=f"Order template item for plan '{plan_db.plan_name}' not found.")
+    subtotal = order_data["subtotal"]
+    processing_fee = order_data["processing_fee"]
 
-    # 3. Prepare Line Items for Order Template
-    line_items = [
-        {
-            "quantity": "1",
-            "catalog_object_id": plan_item.variation_id
-        }
-    ]
-    
-    all_variation_ids = [plan_item.variation_id]
-
-    if request.addons:
-        # Fetch valid addon items from the template table
-        db_addons = db.query(ItemVariation).filter(
-            ItemVariation.item_type == "ADDON",
-            ItemVariation.variation_id.in_(request.addons)
-        ).all()
-        
-        for addon in db_addons:
-            line_items.append({
-                "quantity": "1",
-                "catalog_object_id": addon.variation_id
-            })
-            all_variation_ids.append(addon.variation_id)
-            
-    # 4. Fetch the Processing Fee item
-    fee_item = db.query(ItemVariation).filter(ItemVariation.item_type == "FEE").first()
-            
-    # 5. Fetch Prices for calculation
-    prices = get_catalog_prices(all_variation_ids)
-    
-    # Calculate subtotal with fallbacks
-    # Start with base plan price from DB
-    subtotal = plan_db.plan_cost
-    
-    # Add addon prices based on Square or DB fallback
-    if request.addons:
-        for vid in request.addons:
-            sq_price = prices.get(vid, 0)
-            if sq_price > 0:
-                subtotal += sq_price
-            else:
-                # Fallback to DB price
-                addon_db = next((a for a in db_addons if a.variation_id == vid), None)
-                if addon_db:
-                    subtotal += (addon_db.price or 0.0)
-    
-    # Formula: processing_fee = round((subtotal * 0.026) + 0.10, 2)
-    processing_fee = round((subtotal * 0.026) + 0.10, 2)
-    processing_fee_cents = int(processing_fee * 100)
-    
-    # 6. Add Processing Fee Line Item
-    if fee_item and fee_item.variation_id != "PROCESSING_FEE_PLACEHOLDER":
-        line_items.append({
-            "catalog_object_id": fee_item.variation_id,
-            "quantity": "1",
-            "base_price_money": {
-                "amount": processing_fee_cents,
-                "currency": "USD"
-            }
-        })
-    else:
-        line_items.append({
-            "name": "Payment Processing Fee",
-            "quantity": "1",
-            "base_price_money": {
-                "amount": processing_fee_cents,
-                "currency": "USD"
-            }
-        })
-    
     # 4. Create Order Template
     order_res = create_order(
         location_id=location_id,
-        line_items=line_items,
+        line_items=order_data["line_items"],
         idempotency_key=f"order-{request.idempotency_key or uuid.uuid4().hex}"
     )
     

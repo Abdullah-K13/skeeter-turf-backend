@@ -500,18 +500,45 @@ def retrieve_subscription(subscription_id: str) -> Dict[str, Any]:
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-def update_subscription(subscription_id: str, plan_variation_id: str) -> Dict[str, Any]:
-    """Swap subscription plan in Square."""
+def swap_subscription_plan(subscription_id: str, new_plan_variation_id: str) -> Dict[str, Any]:
+    """Swap subscription plan in Square using swap-plan endpoint."""
     try:
         url = f"{get_square_base_url()}/v2/subscriptions/{subscription_id}/swap-plan"
         headers = get_square_headers()
-        payload = {"new_plan_variation_id": plan_variation_id}
+        payload = {"new_plan_variation_id": new_plan_variation_id}
         response = requests.post(url, json=payload, headers=headers, timeout=10)
         data = response.json()
         if "subscription" in data:
             return {"success": True, "subscription": data["subscription"]}
         return {"success": False, "error": str(data.get("errors", "Unknown error"))}
     except Exception as e:
+        return {"success": False, "error": str(e)}
+
+def update_subscription(subscription_id: str, plan_variation_id: Optional[str] = None, order_template_id: Optional[str] = None, card_id: Optional[str] = None) -> Dict[str, Any]:
+    """Update subscription details in Square using the general UpdateSubscription endpoint."""
+    try:
+        url = f"{get_square_base_url()}/v2/subscriptions/{subscription_id}"
+        headers = get_square_headers()
+        
+        subscription_data = {}
+        if plan_variation_id:
+            subscription_data["plan_variation_id"] = plan_variation_id
+        if order_template_id:
+            subscription_data["order_template_id"] = order_template_id
+        if card_id:
+            subscription_data["card_id"] = card_id
+            
+        if not subscription_data:
+            return {"success": False, "error": "No update fields provided"}
+            
+        payload = {"subscription": subscription_data}
+        response = requests.put(url, json=payload, headers=headers, timeout=10)
+        data = response.json()
+        if "subscription" in data:
+            return {"success": True, "subscription": data["subscription"]}
+        return {"success": False, "error": str(data.get("errors", "Unknown error"))}
+    except Exception as e:
+        logger.error(f"Error updating subscription: {str(e)}")
         return {"success": False, "error": str(e)}
 
 def update_subscription_card(subscription_id: str, card_id: str) -> Dict[str, Any]:
