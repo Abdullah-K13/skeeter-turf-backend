@@ -713,9 +713,23 @@ def get_dashboard_data(user: Customer = Depends(get_db_user), db: Session = Depe
         plans = get_db_plans(db)
         addons = get_db_addons(db)
         
+        # Fetch latest one time order for status display if no subscription
+        from models.subscription import OneTimeOrder
+        latest_oto = db.query(OneTimeOrder).filter(OneTimeOrder.customer_id == user.id).order_by(OneTimeOrder.created_at.desc()).first()
+        latest_oto_data = None
+        if latest_oto:
+            latest_oto_data = {
+                "plan_name": latest_oto.plan_name,
+                "amount": latest_oto.total_cost,
+                "created_at": latest_oto.created_at.isoformat(),
+                "status": latest_oto.payment_status or "PAID",
+                "custom_description": latest_oto.custom_description
+            }
+
         return {
             "success": True,
             "subscriptions": subs.get("subscriptions", []),
+            "latest_one_time_order": latest_oto_data,
             "billing_history": history.get("invoices", []),
             "available_plans": plans.get("plans", []),
             "available_addons": addons.get("addons", []),
