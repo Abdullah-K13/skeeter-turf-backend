@@ -181,7 +181,11 @@ def generate_one_time_receipt_pdf(order):
     pdf.set_font("Helvetica", "", 11)
             
     # Base Plan
-    pdf.cell(140, 10, f"  {order.plan_name} (One-Time Treatment)", border="B")
+    if order.plan_name == "Custom Service" and order.custom_description:
+        pdf.cell(140, 10, f"  Custom Service: {order.custom_description}", border="B")
+    else:
+        pdf.cell(140, 10, f"  {order.plan_name} (One-Time Treatment)", border="B")
+    
     pdf.set_font("Helvetica", "B", 11)
     pdf.cell(50, 10, f"  ${order.plan_cost:.2f}  ", border="B", align="R")
     pdf.ln(12)

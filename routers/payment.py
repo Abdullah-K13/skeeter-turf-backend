@@ -146,6 +146,7 @@ def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_d
         plan_name=request.plan_details.get("name"),
         plan_cost=request.plan_details.get("price"),
         addons=request.addons,
+        custom_description=customer_info.get("custom_description"),
         total_cost=request.total_amount,
         square_payment_id=square_payment_id,
         payment_status="COMPLETED"
@@ -653,12 +654,16 @@ def billing_history(user: Customer = Depends(get_db_user), db: Session = Depends
         
     # Add one-time orders
     for order in one_time_orders:
+        desc = f"One-Time Service: {order.plan_name}"
+        if order.plan_name == "Custom Service" and order.custom_description:
+             desc = f"Custom Service: {order.custom_description}"
+
         bill_history.append({
             "id": f"OTP-{order.id}",
             "amount": int(order.total_cost * 100),
             "status": order.payment_status,
             "created_at": order.created_at.isoformat(),
-            "description": f"One-Time Service: {order.plan_name}",
+            "description": desc,
             "public_url": f"/payments/one-time-order/{order.id}/pdf", # Local PDF download link
             "type": "ONE_TIME",
             "skeeterman": user.skeeterman_number,
