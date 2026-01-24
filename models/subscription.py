@@ -75,6 +75,7 @@ class OneTimeOrder(Base):
     plan_name = Column(String(100))
     plan_cost = Column(Float)
     addons = Column(JSON)
+    custom_description = Column(String(500), nullable=True)
     total_cost = Column(Float)
     square_payment_id = Column(String(255))
     payment_status = Column(String(50)) # COMPLETED, FAILED

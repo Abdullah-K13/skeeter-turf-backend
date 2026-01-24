@@ -146,6 +146,7 @@ def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_d
         plan_name=request.plan_details.get("name"),
         plan_cost=request.plan_details.get("price"),
         addons=request.addons,
+        custom_description=customer_info.get("custom_description"),
         total_cost=request.total_amount,
         square_payment_id=square_payment_id,
         payment_status="COMPLETED"
@@ -653,12 +654,16 @@ def billing_history(user: Customer = Depends(get_db_user), db: Session = Depends
         
     # Add one-time orders
     for order in one_time_orders:
+        desc = f"One-Time Service: {order.plan_name}"
+        if order.plan_name == "Custom Service" and order.custom_description:
+             desc = f"Custom Service: {order.custom_description}"
+
         bill_history.append({
             "id": f"OTP-{order.id}",
             "amount": int(order.total_cost * 100),
             "status": order.payment_status,
             "created_at": order.created_at.isoformat(),
-            "description": f"One-Time Service: {order.plan_name}",
+            "description": desc,
             "public_url": f"/payments/one-time-order/{order.id}/pdf", # Local PDF download link
             "type": "ONE_TIME",
             "skeeterman": user.skeeterman_number,
@@ -708,9 +713,23 @@ def get_dashboard_data(user: Customer = Depends(get_db_user), db: Session = Depe
         plans = get_db_plans(db)
         addons = get_db_addons(db)
         
+        # Fetch latest one time order for status display if no subscription
+        from models.subscription import OneTimeOrder
+        latest_oto = db.query(OneTimeOrder).filter(OneTimeOrder.customer_id == user.id).order_by(OneTimeOrder.created_at.desc()).first()
+        latest_oto_data = None
+        if latest_oto:
+            latest_oto_data = {
+                "plan_name": latest_oto.plan_name,
+                "amount": latest_oto.total_cost,
+                "created_at": latest_oto.created_at.isoformat(),
+                "status": latest_oto.payment_status or "PAID",
+                "custom_description": latest_oto.custom_description
+            }
+
         return {
             "success": True,
             "subscriptions": subs.get("subscriptions", []),
+            "latest_one_time_order": latest_oto_data,
             "billing_history": history.get("invoices", []),
             "available_plans": plans.get("plans", []),
             "available_addons": addons.get("addons", []),

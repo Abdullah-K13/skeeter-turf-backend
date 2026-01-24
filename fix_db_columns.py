@@ -13,7 +13,8 @@ def update_schema():
             "ALTER TABLE customers ADD COLUMN IF NOT EXISTS plan_id VARCHAR(50)",
             "ALTER TABLE customers ADD COLUMN IF NOT EXISTS plan_variation_id VARCHAR(255)",
             "ALTER TABLE customers ADD COLUMN IF NOT EXISTS order_template_id VARCHAR(255)",
-            "ALTER TABLE customers ADD COLUMN IF NOT EXISTS selected_addons JSON"
+            "ALTER TABLE customers ADD COLUMN IF NOT EXISTS selected_addons JSON",
+            "ALTER TABLE one_time_orders ADD COLUMN IF NOT EXISTS custom_description VARCHAR(500)"
         ]
         
         for query in queries:

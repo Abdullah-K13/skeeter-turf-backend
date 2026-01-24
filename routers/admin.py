@@ -35,6 +35,7 @@ class CustomerListItem(BaseModel):
     skeeterman_number: str
     selected_addons: Optional[List[str]] = None
     plan_variation_id: Optional[str] = None
+    addons_list: Optional[List[dict]] = None
 
 
 class PlanDistributionItem(BaseModel):
@@ -196,13 +197,27 @@ def list_customers(
             detail="Only admins can access this resource"
         )
     
-    from sqlalchemy import func
-    from models.subscription import Payment
+    from models.subscription import Payment, OneTimeOrder
     
     # Optimized fetch: get all customers, plans, and last payments in bulk
     customers = db.query(Customer).all()
     all_plans = {p.id: p for p in db.query(SubscriptionPlan).all()}
     
+    # helper for addons
+    from utils.square_client import get_catalog_prices
+    # We ideally should have a local cache of addons, but for now lets fetch DB versions if we synced them
+    # But since addons are dynamic in Square, we might just assume we have names if we synced.
+    # To be safe, let's just use what we have in `selected_addons`.
+    # We will need prices though.
+    
+    # Let's just fetch all subscription plans from DB which might have addon info if we synced them?
+    # No, typically addons are separate. 
+    # For this listing, if we want detailed addon info (name + price), we need to fetch catalog.
+    # That might be slow for ALOT of customers. 
+    # Optimization: Fetch all addons once.
+    from models.subscription import ItemVariation
+    all_addons = {a.variation_id: a for a in db.query(ItemVariation).filter(ItemVariation.item_type == "ADDON").all()}
+
     # Get all last payments in one query
     last_payments = db.query(
         Payment.customer_id,
@@ -212,20 +227,54 @@ def list_customers(
 
     result = []
     for c in customers:
-        plan_name = "No Plan"
-        plan_cost = 0.0
-        
+        plan_display = "No Plan"
+        total_monthly_amount = 0.0
+        details_addons = []
+
+        # 1. Base Plan Logic
         try:
             if c.plan_id == "one-time":
-                plan_name = "One-Time Service"
-                plan_cost = 0.0 # Cost is usually calculated from the order, but for list display we can keep 0 or fetch from order
+                # Check for the latest one-time order to distinguish "One-Time" vs "Custom Service"
+                latest_order = db.query(OneTimeOrder).filter(OneTimeOrder.customer_id == c.id).order_by(OneTimeOrder.created_at.desc()).first()
+                if latest_order:
+                     if latest_order.plan_name == "Custom Service":
+                         plan_display = "Custom Service"
+                     else:
+                         plan_display = latest_order.plan_name or "One-Time Service"
+                else:
+                    plan_display = "One-Time Service"
+                
+                total_monthly_amount = 0.0 
             else:
                 pid = int(c.plan_id) if c.plan_id else None
                 if pid and pid in all_plans:
-                    plan_name = all_plans[pid].plan_name
-                    plan_cost = all_plans[pid].plan_cost
+                    base_plan = all_plans[pid]
+                    plan_display = base_plan.plan_name
+                    total_monthly_amount += base_plan.plan_cost
+                elif c.plan_id:
+                     # Fallback if plan ID exists but not in DB (maybe deleted local plan)
+                     plan_display = "Unknown Plan"
         except (ValueError, TypeError):
             pass
+
+        # 2. Addons Logic
+        if c.selected_addons:
+             for addon_id in c.selected_addons:
+                 if addon_id in all_addons:
+                     addon = all_addons[addon_id]
+                     total_monthly_amount += addon.price
+                     details_addons.append({"name": addon.name, "price": addon.price})
+                 else:
+                     details_addons.append({"name": "Unknown Addon", "price": 0.0})
+
+        # 3. Custom/One-Time Order Check
+        # If they also have custom one-time orders, we might want to flag that.
+        # But usually "One-Time" plan users are just that.
+        # If a subscriber ALSO ordered a custom service, they are still a subscriber.
+        
+        # Refine Plan Display for UI
+        if c.selected_addons and len(c.selected_addons) > 0:
+            plan_display += f" + {len(c.selected_addons)} Addon(s)"
 
         last_payment_date = last_payment_map.get(c.id)
         last_payment_str = last_payment_date.strftime("%Y-%m-%d") if last_payment_date else "N/A"
@@ -235,16 +284,17 @@ def list_customers(
             name=f"{c.first_name} {c.last_name}",
             email=c.email,
             phone=c.phone_number or "",
-            plan=plan_name,
+            plan=plan_display,
             status=c.subscription_status.capitalize() if c.subscription_status else ("Active" if c.subscription_active else "Inactive"),
-            amount=plan_cost,
+            amount=round(total_monthly_amount, 2),
             lastPayment=last_payment_str,
             address=c.address or "",
             city=c.city or "",
             zip=c.zip_code or "",
             skeeterman_number=c.skeeterman_number or "",
             selected_addons=c.selected_addons,
-            plan_variation_id=c.plan_variation_id
+            plan_variation_id=c.plan_variation_id,
+            addons_list=details_addons
         ))
     
     return result
