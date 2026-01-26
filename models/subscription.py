@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, TIMESTAMP, text, ForeignKey, Date, Boolean, JSON
 from db.init import Base
+from models.subscription_schedule import SubscriptionPlanSchedule
 
 class SubscriptionPlan(Base):
     __tablename__ = "subscription_plans"
@@ -16,6 +17,7 @@ class ItemVariation(Base):
     name = Column(String(100))
     variation_id = Column(String(255)) # Square Item Variation ID
     price = Column(Float, default=0.0)
+    billing_type = Column(String(50), default="RECURRING") # RECURRING, ONE_TIME
 
 class Payment(Base):
     __tablename__ = "payments"

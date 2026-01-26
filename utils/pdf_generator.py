@@ -190,15 +190,44 @@ def generate_one_time_receipt_pdf(order):
     pdf.cell(50, 10, f"  ${order.plan_cost:.2f}  ", border="B", align="R")
     pdf.ln(12)
     
-    # Addons
+    # Addons - Grouped by Billing Type
     addons = order.addons or []
-    pdf.set_font("Helvetica", "", 11)
-    for addon in addons:
-        pdf.cell(140, 10, f"  + {addon.get('name', 'Addon')}", border="B")
-        pdf.set_font("Helvetica", "B", 11)
-        pdf.cell(50, 10, f"  ${addon.get('price', 0):.2f}  ", border="B", align="R")
-        pdf.ln(12)
+    
+    # Separate addons by billing type
+    recurring_addons = [a for a in addons if a.get('billing_type', 'ONE_TIME') not in ['ONE_TIME', 'ONETIME']]
+    one_time_addons = [a for a in addons if a.get('billing_type', 'ONE_TIME') in ['ONE_TIME', 'ONETIME']]
+    
+    # Display Recurring Add-ons
+    if recurring_addons:
+        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_text_color(100, 100, 100)
+        pdf.cell(190, 8, "Recurring Add-ons", border="B", ln=True)
+        pdf.ln(4)
+        
         pdf.set_font("Helvetica", "", 11)
+        pdf.set_text_color(*text_color)
+        for addon in recurring_addons:
+            pdf.cell(140, 10, f"  + {addon.get('name', 'Addon')}", border="B")
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.cell(50, 10, f"  ${addon.get('price', 0):.2f}  ", border="B", align="R")
+            pdf.ln(12)
+            pdf.set_font("Helvetica", "", 11)
+    
+    # Display One-Time Add-ons
+    if one_time_addons:
+        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_text_color(100, 100, 100)
+        pdf.cell(190, 8, "One-Time Add-ons", border="B", ln=True)
+        pdf.ln(4)
+        
+        pdf.set_font("Helvetica", "", 11)
+        pdf.set_text_color(*text_color)
+        for addon in one_time_addons:
+            pdf.cell(140, 10, f"  + {addon.get('name', 'Addon')}", border="B")
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.cell(50, 10, f"  ${addon.get('price', 0):.2f}  ", border="B", align="R")
+            pdf.ln(12)
+            pdf.set_font("Helvetica", "", 11)
 
     pdf.ln(10)
     

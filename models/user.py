@@ -25,6 +25,7 @@ class Customer(Base):
     order_template_id = Column(String(255), nullable=True) # Square Order Template ID
     selected_addons = Column(JSON, nullable=True) # List of selected addon variation IDs
     failed_payment_attempts = Column(Integer, default=0)
+    subscription_paused_by_schedule = Column(Boolean, default=False)  # True if paused by schedule, not manually
 
     
     created_at = Column(TIMESTAMP, server_default=text("NOW()"))

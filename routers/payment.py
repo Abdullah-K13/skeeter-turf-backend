@@ -4,6 +4,7 @@ from typing import Optional, List, Dict, Any
 from db.init import get_db
 from models.user import Customer
 from models.subscription import SubscriptionPlan, Payment, PaymentMethod, SubscriptionLog, ItemVariation
+from models.subscription_schedule import SubscriptionPlanSchedule
 from utils.deps import get_current_user, get_db_user
 from utils.square_client import (
     get_subscription_plans,
@@ -79,7 +80,7 @@ def get_one_time_plans(db: Session = Depends(get_db)):
 def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_db)):
     """Process a one-time payment and record the order."""
     from utils.square_client import process_payment, create_square_customer
-    from models.subscription import OneTimeOrder, Payment
+    from models.subscription import OneTimeOrder, Payment, ItemVariation
     
     # 1. Create/Get Square Customer
     sq_customer_id = None
@@ -118,7 +119,40 @@ def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_d
                 existing_user.square_customer_id = sq_customer_id
                 db.commit()
 
-    # 2. Process Payment in Square using the cnon directly
+    # 2. Enrich addons with billing_type from database
+    enriched_addons = []
+    if request.addons:
+        # Extract addon IDs if they exist in the request
+        addon_ids = [addon.get('id') or addon.get('variation_id') for addon in request.addons if addon.get('id') or addon.get('variation_id')]
+        
+        if addon_ids:
+            # Look up addons from database to get billing_type
+            db_addons = db.query(ItemVariation).filter(
+                ItemVariation.variation_id.in_(addon_ids)
+            ).all()
+            addon_map = {addon.variation_id: addon for addon in db_addons}
+            
+            for addon in request.addons:
+                addon_id = addon.get('id') or addon.get('variation_id')
+                if addon_id and addon_id in addon_map:
+                    db_addon = addon_map[addon_id]
+                    enriched_addons.append({
+                        "name": db_addon.name,
+                        "price": db_addon.price,
+                        "billing_type": db_addon.billing_type
+                    })
+                else:
+                    # Fallback: use the addon as-is (for backwards compatibility)
+                    enriched_addons.append({
+                        "name": addon.get('name', 'Addon'),
+                        "price": addon.get('price', 0),
+                        "billing_type": addon.get('billing_type', 'ONE_TIME')
+                    })
+        else:
+            # If no IDs, use the addons as-is with default billing_type
+            enriched_addons = [{"name": a.get('name', 'Addon'), "price": a.get('price', 0), "billing_type": a.get('billing_type', 'ONE_TIME')} for a in request.addons]
+
+    # 3. Process Payment in Square using the cnon directly
     # Reverting to direct nonce charge to match user's curl spec 100%
     idempotency_key = request.idempotency_key or f"otp-{uuid.uuid4().hex}"
     
@@ -139,13 +173,13 @@ def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_d
     payment_data = payment_res.get("payment", {})
     square_payment_id = payment_data.get("id")
     
-    # 3. Create OneTimeOrder record
+    # 4. Create OneTimeOrder record
     new_order = OneTimeOrder(
         customer_id=existing_user.id if existing_user else None,
         customer_details=customer_info,
         plan_name=request.plan_details.get("name"),
         plan_cost=request.plan_details.get("price"),
-        addons=request.addons,
+        addons=enriched_addons,
         custom_description=customer_info.get("custom_description"),
         total_cost=request.total_amount,
         square_payment_id=square_payment_id,
@@ -153,7 +187,7 @@ def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_d
     )
     db.add(new_order)
     
-    # 4. Also record in the global Payments table for unified billing
+    # 5. Also record in the global Payments table for unified billing
     new_payment = Payment(
         customer_id=existing_user.id if existing_user else None,
         amount=request.total_amount,
@@ -204,15 +238,92 @@ def get_square_plans():
 
 @router.get("/subscription-plans/db")
 def get_db_plans(db: Session = Depends(get_db)):
-    """Fetch all subscription plans from local database."""
+    """Fetch all subscription plans from local database with schedule information."""
+    from models.subscription_schedule import SubscriptionPlanSchedule
+    from datetime import datetime
+    
     plans = db.query(SubscriptionPlan).all()
-    return {"success": True, "plans": plans}
+    current_month = datetime.now().month
+    
+    # Fetch all schedules
+    schedules = db.query(SubscriptionPlanSchedule).all()
+    schedule_map = {s.plan_name: s for s in schedules}
+    
+    # Month names for display
+    month_names = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    
+    enriched_plans = []
+    for plan in plans:
+        plan_dict = {
+            "id": plan.id,
+            "plan_name": plan.plan_name,
+            "plan_cost": plan.plan_cost,
+            "plan_variation_id": plan.plan_variation_id,
+            "plan_description": plan.plan_description,
+            "schedule": None
+        }
+        
+        # Try to find matching schedule (case-insensitive partial match)
+        schedule = None
+        for sched_name, sched in schedule_map.items():
+            if sched_name.lower() in plan.plan_name.lower():
+                schedule = sched
+                break
+        
+        if schedule:
+            plan_dict["schedule"] = {
+                "start_month": schedule.start_month,
+                "end_month": schedule.end_month,
+                "start_month_name": month_names[schedule.start_month],
+                "end_month_name": month_names[schedule.end_month],
+                "is_active_now": schedule.is_month_active(current_month),
+                "availability_display": f"{month_names[schedule.start_month]} - {month_names[schedule.end_month]}"
+            }
+        
+        enriched_plans.append(plan_dict)
+    
+    return {"success": True, "plans": enriched_plans, "current_month": current_month}
 
 @router.get("/addons/db")
 def get_db_addons(db: Session = Depends(get_db)):
     """Fetch all addon variations from local database."""
     addons = db.query(ItemVariation).filter(ItemVariation.item_type == "ADDON").all()
     return {"success": True, "addons": addons}
+
+@router.get("/subscription-schedules")
+def get_subscription_schedules(db: Session = Depends(get_db)):
+    """Fetch all subscription plan schedules with active month ranges."""
+    from datetime import datetime
+    
+    schedules = db.query(SubscriptionPlanSchedule).all()
+    current_month = datetime.now().month
+    
+    # Month names for better readability
+    month_names = {
+        1: "January", 2: "February", 3: "March", 4: "April",
+        5: "May", 6: "June", 7: "July", 8: "August",
+        9: "September", 10: "October", 11: "November", 12: "December"
+    }
+    
+    result = []
+    for schedule in schedules:
+        result.append({
+            "id": schedule.id,
+            "plan_id": schedule.plan_id,
+            "plan_name": schedule.plan_name,
+            "start_month": schedule.start_month,
+            "end_month": schedule.end_month,
+            "start_month_name": month_names.get(schedule.start_month, "Unknown"),
+            "end_month_name": month_names.get(schedule.end_month, "Unknown"),
+            "is_active_now": schedule.is_month_active(current_month)
+        })
+    
+    return {
+        "success": True,
+        "schedules": result,
+        "current_month": current_month,
+        "current_month_name": month_names.get(current_month, "Unknown")
+    }
 
 @router.post("/validate-card")
 def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
@@ -446,9 +557,75 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
 
     location_id = request.location_id or os.getenv("SQUARE_LOCATION_ID")
     
-    # 1. Prepare Order Template (Line Items)
+    # 1. Filter Addons
+    recurring_addon_ids = []
+    one_time_addons = []
+    
+    if request.addons:
+        db_addons = db.query(ItemVariation).filter(
+            ItemVariation.variation_id.in_(request.addons)
+        ).all()
+        
+        for addon in db_addons:
+            if addon.billing_type == "ONE_TIME":
+                one_time_addons.append(addon)
+            else:
+                recurring_addon_ids.append(addon.variation_id)
+
+    # 2. Process One-Time Addons Immediate Charge
+    if one_time_addons:
+        # Calculate total for one-time items
+        ot_subtotal = sum(a.price for a in one_time_addons)
+        ot_processing_fee = (ot_subtotal * 0.026) + 0.10
+        ot_final_amount = ot_subtotal + ot_processing_fee
+        
+        logger.info(f"Charging one-time addons: ${ot_final_amount} ({len(one_time_addons)} items)")
+        
+        from utils.square_client import process_payment
+        from models.subscription import OneTimeOrder, Payment
+        
+        # Charge the card on file
+        pay_res = process_payment(
+            source_id=request.card_id,
+            amount=ot_final_amount,
+            idempotency_key=f"ot-addon-{request.idempotency_key or uuid.uuid4().hex}",
+            customer_id=sq_customer_id,
+            location_id=location_id
+        )
+        
+        if "errors" in pay_res:
+             err_detail = pay_res['errors'][0].get('detail', 'Unknown error')
+             raise HTTPException(status_code=400, detail=f"One-time addon payment failed: {err_detail}")
+             
+        # Record OneTimeOrder
+        new_order = OneTimeOrder(
+            customer_id=customer.id if customer else None,
+            customer_details={
+                "email": customer.email if customer else "",
+                "name": f"{customer.first_name} {customer.last_name}" if customer else ""
+            },
+            plan_name="One-Time Addons (with Subscription)",
+            plan_cost=ot_subtotal,
+            addons=[{"name": a.name, "price": a.price, "billing_type": a.billing_type} for a in one_time_addons],
+            total_cost=ot_final_amount,
+            square_payment_id=pay_res.get("payment", {}).get("id"),
+            payment_status="COMPLETED"
+        )
+        db.add(new_order)
+        
+        # Record Payment
+        new_payment = Payment(
+            customer_id=customer.id if customer else None,
+            amount=ot_final_amount,
+            status="PAID",
+            square_transaction_id=pay_res.get("payment", {}).get("id")
+        )
+        db.add(new_payment)
+        db.commit()
+
+    # 3. Prepare Subscription Order Template (Recurring items only)
     from utils.subscription_logic import prepare_subscription_order_items
-    order_data = prepare_subscription_order_items(db, request.plan_variation_id, request.addons)
+    order_data = prepare_subscription_order_items(db, request.plan_variation_id, recurring_addon_ids)
     if not order_data.get("success"):
         raise HTTPException(status_code=400, detail=order_data.get("error"))
 
@@ -467,6 +644,22 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
     
     order_id = order_res.get("order_id")
     
+    # 4.5. Calculate subscription start date based on plan schedule
+    from utils.subscription_scheduler import calculate_subscription_start_date
+    
+    # Get plan name for schedule lookup
+    plan = db.query(SubscriptionPlan).filter(
+        SubscriptionPlan.plan_variation_id == request.plan_variation_id
+    ).first()
+    
+    calculated_start_date = None
+    if plan:
+        calculated_start_date = calculate_subscription_start_date(plan.plan_name)
+        logger.info(f"Calculated start date for {plan.plan_name}: {calculated_start_date}")
+    
+    # Use calculated start date if available, otherwise use provided or None
+    final_start_date = calculated_start_date or request.start_date
+    
     # 5. Create Subscription
     res = create_sq_sub(
         customer_id=sq_customer_id,
@@ -474,7 +667,7 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
         plan_variation_id=request.plan_variation_id,
         card_id=request.card_id,
         idempotency_key=request.idempotency_key,
-        start_date=request.start_date,
+        start_date=final_start_date,
         order_template_id=order_id
     )
     
@@ -486,7 +679,7 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
         customer.order_template_id = order_id # Store the order template ID
         customer.subscription_active = True
         customer.subscription_status = "ACTIVE"
-        customer.selected_addons = request.addons
+        customer.selected_addons = request.addons # Store ALL selected addons for reference
         db.commit()
         
         # Log payment locally
