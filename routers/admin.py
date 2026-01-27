@@ -607,7 +607,7 @@ def admin_change_subscription(
             
         # Calculate total for one-time items
         ot_subtotal = sum(a.price for a in one_time_addons)
-        ot_processing_fee = (ot_subtotal * 0.026) + 0.10
+        ot_processing_fee = (ot_subtotal * 0.040) + 0.10
         ot_final_amount = ot_subtotal + ot_processing_fee
         
         # Charge the card on file

@@ -573,6 +573,8 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
                 recurring_addon_ids.append(addon.variation_id)
 
     # 2. Process One-Time Addons Immediate Charge
+    from models.subscription import OneTimeOrder, Payment
+    
     if one_time_addons:
         # Calculate total for one-time items
         ot_subtotal = sum(a.price for a in one_time_addons)
@@ -582,7 +584,6 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
         logger.info(f"Charging one-time addons: ${ot_final_amount} ({len(one_time_addons)} items)")
         
         from utils.square_client import process_payment
-        from models.subscription import OneTimeOrder, Payment
         
         # Charge the card on file
         pay_res = process_payment(
