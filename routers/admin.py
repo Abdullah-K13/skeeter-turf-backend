@@ -577,15 +577,83 @@ def admin_change_subscription(
     from utils.subscription_logic import prepare_subscription_order_items
     from utils.square_client import create_order, update_subscription, create_subscription, get_catalog_prices
     
-    # Check if a card is available if they don't have a subscription or we need to activate one
-    from models.subscription import PaymentMethod
-    default_card = db.query(PaymentMethod).filter(
-        PaymentMethod.customer_id == customer.id,
-        PaymentMethod.is_default == True
-    ).first()
+    # 1. Fetch and Filter Addons
+    recurring_addon_ids = []
+    one_time_addons = []
+    
+    from models.subscription import ItemVariation, OneTimeOrder, Payment
+    
+    if request.addons:
+        db_addons = db.query(ItemVariation).filter(
+            ItemVariation.variation_id.in_(request.addons)
+        ).all()
+        
+        for addon in db_addons:
+            if addon.billing_type == "ONE_TIME":
+                one_time_addons.append(addon)
+            else:
+                recurring_addon_ids.append(addon.variation_id)
 
-    # 1. Prepare Order Template (Line Items)
-    order_data = prepare_subscription_order_items(db, request.new_plan_variation_id, request.addons)
+    # 2. Process One-Time Addons Immediate Charge
+    if one_time_addons:
+        # Check for default card
+        default_card = db.query(PaymentMethod).filter(
+            PaymentMethod.customer_id == customer.id,
+            PaymentMethod.is_default == True
+        ).first()
+        
+        if not default_card:
+            raise HTTPException(status_code=400, detail="Customer has no default payment method. Please add a card to process one-time addons.")
+            
+        # Calculate total for one-time items
+        ot_subtotal = sum(a.price for a in one_time_addons)
+        ot_processing_fee = (ot_subtotal * 0.026) + 0.10
+        ot_final_amount = ot_subtotal + ot_processing_fee
+        
+        # Charge the card on file
+        from utils.square_client import process_payment
+        
+        pay_res = process_payment(
+            source_id=default_card.square_card_id,
+            amount=ot_final_amount,
+            idempotency_key=f"admin-ot-{uuid.uuid4().hex}",
+            customer_id=customer.square_customer_id,
+            location_id=os.getenv("SQUARE_LOCATION_ID")
+        )
+        
+        if "errors" in pay_res:
+             err_detail = pay_res['errors'][0].get('detail', 'One-time payment failed')
+             raise HTTPException(status_code=400, detail=f"Failed to charge one-time addons: {err_detail}")
+             
+        # Record OneTimeOrder
+        new_order = OneTimeOrder(
+            customer_id=customer.id,
+            customer_details={
+                "email": customer.email,
+                "name": f"{customer.first_name} {customer.last_name}"
+            },
+            plan_name="Admin Added One-Time Addons",
+            plan_cost=ot_subtotal,
+            addons=[{"name": a.name, "price": a.price, "billing_type": a.billing_type} for a in one_time_addons],
+            total_cost=ot_final_amount,
+            square_payment_id=pay_res.get("payment", {}).get("id"),
+            payment_status="COMPLETED"
+        )
+        db.add(new_order)
+        
+        # Record Payment
+        new_payment = Payment(
+            customer_id=customer.id,
+            amount=ot_final_amount,
+            status="PAID",
+            square_transaction_id=pay_res.get("payment", {}).get("id")
+        )
+        db.add(new_payment)
+        db.commit()
+
+    # 3. Prepare Subscription Order Template (Recurring items only)
+    # We use ONLY recurring_addon_ids here
+    order_data = prepare_subscription_order_items(db, request.new_plan_variation_id, recurring_addon_ids)
     if not order_data.get("success"):
         raise HTTPException(status_code=400, detail=order_data.get("error"))
 
@@ -600,7 +668,7 @@ def admin_change_subscription(
     
     order_id = order_res.get("order_id")
 
-    # 2. Update or Create Subscription
+    # 4. Update or Create Subscription
     if customer.square_subscription_id:
         # EXISTING SUBSCRIPTION -> UPDATE
         res = update_subscription(
@@ -611,6 +679,12 @@ def admin_change_subscription(
         action = "CHANGE_PLAN"
     else:
         # NO SUBSCRIPTION -> CREATE (One-time to Subscription conversion)
+        # Check for card again if not checked above
+        default_card = db.query(PaymentMethod).filter(
+            PaymentMethod.customer_id == customer.id,
+            PaymentMethod.is_default == True
+        ).first()
+
         if not default_card:
             raise HTTPException(status_code=400, detail="No saved payment method found for this customer. Please add a card first.")
 
@@ -627,12 +701,16 @@ def admin_change_subscription(
     if not res.get("success"):
         raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
         
-    # 3. Update local DB
+    # 5. Update local DB
     plan = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_variation_id == request.new_plan_variation_id).first()
     if plan:
         customer.plan_id = str(plan.id)
         customer.plan_variation_id = request.new_plan_variation_id
-        customer.selected_addons = request.addons
+        customer.selected_addons = request.addons # We store ALL addons selected (even if one-time processed) for record, or maybe just recurring?
+        # Typically selected_addons in customer profile implies ACTIVE recurring addons.
+        # One-time addons should probably NOT be stored in selected_addons permanently if they are just one-time.
+        # Let's ONLY store recurring_addon_ids in the customer profile so they show up as active.
+        customer.selected_addons = recurring_addon_ids 
         customer.order_template_id = order_id
         
         if not customer.square_subscription_id:
