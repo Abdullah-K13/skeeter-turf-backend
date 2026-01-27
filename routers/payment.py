@@ -576,7 +576,7 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
     if one_time_addons:
         # Calculate total for one-time items
         ot_subtotal = sum(a.price for a in one_time_addons)
-        ot_processing_fee = (ot_subtotal * 0.026) + 0.10
+        ot_processing_fee = (ot_subtotal * 0.040) + 0.10
         ot_final_amount = ot_subtotal + ot_processing_fee
         
         logger.info(f"Charging one-time addons: ${ot_final_amount} ({len(one_time_addons)} items)")

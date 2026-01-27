@@ -68,7 +68,7 @@ def prepare_subscription_order_items(db: Session, plan_variation_id: str, addons
                     subtotal += (addon_db.price or 0.0)
     
     # 5. Add Processing Fee
-    processing_fee = round((subtotal * 0.026) + 0.10, 2)
+    processing_fee = round((subtotal * 0.040) + 0.10, 2)
     processing_fee_cents = int(processing_fee * 100)
     
     fee_item = db.query(ItemVariation).filter(ItemVariation.item_type == "FEE").first()
