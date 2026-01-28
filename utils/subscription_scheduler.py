@@ -215,11 +215,11 @@ def calculate_subscription_start_date(plan_name: str, signup_date: datetime = No
         
         if not schedule:
             # No schedule found, start immediately
-            return signup_date.strftime("%Y-%m-%d")
+            return None
         
         if schedule.is_month_active(current_month):
             # Current month is active, start immediately
-            return signup_date.strftime("%Y-%m-%d")
+            return None
         
         # Find the next active month
         next_month = get_next_active_month(schedule, current_month)
