@@ -364,9 +364,7 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
             raise HTTPException(status_code=400, detail=f"Square customer creation failed: {res.get('error')}")
         sq_customer_id = res.get("customer_id")
         
-        if customer:
-            customer.square_customer_id = sq_customer_id
-            db.commit()
+        # KEY CHANGE: Do NOT commit to DB yet. We wait for card success.
 
     # Attach Card
     print(f"DEBUG: Attaching card source_id: {request.source_id} to customer: {sq_customer_id}")
@@ -377,10 +375,16 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
     print(f"DEBUG: create_card_on_file result: {card_res}")
     
     if not card_res.get("success"):
+        # If card fails, we do NOT save the sq_customer_id to local DB.
+        # This leaves the user in "incomplete" state so they can retry signup or retry card.
         raise HTTPException(status_code=400, detail=f"Card validation failed: {card_res.get('error')}")
 
-    # Save Payment Method to DB if customer exists
+    # Save Payment Method AND Square ID to DB if customer exists
     if customer:
+        # NOW we save the Square ID because the card is valid
+        if not customer.square_customer_id:
+             customer.square_customer_id = sq_customer_id
+
         new_method = PaymentMethod(
             customer_id=customer.id,
             square_card_id=card_res.get("card_id"),

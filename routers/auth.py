@@ -30,27 +30,47 @@ class LoginRequest(BaseModel):
 def signup(request: SignUpRequest, db: Session = Depends(get_db)):
     # Check if user already exists
     existing_user = db.query(Customer).filter(Customer.email == request.email).first()
+    
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    new_customer = Customer(
-        first_name=request.firstName,
-        last_name=request.lastName,
-        email=request.email,
-        phone_number=request.phone,
-        password_hash=hash_password(request.password),
-        address=request.address,
-        city=request.city,
-        zip_code=request.zip,
-        plan_id=request.plan,
-        plan_variation_id=request.planVariationId,
-        skeeterman_number=request.skeetermanNumber,
-        selected_addons=request.addons
-    )
-    
-    db.add(new_customer)
-    db.commit()
-    db.refresh(new_customer)
+        # Check if they are fully registered (have Square ID)
+        if existing_user.square_customer_id:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # If no Square ID, they failed previous signup. Update their details.
+        existing_user.first_name = request.firstName
+        existing_user.last_name = request.lastName
+        existing_user.phone_number = request.phone
+        existing_user.password_hash = hash_password(request.password)
+        existing_user.address = request.address
+        existing_user.city = request.city
+        existing_user.zip_code = request.zip
+        existing_user.plan_id = request.plan
+        existing_user.plan_variation_id = request.planVariationId
+        existing_user.skeeterman_number = request.skeetermanNumber
+        existing_user.selected_addons = request.addons
+        
+        db.commit()
+        db.refresh(existing_user)
+        new_customer = existing_user
+    else:
+        new_customer = Customer(
+            first_name=request.firstName,
+            last_name=request.lastName,
+            email=request.email,
+            phone_number=request.phone,
+            password_hash=hash_password(request.password),
+            address=request.address,
+            city=request.city,
+            zip_code=request.zip,
+            plan_id=request.plan,
+            plan_variation_id=request.planVariationId,
+            skeeterman_number=request.skeetermanNumber,
+            selected_addons=request.addons
+        )
+        
+        db.add(new_customer)
+        db.commit()
+        db.refresh(new_customer)
     
     # Generate token so they are logged in after signup
     access_token = create_access_token(data={"sub": new_customer.email, "id": new_customer.id})
