@@ -798,6 +798,179 @@ def sync_customer_invoices(
     db.commit()
     return {"success": True, "synced": synced_count}
 
+@router.post("/resume-subscription/{customer_id}")
+def resume_customer_subscription(
+    customer_id: int,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    customer = db.query(Customer).get(customer_id)
+    if not customer or not customer.square_subscription_id:
+        raise HTTPException(status_code=404, detail="Active subscription not found")
+
+    from utils.square_client import resume_subscription
+    res = resume_subscription(customer.square_subscription_id)
+
+    if "errors" in res:
+        raise HTTPException(status_code=400, detail=str(res["errors"]))
+
+    customer.subscription_status = "ACTIVE"
+    customer.subscription_active = True
+    
+    log = SubscriptionLog(
+        customer_id=customer.id,
+        subscription_id=customer.square_subscription_id,
+        action="RESUME_ADMIN",
+        effective_date=date.today()
+    )
+    db.add(log)
+    db.commit()
+    
+    return {"success": True, "message": "Subscription resumed"}
+
+@router.post("/pause-subscription/{customer_id}")
+def pause_customer_subscription(
+    customer_id: int,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    customer = db.query(Customer).get(customer_id)
+    if not customer or not customer.square_subscription_id:
+        raise HTTPException(status_code=404, detail="Active subscription not found")
+
+    from utils.square_client import pause_subscription
+    res = pause_subscription(customer.square_subscription_id)
+
+    if "errors" in res:
+        raise HTTPException(status_code=400, detail=str(res["errors"]))
+
+    customer.subscription_status = "PAUSED"
+    # We might keep subscription_active = True technically, as it's not canceled.
+    
+    log = SubscriptionLog(
+        customer_id=customer.id,
+        subscription_id=customer.square_subscription_id,
+        action="PAUSE_ADMIN",
+        effective_date=date.today()
+    )
+    db.add(log)
+    db.commit()
+    
+    return {"success": True, "message": "Subscription paused"}
+
+@router.post("/activate-subscription/{customer_id}")
+def activate_stored_subscription(
+    customer_id: int,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    customer = db.query(Customer).get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+        
+    if customer.subscription_active and customer.subscription_status == "ACTIVE":
+         raise HTTPException(status_code=400, detail="Customer is already active")
+
+    # Check for required data
+    if not customer.plan_variation_id:
+        raise HTTPException(status_code=400, detail="Customer has no plan selected. Please use Change Subscription.")
+        
+    if not customer.square_customer_id:
+        raise HTTPException(status_code=400, detail="Customer has no Square profile. Please add payment method first.")
+
+    # Find default card
+    default_card = db.query(PaymentMethod).filter(
+        PaymentMethod.customer_id == customer.id,
+        PaymentMethod.is_default == True
+    ).first()
+
+    if not default_card:
+        # Try to find any card
+        default_card = db.query(PaymentMethod).filter(
+            PaymentMethod.customer_id == customer.id
+        ).first()
+        
+    if not default_card:
+        raise HTTPException(status_code=400, detail="No payment method on file. Please add a card first.")
+
+    # Prepare logic similar to other activation
+    from utils.square_client import create_order, create_subscription
+    from utils.subscription_logic import prepare_subscription_order_items
+    
+    # 1. Prepare Order
+    # We use currently selected addons if they are recurring? 
+    # Or just use empty addons list and let admin add them later?
+    # Let's assume we want to reactivate what they had designated in selected_addons if possible
+    # But selected_addons might be stale. Best to activate base plan and let admin add addons.
+    # actually, if we use what is in `selected_addons` (list of IDs), we might be safer.
+    
+    # Let's try to use valid recurring addons from their profile
+    recurring_addon_ids = []
+    if customer.selected_addons:
+        from models.subscription import ItemVariation
+        # Validate they exist and are recurring
+        valid_addons = db.query(ItemVariation).filter(
+            ItemVariation.variation_id.in_(customer.selected_addons),
+            ItemVariation.billing_type != "ONE_TIME"
+        ).all()
+        recurring_addon_ids = [a.variation_id for a in valid_addons]
+
+    order_data = prepare_subscription_order_items(db, customer.plan_variation_id, recurring_addon_ids)
+    if not order_data.get("success"):
+        raise HTTPException(status_code=400, detail=order_data.get("error"))
+
+    location_id = os.getenv("SQUARE_LOCATION_ID")
+    order_res = create_order(
+        location_id=location_id,
+        line_items=order_data["line_items"],
+        idempotency_key=f"admin-reactiv-order-{uuid.uuid4().hex}"
+    )
+    
+    if not order_res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Order creation failed: {order_res.get('error')}")
+        
+    order_id = order_res.get("order_id")
+
+    # 2. Create Subscription
+    res = create_subscription(
+        customer_id=customer.square_customer_id,
+        location_id=location_id,
+        plan_variation_id=customer.plan_variation_id,
+        card_id=default_card.square_card_id,
+        order_template_id=order_id,
+        idempotency_key=f"admin-reactiv-sub-{uuid.uuid4().hex}"
+    )
+    
+    if not res.get("success"):
+        raise HTTPException(status_code=400, detail=f"Square Subscription failed: {res.get('error')}")
+        
+    # 3. Update Local
+    customer.square_subscription_id = res.get("subscription_id")
+    customer.subscription_active = True
+    customer.subscription_status = "ACTIVE"
+    customer.order_template_id = order_id
+    
+    # Log
+    log = SubscriptionLog(
+        customer_id=customer.id,
+        subscription_id=customer.square_subscription_id,
+        action="ACTIVATE_ADMIN",
+        effective_date=date.today()
+    )
+    db.add(log)
+    db.commit()
+
+    return {"success": True, "message": "Subscription activated instantly"}
+
 @router.get("/invoice-pdf/{square_invoice_id}")
 def download_invoice_pdf(
     square_invoice_id: str,
