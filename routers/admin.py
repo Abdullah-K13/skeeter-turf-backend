@@ -81,55 +81,87 @@ def get_admin_analytics(
     if current_user.get("role") != "admin":
         raise HTTPException(status_code=403, detail="Forbidden")
     
-    # 1. Active Subscribers & MRR & Plan Distribution via Square API
-    from utils.square_client import search_subscriptions, get_catalog_prices
-    from models.subscription import SubscriptionPlan
+    # Imports for local calculation
+    from models.subscription import SubscriptionPlan, ItemVariation
+    from models.user import Customer
     
-    # Fetch local plans to filter out ProTown or other unrelated plans
-    local_plans = db.query(SubscriptionPlan).all()
-    local_variation_ids = {p.plan_variation_id for p in local_plans if p.plan_variation_id}
-    variation_name_map = {p.plan_variation_id: p.plan_name for p in local_plans if p.plan_variation_id}
+    # 1. Fetch Necessary Data
+    # Get all potential recurring plans
+    all_plans = db.query(SubscriptionPlan).all()
+    # Map variation_id -> Plan Object
+    plan_map = {p.plan_variation_id: p for p in all_plans if p.plan_variation_id}
+    # Map plan_id (str(id)) -> Plan Object (fallback if variation_id missing on customer but plan_id present)
+    plan_id_map = {str(p.id): p for p in all_plans}
 
-    # Fetch all active subscriptions from Square
-    subs_res = search_subscriptions(status="ACTIVE")
-    all_active_subs = subs_res.get("subscriptions", [])
+    # Get all addons to calculate Addon Revenue
+    all_addons = db.query(ItemVariation).filter(ItemVariation.item_type == "ADDON").all()
+    addon_map = {a.variation_id: a for a in all_addons}
+
+    # active_subscribers_query
+    active_customers = db.query(Customer).filter(
+        Customer.subscription_active == True,
+        Customer.subscription_status == "ACTIVE" 
+    ).all()
+
+    active_sub_count = len(active_customers)
     
-    # Filter to only contain subscriptions for our local plans
-    active_subs = [sub for sub in all_active_subs if sub.get("plan_variation_id") in local_variation_ids]
-    active_sub_count = len(active_subs)
-    
-    # Calculate MRR and Plan counts
+    # 2. Calculate MRR & Distributions
     mrr = 0.0
-    plan_counts = {p.plan_name: 0 for p in local_plans} # Initialize with 0 for all local plans
-    plan_revenue = {p.plan_name: 0.0 for p in local_plans}
+    plan_counts = {p.plan_name: 0 for p in all_plans}
+    plan_revenue = {p.plan_name: 0.0 for p in all_plans}
     
-    # Get all plan variation IDs to fetch prices
-    variation_ids = set()
-    for sub in active_subs:
-        if sub.get("plan_variation_id"):
-            variation_ids.add(sub.get("plan_variation_id"))
+    # Initialize "Unknown" or "Custom" if needed, but let's stick to defined plans primarily
+    
+    for customer in active_customers:
+        # Determine Base Plan Cost
+        customer_plan_cost = 0.0
+        plan_name = "Unknown Plan"
+        
+        # Try finding plan by variation ID first
+        if customer.plan_variation_id and customer.plan_variation_id in plan_map:
+            plan = plan_map[customer.plan_variation_id]
+            customer_plan_cost = plan.plan_cost
+            plan_name = plan.plan_name
+        # Fallback to plan_id look up
+        elif customer.plan_id and customer.plan_id in plan_id_map:
+            plan = plan_id_map[customer.plan_id]
+            customer_plan_cost = plan.plan_cost
+            plan_name = plan.plan_name
             
-    # Fetch prices from catalog
-    prices_map = get_catalog_prices(list(variation_ids))
-
-    for sub in active_subs:
-        var_id = sub.get("plan_variation_id")
+        # Determine Addons Cost
+        addons_cost = 0.0
+        if customer.selected_addons:
+            for addon_id in customer.selected_addons:
+                if addon_id in addon_map:
+                    addons_cost += addon_map[addon_id].price
         
-        price = prices_map.get(var_id, 0.0)
-        p_name = variation_name_map.get(var_id, "Unknown Plan")
+        total_customer_revenue = customer_plan_cost + addons_cost
         
-        mrr += price
-        plan_counts[p_name] = plan_counts.get(p_name, 0) + 1
-        plan_revenue[p_name] = plan_revenue.get(p_name, 0) + price
+        # Aggregate
+        mrr += total_customer_revenue
+        
+        # Add to distributions (create key if not exists, though we init'd above)
+        if plan_name not in plan_counts:
+            plan_counts[plan_name] = 0
+            plan_revenue[plan_name] = 0.0
+            
+        plan_counts[plan_name] += 1
+        plan_revenue[plan_name] += total_customer_revenue
 
     # Format Plan Distribution & Revenue Distribution
-    colors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"]
+    colors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#6366f1", "#ec4899"]
     plan_dist = []
     rev_dist = []
     
+    # Sort by value or name? Let's sort by name for consistency
     sorted_plans = sorted(plan_counts.keys())
     
     for i, name in enumerate(sorted_plans):
+        # Skip if 0? Maybe keep to show 0 if it's a valid plan
+        # Let's skip 0 to keep chart clean
+        if plan_counts[name] == 0:
+            continue
+
         color = colors[i % len(colors)]
         
         plan_dist.append(PlanDistributionItem(
@@ -144,10 +176,10 @@ def get_admin_analytics(
             color=color
         ))
         
-    # 2. Total Customers (Local DB)
+    # 3. Total Customers (Local DB - Existing Logic)
     total_customers = db.query(Customer).count()
     
-    # 3. Growth History (Last 30 days - Local DB)
+    # 4. Growth History (Last 30 days - Local DB - Existing Logic)
     thirty_days_ago = datetime.now() - timedelta(days=30)
     
     daily_growth = db.query(
@@ -174,7 +206,7 @@ def get_admin_analytics(
 
     # Debug logs
     print(f"DEBUG: Active Subs (Local): {active_sub_count}")
-    print(f"DEBUG: MRR: {mrr}")
+    print(f"DEBUG: MRR (Local): {mrr}")
 
     return AnalyticsResponse(
         mrr=mrr,
