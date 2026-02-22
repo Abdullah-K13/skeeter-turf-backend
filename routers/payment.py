@@ -523,6 +523,11 @@ def save_card(request: SaveCardRequest, user: Customer = Depends(get_db_user), d
 @router.delete("/remove-card/{card_id}")
 def remove_card(card_id: str, user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
     """Disable a card in Square and remove from local DB."""
+    # Block customers from removing cards
+    raise HTTPException(
+        status_code=403,
+        detail="Card removal is not allowed. Please contact admin or call 910-998-2281."
+    )
     # 1. Disable in Square
     sq_res = disable_card(card_id)
     
@@ -752,6 +757,11 @@ def get_my_subs(user: Customer = Depends(get_db_user), db: Session = Depends(get
 
 @router.post("/pause-subscription")
 def pause_sub(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    # Block customers from pausing subscriptions
+    raise HTTPException(
+        status_code=403,
+        detail="Subscription pause is not allowed. Please contact admin or call 910-998-2281."
+    )
     if not user.square_subscription_id:
         raise HTTPException(status_code=404, detail="No active subscription found")
     
@@ -792,6 +802,11 @@ def resume_sub(user: Customer = Depends(get_db_user), db: Session = Depends(get_
 
 @router.post("/cancel-subscription")
 def cancel_sub(user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    # Block customers from cancelling subscriptions
+    raise HTTPException(
+        status_code=403,
+        detail="Subscription cancellation is not allowed. Please contact admin or call 910-998-2281."
+    )
     if not user.square_subscription_id:
         raise HTTPException(status_code=404, detail="No active subscription found")
     
@@ -813,6 +828,11 @@ def cancel_sub(user: Customer = Depends(get_db_user), db: Session = Depends(get_
 
 @router.post("/change-plan")
 def change_plan(request: ChangePlanRequest, user: Customer = Depends(get_db_user), db: Session = Depends(get_db)):
+    # Block customers from changing plans
+    raise HTTPException(
+        status_code=403,
+        detail="Plan changes are not allowed. Please contact admin or call 910-998-2281."
+    )
     if not user.square_subscription_id:
         raise HTTPException(status_code=404, detail="No active subscription found")
     
