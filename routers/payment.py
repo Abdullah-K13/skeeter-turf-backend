@@ -690,6 +690,12 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
         customer.subscription_active = True
         customer.subscription_status = "ACTIVE"
         customer.selected_addons = request.addons # Store ALL selected addons for reference
+        
+        # Explicitly assign their plan in case they migrated from one-time or had an error during initial signup
+        if plan:
+            customer.plan_id = str(plan.id)
+            customer.plan_variation_id = plan.plan_variation_id
+
         db.commit()
         
         # Log payment locally
