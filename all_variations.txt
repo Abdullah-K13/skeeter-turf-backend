@@ -1,0 +1,5 @@
+Plan: Pro Town Network - dont use | Variation: Pro Town Network - dont use | Cadence: MONTHLY | ID: VQOX4UWFAA6PRBMTQPU2VJWC
+Plan: Pro Town Network Monthly | Variation: Pro Town Network Monthly | Cadence: MONTHLY | ID: LYIAHPLNYRD3AX5FPCDDYDV3
+Plan: Pro Town Network Yearly | Variation: Pro Town Network Yearly | Cadence: ANNUAL | ID: VGMYZYBSVKPM3CJWYK35FS7N
+Plan: ProTown Testing | Variation: ProTown Testing | Cadence: WEEKLY | ID: JDCZJQKUQOYZQI73XOMDOH3H
+Plan: ProTown Testing Fixed | Variation: Weekly Fixed | Cadence: WEEKLY | ID: BNWSV4WTDY6ZAPWXYEOFL3VU

@@ -1,0 +1,38 @@
+Customer:   | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 64fc9d9d-4a0c-4d78-9995-a70764f1108f
+Customer:   | Cadence: MONTHLY | Status: ACTIVE | Sub ID: cfdd414b-423a-4a08-9c42-64a4ca3474a1
+Customer: Chip Patton | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 16e6d6cf-de2e-49b9-915e-2ae79bdbeba6
+Customer: Clayton Williamson | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 1d820ff3-8eb3-4d83-b82e-4c22b5fc2dd9
+Customer: Ian Phillips | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 8f6a75c8-b7c9-4e62-bac6-d7840166fa43
+Customer: Donna Agnew | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 7c456309-7b23-4680-8d8b-e5b8b67bc48d
+Customer: Lynda Jones | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 6b483f1f-166b-406b-85cd-1b5bce29bec0
+Customer: Cary brownley | Cadence: MONTHLY | Status: ACTIVE | Sub ID: dc85c038-a39c-42b1-96ba-4006a673466e
+Customer: Diane Dworsky | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 155c2966-fd1d-498d-8437-d9d2d58780c5
+Customer:   | Cadence: WEEKLY | Status: CANCELED | Sub ID: 54e9ae17-37fd-4401-804a-d6843230cffa
+Customer:   | Cadence: WEEKLY | Status: CANCELED | Sub ID: 7d682a3a-4c79-47f9-b577-c528967f1574
+Customer:   | Cadence: WEEKLY | Status: CANCELED | Sub ID: 6b26ca18-d489-41a5-aeb8-0d681c34d162
+Customer: Addon  Mathews | Cadence: MONTHLY | Status: CANCELED | Sub ID: c5d3bd60-ee59-4d1c-9ce8-4c50c5920e5e
+Customer: Mark Castle | Cadence: WEEKLY | Status: CANCELED | Sub ID: 697eb5da-b9d2-4101-9798-95a9f6dc8319
+Customer:   | Cadence: MONTHLY | Status: CANCELED | Sub ID: 5c852912-4403-4e01-92a6-343a9ccbf56f
+Customer:   | Cadence: WEEKLY | Status: CANCELED | Sub ID: 8e5bcc1e-c77a-4761-a276-e884b51b466d
+Customer: Steve Sullivan | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 50ac7045-a596-4530-af25-2fd2bf729a20
+Customer: Lance Medric | Cadence: MONTHLY | Status: ACTIVE | Sub ID: bc295b54-101a-4f0e-8d28-e28e1c6a3f2a
+Customer: Jennifer Marano | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 4fe42f19-3ff3-4b86-9e6f-9bd39c1605b5
+Customer: Clare Kinlaw | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 76dd2db7-b576-4c83-8502-64b95f8af5c0
+Customer: Chip Patton | Cadence: MONTHLY | Status: ACTIVE | Sub ID: a3fbf4a9-a0e0-4f39-b3b4-91da9e583d4c
+Customer: Debbie McQuery | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 96ec96ac-a63a-425e-b548-765ae7ad4d4f
+Customer: Lynda Jones | Cadence: MONTHLY | Status: ACTIVE | Sub ID: a547e6b2-6ba5-4d15-8b06-67af689bf545
+Customer: Mary Renquist | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 162f6b36-6b94-402d-bc32-182f89af8887
+Customer: janyne hornung | Cadence: MONTHLY | Status: ACTIVE | Sub ID: d5c79421-51f7-40b7-bc96-f1f495688766
+Customer: MARY GLENN | Cadence: MONTHLY | Status: ACTIVE | Sub ID: adc83db6-1c98-4dd3-961f-d61beaafc52e
+Customer: Richard Anthony | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 8711726a-dc55-45ce-9c94-60afc140b369
+Customer: Brian Goff | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 01343502-75d8-4e5e-a277-9e58c39a5ec0
+Customer: Todd Zima | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 622148ea-6964-4189-8f8b-a7e4abe9c738
+Customer:   | Cadence: MONTHLY | Status: CANCELED | Sub ID: 2991120f-34d8-4f3e-92d9-609d4102523e
+Customer: Steven Morgan | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 25e01748-a9f3-4ab5-a7f0-4dbed7bf966e
+Customer: alice benjey | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 3d544db0-8202-4516-821f-a80178134dd3
+Customer: Millie Griffin | Cadence: MONTHLY | Status: ACTIVE | Sub ID: 90a0fbd3-2417-43cc-957b-16cda5e80ae1
+Customer: Jennifer Caling | Cadence: MONTHLY | Status: ACTIVE | Sub ID: aa5b9d23-97bb-42eb-b059-b255b32ac032
+Customer: Crystal Baker | Cadence: WEEKLY | Status: ACTIVE | Sub ID: ab793446-e780-47f6-af95-ebb7fc5bd3a9
+Customer: Heather Sandusky | Cadence: MONTHLY | Status: ACTIVE | Sub ID: a7dce5d6-35de-463d-8649-de7c898e346c
+Customer: Brian Keigher | Cadence: WEEKLY | Status: ACTIVE | Sub ID: 41c0aa4a-ff1e-4808-b053-a6211047b518
+Customer: Christa Fulenwider | Cadence: WEEKLY | Status: ACTIVE | Sub ID: 59385a8d-ae42-445b-b67c-1fd7877a38f5

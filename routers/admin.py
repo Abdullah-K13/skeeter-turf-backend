@@ -36,6 +36,7 @@ class CustomerListItem(BaseModel):
     selected_addons: Optional[List[str]] = None
     plan_variation_id: Optional[str] = None
     addons_list: Optional[List[dict]] = None
+    planType: str
 
 
 class PlanDistributionItem(BaseModel):
@@ -262,30 +263,39 @@ def list_customers(
         plan_display = "No Plan"
         total_monthly_amount = 0.0
         details_addons = []
+        plan_type = "recurring"
 
         # 1. Base Plan Logic
         try:
-            if c.plan_id == "one-time":
+            if not c.plan_id:
+                plan_display = "No Plan"
+                plan_type = "none"
+            elif c.plan_id == "one-time":
                 # Check for the latest one-time order to distinguish "One-Time" vs "Custom Service"
                 latest_order = db.query(OneTimeOrder).filter(OneTimeOrder.customer_id == c.id).order_by(OneTimeOrder.created_at.desc()).first()
                 if latest_order:
                      if latest_order.plan_name == "Custom Service":
                          plan_display = "Custom Service"
+                         plan_type = "custom"
                      else:
                          plan_display = latest_order.plan_name or "One-Time Service"
+                         plan_type = "one-time"
+                     total_monthly_amount = latest_order.total_cost or 0.0
                 else:
                     plan_display = "One-Time Service"
-                
-                total_monthly_amount = 0.0 
+                    plan_type = "one-time"
+                    total_monthly_amount = 0.0
             else:
                 pid = int(c.plan_id) if c.plan_id else None
                 if pid and pid in all_plans:
                     base_plan = all_plans[pid]
                     plan_display = base_plan.plan_name
                     total_monthly_amount += base_plan.plan_cost
+                    plan_type = "recurring"
                 elif c.plan_id:
                      # Fallback if plan ID exists but not in DB (maybe deleted local plan)
                      plan_display = "Unknown Plan"
+                     plan_type = "none"
         except (ValueError, TypeError):
             pass
 
@@ -326,7 +336,8 @@ def list_customers(
             skeeterman_number=c.skeeterman_number or "",
             selected_addons=c.selected_addons,
             plan_variation_id=c.plan_variation_id,
-            addons_list=details_addons
+            addons_list=details_addons,
+            planType=plan_type
         ))
     
     return result

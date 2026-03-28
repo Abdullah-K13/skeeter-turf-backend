@@ -1,0 +1,3173 @@
+[
+  {
+    "var_id": "VQOX4UWFAA6PRBMTQPU2VJWC",
+    "var_name": "Pro Town Network - dont use",
+    "plan_id": "XYQP3LX33LB2DFIGT46GQDWQ",
+    "plan_name": "Pro Town Network - dont use",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LYIAHPLNYRD3AX5FPCDDYDV3",
+    "var_name": "Pro Town Network Monthly",
+    "plan_id": "D3B2LOI6VSAH3DMYD6GLPYV6",
+    "plan_name": "Pro Town Network Monthly",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VGMYZYBSVKPM3CJWYK35FS7N",
+    "var_name": "Pro Town Network Yearly",
+    "plan_id": "AXNTHZYDCKVCL6NXGXF3CLVY",
+    "plan_name": "Pro Town Network Yearly",
+    "cadence": "ANNUAL"
+  },
+  {
+    "var_id": "JDCZJQKUQOYZQI73XOMDOH3H",
+    "var_name": "ProTown Testing",
+    "plan_id": "ED2EIFCVYS2FL2J63R3LDTTQ",
+    "plan_name": "ProTown Testing",
+    "cadence": "WEEKLY"
+  },
+  {
+    "var_id": "BNWSV4WTDY6ZAPWXYEOFL3VU",
+    "var_name": "Weekly Fixed",
+    "plan_id": "RNYISNS7J2GDL3YDVK5BNH67",
+    "plan_name": "ProTown Testing Fixed",
+    "cadence": "WEEKLY"
+  },
+  {
+    "var_id": "22W4UTRGCXPAMJ435ASXIIXD",
+    "var_name": "Weekly \ufffd $25",
+    "plan_id": "3WKZE3GCVUQQAPO5UTEHGKJZ",
+    "plan_name": "ProTown Weekly",
+    "cadence": "WEEKLY"
+  },
+  {
+    "var_id": "O7BFOIMOILNPKHFDADXOBIGP",
+    "var_name": "ProTown Monthly",
+    "plan_id": "YH3E6TAPK7KGOD6UXCOUXQGF",
+    "plan_name": "ProTown Monthly",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "P556DCVA5JKDZEDAXUNTWMYK",
+    "var_name": "Yearly \ufffd $1200",
+    "plan_id": "RW576VFONTV534SRNGC7CJEC",
+    "plan_name": "ProTown Yearly",
+    "cadence": "ANNUAL"
+  },
+  {
+    "var_id": "53ABOOLFZ2RXVLQB4UWNED3Y",
+    "var_name": "Weekly Fixed",
+    "plan_id": "2BZDI2XMWGLX66ADUOJ762MP",
+    "plan_name": "ProTown Testing To Change plans",
+    "cadence": "WEEKLY"
+  },
+  {
+    "var_id": "BBE4APCVVYFAEI4UDJX7NPBJ",
+    "var_name": "Skeeter-Monthly \ufffd $80",
+    "plan_id": "DVBJVOUEX2DS5LLF6ZESGECS",
+    "plan_name": "Skeeter Monthly-80 dollars",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CBEICYMMO2HRCJN4X5GH7RBF",
+    "var_name": "Skeeter-Monthly \ufffd $100",
+    "plan_id": "PFK5WJFRUU2LUIETZYYEICTE",
+    "plan_name": "Skeeter Monthly-100 dollars",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6JASEXSQRDN24HQLBGXM662N",
+    "var_name": "Skeeter-Monthly \ufffd $150",
+    "plan_id": "GGQJ6FIIIMV3AL7WPTDYH74F",
+    "plan_name": "Skeeter Monthly-150 dollars",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "63LWXJAL3SVW2I77A7QARXQ2",
+    "var_name": "Skeeter Base Monthly $1 for addons testing",
+    "plan_id": "AI5DYX2XEPJMV4FBXNPFGGXO",
+    "plan_name": "Skeeter Test Base Plan for Addons",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "L5YOWXLX67F62VC4457XN7Q4",
+    "var_name": "Adams Property Monthly $600",
+    "plan_id": "ZC4LR23KH3N6S7V2CVDUPUNR",
+    "plan_name": "Adams Property Monthly 600",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7CQMVKRESD3QXGA54VEWXFOC",
+    "var_name": "Adams Property Monthly $650",
+    "plan_id": "XX557F2JMULSH26EMEJ44B5P",
+    "plan_name": "Adams Property Monthly 650",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EDZ5T3OOULZEQKR6SM3RNZYA",
+    "var_name": "Adams Property Monthly $700",
+    "plan_id": "DYWYWABWZZSOQUECMSA5TIRX",
+    "plan_name": "Adams Property Monthly 700",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GPEXUIZBINZHTP22JVQ5VKY5",
+    "var_name": "Adams Property Monthly $750",
+    "plan_id": "J762CPIZQIZ6SQE2MZD5VWKY",
+    "plan_name": "Adams Property Monthly 750",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GJJKCOZ3K6ZDSWZG67X2XDCJ",
+    "var_name": "Adams Property Monthly $800",
+    "plan_id": "YX3PJSC3SYCNCAKFKI3YJJ3I",
+    "plan_name": "Adams Property Monthly 800",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZS4RINBH342PVMSMLDHCRHOE",
+    "var_name": "Adams Property Monthly $850",
+    "plan_id": "X76HMPBNRXGX4VXSDOBCMIEU",
+    "plan_name": "Adams Property Monthly 850",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GFA4II7PKZO4ZA2XAV4ORSND",
+    "var_name": "Adams Property Monthly $900",
+    "plan_id": "BDGWU5X5JHHAIQL2AURQ62XJ",
+    "plan_name": "Adams Property Monthly 900",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZNPXSGWSAPCH6CRJC77ISGRB",
+    "var_name": "Adams Property Monthly $950",
+    "plan_id": "KZSTRLSN6IJDZMDZXFHOX7PS",
+    "plan_name": "Adams Property Monthly 950",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BP3RVB4OTRWKGUSP6NLXJ6QV",
+    "var_name": "Adams Property Monthly $1000",
+    "plan_id": "V7TRNINX6SZ6DDAWNQ72RLJS",
+    "plan_name": "Adams Property Monthly 1000",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "G2XKFQPS6WGQDV3F2ITSCRWQ",
+    "var_name": "Adams Property Monthly $1050",
+    "plan_id": "PKNI2F4VW72HKX2C34VUEEUP",
+    "plan_name": "Adams Property Monthly 1050",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "KZXM3IYAZGTI3OFCMJELAYHC",
+    "var_name": "Adams Property Monthly $1100",
+    "plan_id": "WYD4JO42XGJ7DN3HTAGZW453",
+    "plan_name": "Adams Property Monthly 1100",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RQFB72XFEYJN4QFKFSTRP7N3",
+    "var_name": "Adams Property Monthly $1150",
+    "plan_id": "IOBVGNLCBBF7Z2Z3M3VU4COC",
+    "plan_name": "Adams Property Monthly 1150",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PRVACGCJPIY3SXZ3NMNORXJ2",
+    "var_name": "Adams Property Monthly $1200",
+    "plan_id": "4A4BAV3UQLRHT7XE22ZN4XED",
+    "plan_name": "Adams Property Monthly 1200",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ISF6TMQBJTZTN4EGI7TOPBZU",
+    "var_name": "Adams Property Monthly $1250",
+    "plan_id": "FWICVBFXM2KZXNNW57HXRYCN",
+    "plan_name": "Adams Property Monthly 1250",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UAVUIWEY6DVQBHT67XZIWFGS",
+    "var_name": "Adams Property Monthly $1300",
+    "plan_id": "6QV3J6ADXZ65JQP2N6PGSRCI",
+    "plan_name": "Adams Property Monthly 1300",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6LS53P7G3DZBWMAHXCRIEA6B",
+    "var_name": "Adams Property Monthly $1350",
+    "plan_id": "NUWY44BH7HWJSBCEBPCEOPEB",
+    "plan_name": "Adams Property Monthly 1350",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "73DOXB3SW4RX2WZGKZMX55BF",
+    "var_name": "Adams Property Monthly $1400",
+    "plan_id": "HL2VY2YA6ITDARYD6KDWZIRU",
+    "plan_name": "Adams Property Monthly 1400",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EVATN6W4AYLUB4Z3VRN4YAQE",
+    "var_name": "Adams Property Monthly $1450",
+    "plan_id": "AMHIIA7YYLATCAJGYHY3TEBQ",
+    "plan_name": "Adams Property Monthly 1450",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RVQPAUETQCR7FCKU6EJAJKWU",
+    "var_name": "Adams Property Monthly $1500",
+    "plan_id": "EMU7SGUBDD6KK23VU6AXXPUF",
+    "plan_name": "Adams Property Monthly 1500",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YEOEU5CQ3RURFZYVFZSXJ7DI",
+    "var_name": "Adams Property Monthly $1550",
+    "plan_id": "MXT6WPVH74H4WNN3NNYITDUP",
+    "plan_name": "Adams Property Monthly 1550",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Y4RAAMPNX3RQLDZVBSQIVDDC",
+    "var_name": "Adams Property Monthly $1600",
+    "plan_id": "N6TPEDJAPTUJQ7UA7OBQWFVF",
+    "plan_name": "Adams Property Monthly 1600",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XMAQQRJ3SBPJPLBVJMKQXZ5K",
+    "var_name": "Adams Property Monthly $1650",
+    "plan_id": "OEINXZ3FFD24ZLFDGJL3OTSG",
+    "plan_name": "Adams Property Monthly 1650",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZZ3WQEHLFY4HV5PSBG2FLH2M",
+    "var_name": "Adams Property Monthly $1700",
+    "plan_id": "KK252ZQH26NROFWZP6XM6V37",
+    "plan_name": "Adams Property Monthly 1700",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NFWZV6NDMNSCT37EWO3RICXT",
+    "var_name": "Adams Property Monthly $1750",
+    "plan_id": "NVPFTV4EHH6GZIUDEECDZEKD",
+    "plan_name": "Adams Property Monthly 1750",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ONBOZ3I7SGTDSE62JBGZ337E",
+    "var_name": "Adams Property Monthly $1800",
+    "plan_id": "EPC2EN3SYFOJQGHAN6UKOK5Z",
+    "plan_name": "Adams Property Monthly 1800",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7U5YFYRDMEA5UNGR5CN2ZIBW",
+    "var_name": "Adams Property Monthly $1850",
+    "plan_id": "E5Z7OTYLQJNOGQEITUV7JEXP",
+    "plan_name": "Adams Property Monthly 1850",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HZCA6KK626JR6SBZNHKTJXLP",
+    "var_name": "Adams Property Monthly $1900",
+    "plan_id": "LAFINW6EMJHN5YC3CYZOD3US",
+    "plan_name": "Adams Property Monthly 1900",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NBBATK6NLCRJKZU6HZKIBAVV",
+    "var_name": "Adams Property Monthly $1950",
+    "plan_id": "2EPVDWMU6EKYA5IVFHTL6M63",
+    "plan_name": "Adams Property Monthly 1950",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "62C32I536BXJ5AANACPWMJER",
+    "var_name": "Adams Property Monthly $2000",
+    "plan_id": "XHCF424GHCLG25UUUCYEGDCJ",
+    "plan_name": "Adams Property Monthly 2000",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZKBOW5MYYRRAEDBLITIR6XWA",
+    "var_name": "adams monthly $60",
+    "plan_id": "NT3BXKJQQ3WMUDSRSFN67DSE",
+    "plan_name": "adams monthly 60",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FVZTDH4DHEUZ4MKZEMPQ7TH6",
+    "var_name": "Adams Monthly $65",
+    "plan_id": "PJ7FNI3CHAAADMBBMETWZC2C",
+    "plan_name": "Adams Monthly 65",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "S3VTG3CO2GTM42MXDPKM2JF6",
+    "var_name": "Adams Monthly $70",
+    "plan_id": "ABVJWODCWF75VWZWJ6J7CC2B",
+    "plan_name": "Adams Monthly 70",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WLVNCKAHCKP5KLNV7I7YNZEN",
+    "var_name": "Adams Monthly $75",
+    "plan_id": "ECFE2NQYZKN2YVBEL77IOMSJ",
+    "plan_name": "Adams Monthly 75",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "R2G3DNKNGDTOLQMKDLEHYC4Z",
+    "var_name": "Adams Monthly $80",
+    "plan_id": "UEZNPDAGG6KUU42LQGJHUEOS",
+    "plan_name": "Adams Monthly 80",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UTLZQQRTISF4TBFSUIZ3LVMT",
+    "var_name": "Adams Monthly $85",
+    "plan_id": "PQSV67JRL722DAGRBF42DZRL",
+    "plan_name": "Adams Monthly 85",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6BPHKLZYWDGO3CVYNBTVDILB",
+    "var_name": "Adams Monthly $90",
+    "plan_id": "NZ3TDONISHSJMLDAG7Y6HSMC",
+    "plan_name": "Adams Monthly 90",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5C3RN6TMJZQ5KMIZMK5DO5ZT",
+    "var_name": "Adams Monthly $95",
+    "plan_id": "AVHSBEMUW2EYU5VF6U7BSON6",
+    "plan_name": "Adams Monthly 95",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZQTQQQMA3PWDCOWUFNV4ISHX",
+    "var_name": "Adams Monthly $100",
+    "plan_id": "EBZDFX3EOXYGNQ5N6PPMQUQC",
+    "plan_name": "Adams Monthly 100",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "THPLGEL2CV37NLD22H2FV4FZ",
+    "var_name": "Adams Monthly $105",
+    "plan_id": "LMGHS7RQ5E5SOQIDPA2BZOTU",
+    "plan_name": "Adams Monthly 105",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QZJUVMXU7NJHJIUSNUMQ3I3R",
+    "var_name": "Adams Monthly $110",
+    "plan_id": "O7XCRQYEWNG6UDRJJQGPC7RW",
+    "plan_name": "Adams Monthly 110",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GWYLY3J5HJCVHC5642LTTAS5",
+    "var_name": "Adams Monthly $115",
+    "plan_id": "LWYM4OXTD72TVG5AWLX2ZTPV",
+    "plan_name": "Adams Monthly 115",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FUZTYRS5ZYWNUM7HJQVCEOI5",
+    "var_name": "Adams Monthly $120",
+    "plan_id": "3SK467CJILJ7OTMHNAPV6YWV",
+    "plan_name": "Adams Monthly 120",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RCI3AAKTYFFQJMGXHKUR4TD4",
+    "var_name": "Adams Monthly $125",
+    "plan_id": "KERU76BEY7CVJMCIMEPLI65B",
+    "plan_name": "Adams Monthly 125",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VC3XBAAJAOEOXM5KDEFMPQMI",
+    "var_name": "Adams Monthly $130",
+    "plan_id": "6FMKTG2ZWGO2SNSMP7IGGJI5",
+    "plan_name": "Adams Monthly 130",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZIA3KGIQXK2CMVTZUULKDYBI",
+    "var_name": "Adams Monthly $135",
+    "plan_id": "QBGZMDLKBGCBWBA5G4IN6GLN",
+    "plan_name": "Adams Monthly 135",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "P2U52WR4DHJKYBZLHEDQGS4U",
+    "var_name": "Adams Monthly $140",
+    "plan_id": "I7LHEGVS7MJWQ2KIGCD7CBAZ",
+    "plan_name": "Adams Monthly 140",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TY5ZUFZSDX4FUDSZDZBJG55U",
+    "var_name": "Adams Monthly $145",
+    "plan_id": "MYXZZLRX6Y7Z6WO3ECCQCLQV",
+    "plan_name": "Adams Monthly 145",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MTLGRIMLHEE6D24T7GXHEAW7",
+    "var_name": "Adams Monthly $150",
+    "plan_id": "H76OFBKENN4BA4DDBJFM2VFM",
+    "plan_name": "Adams Monthly 150",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TAEEFFT53GO3TMJH7E24IR2F",
+    "var_name": "Adams Monthly $155",
+    "plan_id": "LMEQIO7YBHBAUEDRJRL4MQ27",
+    "plan_name": "Adams Monthly 155",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MIH23KQXBTMCR32RZVZJW3JV",
+    "var_name": "Adams Monthly $160",
+    "plan_id": "HGIPEU76ZGWPJNJJH7EPFZ5W",
+    "plan_name": "Adams Monthly 160",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OJ6GA6VATTYGCYFN5IWNTT7P",
+    "var_name": "Adams Monthly $165",
+    "plan_id": "MWXLRZAP5E4YGW3EFLMQFMHD",
+    "plan_name": "Adams Monthly 165",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "KZFSRSKEDGXDRAAUPOIQPL5X",
+    "var_name": "Adams Monthly $170",
+    "plan_id": "ZOG2F4Y3OT6URBNMLJEDPEZC",
+    "plan_name": "Adams Monthly 170",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VP4DM77CSHWYOXNHDTJOVFU6",
+    "var_name": "Adams Monthly $175",
+    "plan_id": "YZ7J3SCFDJAVQFAV5JTNYGBG",
+    "plan_name": "Adams Monthly 175",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FOPL7XYBIXD4ECTBMHCPJAQH",
+    "var_name": "Adams Monthly $180",
+    "plan_id": "Y6LXF6T3DWG2ZLNKSBGYC3BZ",
+    "plan_name": "Adams Monthly 180",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QOZ5SKXULVTOUPU5WUZGDZ6I",
+    "var_name": "Adams Monthly $185",
+    "plan_id": "OD3YHSYS72LNSZD7SIOYHNX5",
+    "plan_name": "Adams Monthly 185",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PWMNVR3MM64VYZX7XRLXACDR",
+    "var_name": "Adams Monthly $65",
+    "plan_id": "5M3MPPHA4T3LJFMLUYVJUJJV",
+    "plan_name": "Adams Monthly 65",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7GWPKWY2XJUDP5TL4EVEWVD3",
+    "var_name": "Adams Monthly $70",
+    "plan_id": "ZBOOQEX4U2LDS5Y5D4O3S4MM",
+    "plan_name": "Adams Monthly 70",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "J5AVENPTSWY7F2OEKD7UDZXO",
+    "var_name": "Adams Monthly $75",
+    "plan_id": "IITPQQJM2A3XA6DQ6MC5WK6P",
+    "plan_name": "Adams Monthly 75",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FITEHK3AWCTWUT4GXH2LF7JO",
+    "var_name": "Adams Monthly $80",
+    "plan_id": "5D5QUNZQPDOWHO2WURPAVKSJ",
+    "plan_name": "Adams Monthly 80",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UUJHTT2JA5SNZO2NF5HJ3K5N",
+    "var_name": "Adams Monthly $85",
+    "plan_id": "DMXABGZFGSC6FOBRRSMPT4GG",
+    "plan_name": "Adams Monthly 85",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GAW3TUD3COPGWPITTJ5O6GLR",
+    "var_name": "Adams Monthly $90",
+    "plan_id": "3EJEKLIGEV52PRA7VHKV32V6",
+    "plan_name": "Adams Monthly 90",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5G5QUA2Y4RF66SGG7PCVILK4",
+    "var_name": "Adams Monthly $95",
+    "plan_id": "4WAXHGQP5BKE4LPPEWPZDO6K",
+    "plan_name": "Adams Monthly 95",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DYKLIK75ZF4RU3HH4ZJ4GJMO",
+    "var_name": "Adams Monthly $100",
+    "plan_id": "7V2Z4EHTNVI5KCVOAZZZPLJU",
+    "plan_name": "Adams Monthly 100",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FGVXGVS5T3EWGSXTH7S47BKN",
+    "var_name": "Adams Monthly $105",
+    "plan_id": "WRVUFSI23NLYGRPITMFSWGHE",
+    "plan_name": "Adams Monthly 105",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4KNB44MDLNMXDRW5T6Y24KBP",
+    "var_name": "Adams Monthly $110",
+    "plan_id": "ZHMO5A6M7ANOJVXVPZGQ74C6",
+    "plan_name": "Adams Monthly 110",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OR34ZD2AENDFKRVTHRK6XB7Z",
+    "var_name": "Adams Monthly $115",
+    "plan_id": "VC6XIBTZ3L572GTTD5257D4H",
+    "plan_name": "Adams Monthly 115",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XZY3JDWZ2HYPI3EQVWQ7QVSI",
+    "var_name": "Adams Monthly $120",
+    "plan_id": "ETT43GAL6RGA6YSIIPSPDDXQ",
+    "plan_name": "Adams Monthly 120",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FD6DJL2AYPE4KWCIUHTMBF7O",
+    "var_name": "Adams Monthly $125",
+    "plan_id": "7RSAUEW5F65JAAQFXOWK4UMF",
+    "plan_name": "Adams Monthly 125",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "E6YGZZUXQT5254HWRF72GWDI",
+    "var_name": "Adams Monthly $130",
+    "plan_id": "JQR3VE446OR5DU2ZD2G54VRJ",
+    "plan_name": "Adams Monthly 130",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "T2AIDPV3IAHCKKQLFKW4NR5H",
+    "var_name": "Adams Monthly $190",
+    "plan_id": "UM4X3E3EP6VS4TOPAFMXUME6",
+    "plan_name": "Adams Monthly 190",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XKAYHJICMM4QGO7OI6OEPLGP",
+    "var_name": "Adams Monthly $195",
+    "plan_id": "YJRJEXL4RRWIS2ZT74KIXUED",
+    "plan_name": "Adams Monthly 195",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ORS5DVSTMUHA3J4CO4AOQXN5",
+    "var_name": "Adams Monthly $200",
+    "plan_id": "T7RELRTAFYXFZ3TQJKCGHC4Z",
+    "plan_name": "Adams Monthly 200",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3S36V6FHK4CXXC6QFUNYBNUT",
+    "var_name": "Adams Monthly $205",
+    "plan_id": "M42U6AWG3GO25IAUC5P643ZL",
+    "plan_name": "Adams Monthly 205",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5LD34MVIGARVMMJNXHLPMP5I",
+    "var_name": "Adams Monthly $210",
+    "plan_id": "QPM2VAJP3NTXJ34CKVLYGOIQ",
+    "plan_name": "Adams Monthly 210",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BYHQSGOHKMVGPV655CZ5LYIP",
+    "var_name": "Adams Monthly $215",
+    "plan_id": "2EJS6YDMAPTBVNV2BPVG4VST",
+    "plan_name": "Adams Monthly 215",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QQ6XE4OFAK5ATWNPYJPDPNKK",
+    "var_name": "Adams Monthly $220",
+    "plan_id": "IEQ5WYOKPANZICXTM7RTB4QL",
+    "plan_name": "Adams Monthly 220",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QIBPSXZLH56NAMWHOUIDA45J",
+    "var_name": "Adams Monthly $225",
+    "plan_id": "Z5YC5EVFDDTPTCIK3SDTI7MM",
+    "plan_name": "Adams Monthly 225",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VLBW6OK5EPACBKD7Z7BTCJSQ",
+    "var_name": "Adams Monthly $230",
+    "plan_id": "2KEUPZFZDTJTYHPQBRQBK7LW",
+    "plan_name": "Adams Monthly 230",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7VQRY2BTTX3FKRM4FSLE5OVB",
+    "var_name": "Adams Monthly $235",
+    "plan_id": "EXAW6JKEYUHGLU4GKPZGQUYH",
+    "plan_name": "Adams Monthly 235",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7IS5C23KCNKG3VE44FTF2UHA",
+    "var_name": "Adams Monthly $240",
+    "plan_id": "5TMSXATIQ5VIYL4VQR5B5HVC",
+    "plan_name": "Adams Monthly 240",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JSQRHV4RWQUJJMB7XLPXLGEM",
+    "var_name": "Adams Monthly $245",
+    "plan_id": "DAXRDC7WXXIQMS22S42SYCKR",
+    "plan_name": "Adams Monthly 245",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4V44BRKBAFLCAB3JOGI5PHYW",
+    "var_name": "Adams Monthly $250",
+    "plan_id": "STOQXIKBLQCNP2BV2EBUFMP3",
+    "plan_name": "Adams Monthly 250",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "C3PTHINAWAMML7A2YTZGWOFQ",
+    "var_name": "Adams Monthly $255",
+    "plan_id": "DKZASQ6BZ2GIXFR2YQN4SCTH",
+    "plan_name": "Adams Monthly 255",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4LQIAAEKZIZIPF7VJBCSXU34",
+    "var_name": "Adams Monthly $260",
+    "plan_id": "WZGAKMZDATZWFFUNYQEIV7UC",
+    "plan_name": "Adams Monthly 260",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ORHIXSXF3JGVZACIRNMNOA4L",
+    "var_name": "Adams Monthly $265",
+    "plan_id": "7GMYYFQSSPM4WLBI45GWXFQO",
+    "plan_name": "Adams Monthly 265",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EUV75VI3ZH66FYYPUBJPWBDC",
+    "var_name": "Adams Monthly $270",
+    "plan_id": "K7FQ2WDOIYRON3LYU4UUXCTL",
+    "plan_name": "Adams Monthly 270",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "V7TPO77VQ6ZXDTDK7Y7NXGT2",
+    "var_name": "Adams Monthly $275",
+    "plan_id": "HKD7OV5D2KLTJXVRKLFXHB3S",
+    "plan_name": "Adams Monthly 275",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "IYYV6JEASFVG2K4TK343Z3I6",
+    "var_name": "Adams Monthly $280",
+    "plan_id": "3WTJSPOMRQQPSEICGNXCCTM7",
+    "plan_name": "Adams Monthly 280",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DEWEFSXK7PJ4K5S7G4GEEQJB",
+    "var_name": "Adams Monthly $285",
+    "plan_id": "BF46OO6NVXXGP7M6WOUME7M6",
+    "plan_name": "Adams Monthly 285",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "M75KHYRPPXGGGVOX3BZPTSM5",
+    "var_name": "Adams Monthly $290",
+    "plan_id": "74VRXLCTTX5LSNEV6O7GF7TN",
+    "plan_name": "Adams Monthly 290",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QPVAAHELDHGI3ED5UCGCX2IX",
+    "var_name": "Adams Monthly $295",
+    "plan_id": "SM3J4ZPHEV4JX7HGHRH424TL",
+    "plan_name": "Adams Monthly 295",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2TQOFEK4FYTSPJG6PMDIASHE",
+    "var_name": "Adams Monthly $300",
+    "plan_id": "RC2VMXAINWSJTC32WCR36RNM",
+    "plan_name": "Adams Monthly 300",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "I5TSOR27CLZM5BNC5DOKZDVT",
+    "var_name": "Adams Monthly $305",
+    "plan_id": "37F6ZVZ7IDLLZCZEZM3APZ5R",
+    "plan_name": "Adams Monthly 305",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YUJTPEK7ZTBHLDJQWGUUFLPC",
+    "var_name": "Adams Monthly $310",
+    "plan_id": "D5E33EOSEQ7G5LUWHNAYU32J",
+    "plan_name": "Adams Monthly 310",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "53O4VDQQ4P6PRVDEM67HD6IN",
+    "var_name": "Adams Monthly $315",
+    "plan_id": "RZCACN2AS46M6GQAJJT5Y3XI",
+    "plan_name": "Adams Monthly 315",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PL2HSYJXLLQB4JPQ7VQKWBNX",
+    "var_name": "Adams Monthly $320",
+    "plan_id": "3CRW2UFFIPOXJQWNGRHLRWMB",
+    "plan_name": "Adams Monthly 320",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FYRR3GGBM3QCXXIFNQEPHO25",
+    "var_name": "Adams Monthly $325",
+    "plan_id": "CSK7E5OHV5ZKB47X2MMEKPDV",
+    "plan_name": "Adams Monthly 325",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Y3WG32HO5MLHC5PHPV2XKYTP",
+    "var_name": "Adams Monthly $330",
+    "plan_id": "BP4HWTN65GT6INV45YX7DNYQ",
+    "plan_name": "Adams Monthly 330",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Y5AUGXECNCXAKCAAEKEYBSQ4",
+    "var_name": "Adams Monthly $335",
+    "plan_id": "DSM7BYXF2LI6CBGBI4FACELY",
+    "plan_name": "Adams Monthly 335",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VOVJALHK5T4Q7PR3LTUBIOMS",
+    "var_name": "Adams Monthly $340",
+    "plan_id": "I6U5XSVXA7JQ3RB7XVBHFX42",
+    "plan_name": "Adams Monthly 340",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MU6BJLLZFKLJQWYA7YSCOYCH",
+    "var_name": "Adams Monthly $345",
+    "plan_id": "WGLK4SHBJ3APEVR5F6AGJUMZ",
+    "plan_name": "Adams Monthly 345",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WWSF223QQH4KY6GYVHO5PY32",
+    "var_name": "Adams Monthly $350",
+    "plan_id": "UM3XKXCS5VCLZRLH6PJPBVCJ",
+    "plan_name": "Adams Monthly 350",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3NHWJCP7JKKCUK7ZOB4YZMVS",
+    "var_name": "Adams Monthly $355",
+    "plan_id": "3PDHKQEII5OI7BLOJI5SDWK4",
+    "plan_name": "Adams Monthly 355",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "I2UTVSOEPPTLGKPQD7FHEY5N",
+    "var_name": "Adams Monthly $360",
+    "plan_id": "6IB4DFWR7J357VQU37E4UWB6",
+    "plan_name": "Adams Monthly 360",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WXMORXLQKUCZEVI2427PMHSD",
+    "var_name": "Adams Monthly $365",
+    "plan_id": "LNPJDZBMVCIQH4AEPGPETBVL",
+    "plan_name": "Adams Monthly 365",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BRWCQPZOGZSZFMUYI6RW63LC",
+    "var_name": "Adams Monthly $370",
+    "plan_id": "HILC3QZKW2LGEMRTFVVQ2UPK",
+    "plan_name": "Adams Monthly 370",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SUKDYTLSZASENBTJMVBWIN37",
+    "var_name": "Adams Monthly $375",
+    "plan_id": "EK2BUI2NZH6BKJDOCI23E75G",
+    "plan_name": "Adams Monthly 375",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QJM2GNL3LWDOXUKJPSJPE2EY",
+    "var_name": "Adams Monthly $380",
+    "plan_id": "DQF27DJKSHK7BMLNZ75SDWF2",
+    "plan_name": "Adams Monthly 380",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MMOXFUGCXJN5XZYQKGYEDKTD",
+    "var_name": "Adams Monthly $385",
+    "plan_id": "DZFHCJYICEUJJT6LLQERZHT7",
+    "plan_name": "Adams Monthly 385",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YUGTH22RU4XXP2PKDR363M2Y",
+    "var_name": "Adams Monthly $390",
+    "plan_id": "J7NIHWX4AZY37Z4E2DX5HINR",
+    "plan_name": "Adams Monthly 390",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SH7RUWRRRGKNXRO56BUVJNZ3",
+    "var_name": "Adams Monthly $395",
+    "plan_id": "5IRHNYBEFWPC566YRZT3QZH6",
+    "plan_name": "Adams Monthly 395",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TZUIR2INTNT3GSYYG645NPYO",
+    "var_name": "Adams Monthly $400",
+    "plan_id": "DJBTEGYESDWH4HDTTZVRTX3H",
+    "plan_name": "Adams Monthly 400",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LK23TU4UNZ4JU55CD6KYENL4",
+    "var_name": "Adams Monthly $405",
+    "plan_id": "OIXL6QXDK2YWUYPYULQ2WHBM",
+    "plan_name": "Adams Monthly 405",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CK7KPTWE5VI46GY7Z5GKVMSW",
+    "var_name": "Adams Monthly $410",
+    "plan_id": "T63M3XVXCLXMA3TCZFIJ3KWE",
+    "plan_name": "Adams Monthly 410",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "V7GT5RWQLPRQ5KNTCKEJ37ZJ",
+    "var_name": "Adams Monthly $415",
+    "plan_id": "4KX5SYWOUQ43LC4FOOTNV42F",
+    "plan_name": "Adams Monthly 415",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CBGLWF34RZWWIGRWFG5EPKWB",
+    "var_name": "Adams Monthly $420",
+    "plan_id": "VE6747QSI5LNTQVQ7NHK4CAC",
+    "plan_name": "Adams Monthly 420",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MPMWTXPLNVSD57VQC3E3UVDG",
+    "var_name": "Adams Monthly $425",
+    "plan_id": "NHN2CTIIWJV6ZIDSBWLZQHMC",
+    "plan_name": "Adams Monthly 425",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "K67VTLXIF2NFU3N4XTON7VU7",
+    "var_name": "Adams Monthly $430",
+    "plan_id": "WMKCHK5TZB3JJFW5JSVV7AVN",
+    "plan_name": "Adams Monthly 430",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LIQXJHUYXBISCRVOPBOQOPOH",
+    "var_name": "Adams Monthly $435",
+    "plan_id": "KPILL6XMRNM5DXH45AGFYNAD",
+    "plan_name": "Adams Monthly 435",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "IVEPOYWACFLWEYIBDVV6MF7O",
+    "var_name": "Adams Monthly $440",
+    "plan_id": "ZAK7MS2SREQA7CUFEEV23R5P",
+    "plan_name": "Adams Monthly 440",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QG5X7BNBKTZE6BVY2BRBE22W",
+    "var_name": "Adams Monthly $445",
+    "plan_id": "CTGUB2T3U7VDMTG4ARY2YYT4",
+    "plan_name": "Adams Monthly 445",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "W43O2ODGMONWHBYAKRL5UXQV",
+    "var_name": "Adams Monthly $450",
+    "plan_id": "O54ETETQWE4ZOJNYL4SH42XW",
+    "plan_name": "Adams Monthly 450",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7ZW3AI7GRJQEOBIJMSU4J7NO",
+    "var_name": "Adams Monthly $455",
+    "plan_id": "VA5JAIJZ3CI74U4HBQNNEC5I",
+    "plan_name": "Adams Monthly 455",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YGKMECHKJ2FE2ZHKWIRSI7FR",
+    "var_name": "Adams Monthly $460",
+    "plan_id": "QQACHK6GMZKJ75WMCZU5D76D",
+    "plan_name": "Adams Monthly 460",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WBUN7F4TSCSW2726H53WRUX6",
+    "var_name": "Adams Monthly $465",
+    "plan_id": "NNPM2GD2BEL4UR7QLUNMQ7CQ",
+    "plan_name": "Adams Monthly 465",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "C3UDZSOP7LT3G2DCI6ZQNI3D",
+    "var_name": "Adams Monthly $470",
+    "plan_id": "YCKNCC2VVNG33JEJZLPZA7IR",
+    "plan_name": "Adams Monthly 470",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GF7TVDUD4WXXWUMR6PSBG47W",
+    "var_name": "Adams Monthly $475",
+    "plan_id": "HZF5G7CKU5TXOF7ZVFUW7KW7",
+    "plan_name": "Adams Monthly 475",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7XRWTTJIKN2KNW4PEGTTSVO4",
+    "var_name": "Adams Monthly $480",
+    "plan_id": "J63R6MB7CM547FDOZSGUSQGC",
+    "plan_name": "Adams Monthly 480",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OGY6TQMGTT5A2SF666YSP3LQ",
+    "var_name": "Adams Monthly $485",
+    "plan_id": "65P4GGJZCG7ZCXZB4BXJV7R6",
+    "plan_name": "Adams Monthly 485",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NHEHNAGDZUU37Z2YXJOTDJ4B",
+    "var_name": "Adams Monthly $490",
+    "plan_id": "DLHET6WIMEH22TLLGOAE3IHW",
+    "plan_name": "Adams Monthly 490",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "L7UPFOYA2UXBCMUWSHPJBQAT",
+    "var_name": "Adams Monthly $495",
+    "plan_id": "4XTE7NP2RHHNGT7ZR46XYKXA",
+    "plan_name": "Adams Monthly 495",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CWCWJFDTVJSHRZ7QEK26LMES",
+    "var_name": "Adams Monthly $500",
+    "plan_id": "YASFJRT2CBENCSO22ZPOKYT5",
+    "plan_name": "Adams Monthly 500",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "AHEX7S6TDKYMZPDCV2UFXMUM",
+    "var_name": "Adams Monthly $505",
+    "plan_id": "6LVBN2ZN5IRI3UUW63Y67TPY",
+    "plan_name": "Adams Monthly 505",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZOZPCLJZPGQZ4CR7SUBGQWPC",
+    "var_name": "Adams Monthly $510",
+    "plan_id": "6LBIC756YIDXRTVT3LF6YP5Z",
+    "plan_name": "Adams Monthly 510",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "AZGZEHI4FJLBYH72UXEA3WN4",
+    "var_name": "Adams Monthly $515",
+    "plan_id": "K6FOEC7J25C4E3REVAWTNGMQ",
+    "plan_name": "Adams Monthly 515",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "73NDVJUFLXET4NAYTQFZE56V",
+    "var_name": "Adams Monthly $520",
+    "plan_id": "STABVSRDVQZZQBKZ555ENZUE",
+    "plan_name": "Adams Monthly 520",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WAM7MCNH5KAS5VJJPFIO4VKQ",
+    "var_name": "Adams Monthly $525",
+    "plan_id": "5K4DPXVZVLR6VBJ5UVSHXWKO",
+    "plan_name": "Adams Monthly 525",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6HVFQ6LLYIBAOLLMUTV7PB7K",
+    "var_name": "Adams Monthly $530",
+    "plan_id": "L25VSDQ3F72ZV2NKQZJCI5ET",
+    "plan_name": "Adams Monthly 530",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "I2MWZAPL3R3AMF4H2NDBZ6SO",
+    "var_name": "Adams Monthly $535",
+    "plan_id": "VCIK7UK6H22UIYW6AMX5DHGE",
+    "plan_name": "Adams Monthly 535",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4HKUBVGICHJARD72F3WDQWBQ",
+    "var_name": "Adams Monthly $540",
+    "plan_id": "PXIDKUPIC5SR2T5REWHH7N5I",
+    "plan_name": "Adams Monthly 540",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BAIORRVFYODHAZKDQX3CGDOO",
+    "var_name": "Adams Monthly $545",
+    "plan_id": "UIDULATFYAIFTNHBB4G2HUXM",
+    "plan_name": "Adams Monthly 545",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BSGGAETJ3NJBYXNXMSBU7FO7",
+    "var_name": "Adams Monthly $550",
+    "plan_id": "2LT44G6C5FUDCRIGJ37OAWO6",
+    "plan_name": "Adams Monthly 550",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "KQ2O3N4K355FAJSOB54BNSWH",
+    "var_name": "Adams Monthly $555",
+    "plan_id": "CPI7YSNR56HDWDCXLLOOJC43",
+    "plan_name": "Adams Monthly 555",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JJE2DMVK7WPINPD4ZN6UZ2SR",
+    "var_name": "Adams Monthly $560",
+    "plan_id": "Y6ANS5T2MJLCXFHOWHEBZWVZ",
+    "plan_name": "Adams Monthly 560",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BVSZYTXHAVCB5I3K5V7OGEKD",
+    "var_name": "Adams Monthly $565",
+    "plan_id": "KHJJNLPXKK466BF3XNLT5FJ2",
+    "plan_name": "Adams Monthly 565",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RB7ZPCJGO3SP6IKFZEMC243W",
+    "var_name": "Adams Monthly $570",
+    "plan_id": "Y6P5TOBVJFSEVXXUWDGWUKUB",
+    "plan_name": "Adams Monthly 570",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WE6M7GGZSU7VKRXAFN7BKC3D",
+    "var_name": "Adams Monthly $575",
+    "plan_id": "SCEOCRRLRX7L7CQVYQDPX5HJ",
+    "plan_name": "Adams Monthly 575",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VCIU2PJBYP4FFZU246CL7OQ5",
+    "var_name": "Adams Monthly $580",
+    "plan_id": "ICNU4OJCBYAVLZUMO3NWR6J2",
+    "plan_name": "Adams Monthly 580",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YSSNXTMVLC2FJ4YGAAPRPCIE",
+    "var_name": "Adams Monthly $585",
+    "plan_id": "KJNBHUWWKWQXHOD54NK26QBR",
+    "plan_name": "Adams Monthly 585",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "AGPY7OXMZDWGQJEGH7XPZYY6",
+    "var_name": "Adams Monthly $590",
+    "plan_id": "WC3E33EFHCJSGMTBCTOYUD2V",
+    "plan_name": "Adams Monthly 590",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MJOJY7ZOCKRTDHZNBIEVAW32",
+    "var_name": "Adams Monthly $595",
+    "plan_id": "OFRJERYUAHOB77WGSASWBAVY",
+    "plan_name": "Adams Monthly 595",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "KMAXZHSPQSJGIPV7DTERB4CD",
+    "var_name": "Adams Monthly $605",
+    "plan_id": "Q2M535ULO7XSMRYFABYS26V7",
+    "plan_name": "Adams Monthly 605",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4KGHLY7P5YQBQKCZS2EBJKDR",
+    "var_name": "Adams Monthly $610",
+    "plan_id": "HJWBDEBSN3ABC3R7DLJX6AR4",
+    "plan_name": "Adams Monthly 610",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HSJUPPUM74EME7QDMTQA5QAS",
+    "var_name": "Adams Monthly $615",
+    "plan_id": "X4JXD6OGR4LG56C3SP7T76EZ",
+    "plan_name": "Adams Monthly 615",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WOTSI5ZECOROJNZZDGMKL7E7",
+    "var_name": "Adams Monthly $620",
+    "plan_id": "C7LBL47O72QQAB7X6RPBERBV",
+    "plan_name": "Adams Monthly 620",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4XAL7425YWTZTN6A3PYUV3MV",
+    "var_name": "Adams Monthly $625",
+    "plan_id": "BQ4FJ4NLOHCV2GSWEURMUWQK",
+    "plan_name": "Adams Monthly 625",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XIKTEA4XFV7K7NOTSMQ7A6GQ",
+    "var_name": "Adams Monthly $630",
+    "plan_id": "4MNX7MZKGXN3GUK33IEIOFEQ",
+    "plan_name": "Adams Monthly 630",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5RTXUOS3E5ZA4X2YLO7PCEOE",
+    "var_name": "Adams Monthly $635",
+    "plan_id": "KB6BW2Y5DSKXPCDTAFTLFTYS",
+    "plan_name": "Adams Monthly 635",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TGH5EZ3P5LIXZOFX4TPYFXTT",
+    "var_name": "Adams Monthly $640",
+    "plan_id": "N7WISZVFCUEWQPZB3QFUBOUS",
+    "plan_name": "Adams Monthly 640",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OV3A3GDAJ5CK2NOUNYWPBTNX",
+    "var_name": "Adams Monthly $645",
+    "plan_id": "S2MKRC6A7XTPKGEUBACB7UIL",
+    "plan_name": "Adams Monthly 645",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TSVZ3T3ESSBX2NX3AJKCPY5U",
+    "var_name": "Adams Monthly $655",
+    "plan_id": "QB3MYJI2JK6EV334KJ6RZUW3",
+    "plan_name": "Adams Monthly 655",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EPXH46PY2JUHAWJA2SERPG4A",
+    "var_name": "Adams Monthly $660",
+    "plan_id": "DMC7LTRQU6JHMILJVJPUUCKG",
+    "plan_name": "Adams Monthly 660",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UWWZ7NEPXESKRPGFIYVAZ7SL",
+    "var_name": "Adams Monthly $665",
+    "plan_id": "PCOYXS2YWTXHCH4WEJDJHXW4",
+    "plan_name": "Adams Monthly 665",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "E57UAY7LEZOEGTODLJAES2ZK",
+    "var_name": "Adams Monthly $670",
+    "plan_id": "M7OYWRL6PFU77YBHMCWKUY5K",
+    "plan_name": "Adams Monthly 670",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YOY4P2BQSGLV6TLPEVITC5S2",
+    "var_name": "Adams Monthly $675",
+    "plan_id": "WGFKQTX7HU5DW3OMMT34W46C",
+    "plan_name": "Adams Monthly 675",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WV6AOM55Q2EBL6PVQI7G5EPL",
+    "var_name": "Adams Monthly $680",
+    "plan_id": "3G2K3EJKD5CGOUX6D5NBTPG6",
+    "plan_name": "Adams Monthly 680",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QRB6P2WVH2OUD4DFGFVJM7QA",
+    "var_name": "Adams Monthly $685",
+    "plan_id": "XXS4E7AAVXJ2QOQERBUSSMZG",
+    "plan_name": "Adams Monthly 685",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WWUL7HYWPXB42Z3RLQF6RWD5",
+    "var_name": "Adams Monthly $690",
+    "plan_id": "UOQNM2TMZHSUPQSJ6VE2VEIP",
+    "plan_name": "Adams Monthly 690",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QGBFW6YABSEB4BGZLRW27N4X",
+    "var_name": "Adams Monthly $695",
+    "plan_id": "H3YSNLXVBK2EKAOKKAKO56TN",
+    "plan_name": "Adams Monthly 695",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "U5EWGJWZZJDHJAHCPJ3ZXI3T",
+    "var_name": "Adams Monthly $705",
+    "plan_id": "RDOVN3TG7WVSVS2M3SMXFMRD",
+    "plan_name": "Adams Monthly 705",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HVKD3J2F7AQ5Z7BCKA2FC5EM",
+    "var_name": "Adams Monthly $710",
+    "plan_id": "L5YNVXB4LKGUAXY73DUERHZK",
+    "plan_name": "Adams Monthly 710",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XCWOVASKO5BGLG2T6V2BZSBS",
+    "var_name": "Adams Monthly $715",
+    "plan_id": "5IDJUSI5FQLR62BDZGVICD2J",
+    "plan_name": "Adams Monthly 715",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZIG5KRVZMUSPLVSKLJQIMQJB",
+    "var_name": "Adams Monthly $720",
+    "plan_id": "P3C2YKOO5HEO7SD2OGWFIJCF",
+    "plan_name": "Adams Monthly 720",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "T3FBFKHTZSFY7OL5E3EV5EAM",
+    "var_name": "Adams Monthly $725",
+    "plan_id": "FCPL7Z5GVTLZXAKZWJLXTTUF",
+    "plan_name": "Adams Monthly 725",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7TEU6NJDOI3QYCAGEAQWRBVI",
+    "var_name": "Adams Monthly $730",
+    "plan_id": "H3BRXDEIBUMPONEZVX56L7NK",
+    "plan_name": "Adams Monthly 730",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XPDNVVT7GD6IMIDD4RPQWYIX",
+    "var_name": "Adams Monthly $735",
+    "plan_id": "GIVGBBFKAH2Y45R3WYCJ4CEN",
+    "plan_name": "Adams Monthly 735",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DFOZQAW2YJYPGAZ3RTR6ZWOW",
+    "var_name": "Adams Monthly $740",
+    "plan_id": "5UUNDW6ZXEWDBQO2LMD4QDG4",
+    "plan_name": "Adams Monthly 740",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SD7PXRDE2N2KUCUKYXPTD2MN",
+    "var_name": "Adams Monthly $745",
+    "plan_id": "R752CM5FTNVXH2PEXDCO6RGZ",
+    "plan_name": "Adams Monthly 745",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GBQLHBELJVYNZ463CRTKRNFF",
+    "var_name": "Adams Monthly $755",
+    "plan_id": "7VXVKRMYZEPBNM3MPC6RUFNN",
+    "plan_name": "Adams Monthly 755",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "35KDVFT6F44QQH324QGPLDGZ",
+    "var_name": "Adams Monthly $760",
+    "plan_id": "U4JQAIHZXBQ47ETUA3FMRH4E",
+    "plan_name": "Adams Monthly 760",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CXXVKTOZWHFJRFDDJV5JMPVN",
+    "var_name": "Adams Monthly $765",
+    "plan_id": "XRDLZOENTL2H3DKZBTM7KL4U",
+    "plan_name": "Adams Monthly 765",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JBTKKVT4UI7RPDMNCMXPY6OJ",
+    "var_name": "Adams Monthly $770",
+    "plan_id": "2ORXFSRYUILL66S37U2MKIQ3",
+    "plan_name": "Adams Monthly 770",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HPWMCHUJDCGYLER5JICQRIAM",
+    "var_name": "Adams Monthly $775",
+    "plan_id": "4AJ4HX34J4PDHR3BXPJSYW7U",
+    "plan_name": "Adams Monthly 775",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TCQ6E6VZHHIXWFDHXDLIMMBW",
+    "var_name": "Adams Monthly $780",
+    "plan_id": "VQAS47OJ5FBC37TZE6TS7RJW",
+    "plan_name": "Adams Monthly 780",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GPCTBX6OOANB67H2UIHC3SKL",
+    "var_name": "Adams Monthly $785",
+    "plan_id": "FOGXC72H4BVWU37T2IXGSFTQ",
+    "plan_name": "Adams Monthly 785",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SWEQTJNSAS5KEICBUUJ55T3Y",
+    "var_name": "Adams Monthly $790",
+    "plan_id": "22HZGHPDCTIKTUGSFX3FXXZZ",
+    "plan_name": "Adams Monthly 790",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "IYAK2AOOXOEWJ2MCIKKV42M4",
+    "var_name": "Adams Monthly $795",
+    "plan_id": "CG4QHHYU7GHBDOJQ525GART7",
+    "plan_name": "Adams Monthly 795",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5GSV5CKEUINVMBZQDHGQ555C",
+    "var_name": "Adams Monthly $805",
+    "plan_id": "HOTUEEHDWTJNJOHPKJLQXMOK",
+    "plan_name": "Adams Monthly 805",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FQAY4M273DWAIB3Z7QOYGQLN",
+    "var_name": "Adams Monthly $810",
+    "plan_id": "SX2YM66SAQS3O3CLCEUIPWYN",
+    "plan_name": "Adams Monthly 810",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3LZ4UZSD4Y64EQJGV7DON5AJ",
+    "var_name": "Adams Monthly $815",
+    "plan_id": "4W5BYQPUFW3WCEFJOKYURNMW",
+    "plan_name": "Adams Monthly 815",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PZWLV2D5Q5N6L7PB7U4WHDUW",
+    "var_name": "Adams Monthly $820",
+    "plan_id": "D3BP6IN6PTWUWFO663RG4EGS",
+    "plan_name": "Adams Monthly 820",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JTZDSNMY5A6VPSG5WYBBGKYH",
+    "var_name": "Adams Monthly $825",
+    "plan_id": "FWQ4GR3BGQXQA3ZA37PBH4VE",
+    "plan_name": "Adams Monthly 825",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FECVMFLWBY7SSC72TB5CL4H6",
+    "var_name": "Adams Monthly $830",
+    "plan_id": "KEYY636ZG3ZTGIIS7QH5WHHK",
+    "plan_name": "Adams Monthly 830",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WVJ5LU2PKYI36ZQ3XFAPHTLV",
+    "var_name": "Adams Monthly $835",
+    "plan_id": "KB2PQX4WKVBHJHJWXC2SJOWN",
+    "plan_name": "Adams Monthly 835",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TTBBVAEE2JYEDF5BVZQAWTUX",
+    "var_name": "Adams Monthly $840",
+    "plan_id": "CYSULIPZKALSGZUW7OJQPC3A",
+    "plan_name": "Adams Monthly 840",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "K5K3ZSJ2OU5VQJIZVKILDCP6",
+    "var_name": "Adams Monthly $845",
+    "plan_id": "5MOXELWBESI2WRR5DNBFEJCI",
+    "plan_name": "Adams Monthly 845",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LCRZLCEQNZQAIWBWLHLSKM5H",
+    "var_name": "Adams Monthly $855",
+    "plan_id": "JXP6IFIL3OGFT67L6LPZNQFL",
+    "plan_name": "Adams Monthly 855",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MMAZARU7VHHV6URNKX3C6BAB",
+    "var_name": "Adams Monthly $860",
+    "plan_id": "4QVKP5MVZF4EM36XN2MTC3CG",
+    "plan_name": "Adams Monthly 860",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6OOXD6WDJVH7HGTZLVUAY27O",
+    "var_name": "Adams Monthly $865",
+    "plan_id": "ZLM7MLNJUKKY73KBPJGSAGCM",
+    "plan_name": "Adams Monthly 865",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6VQ4T7KUAKA7HMYP3MA3ST7N",
+    "var_name": "Adams Monthly $870",
+    "plan_id": "GBPLDVN7QWEXGIQEJ3YZPNPF",
+    "plan_name": "Adams Monthly 870",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WH6WDRBU56AO3NNTWXGNMEGG",
+    "var_name": "Adams Monthly $875",
+    "plan_id": "ZX6OHD5H73DYDKMIOBAQ4MYM",
+    "plan_name": "Adams Monthly 875",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "37EHUTI2W6XIMFXEFFD2CYYA",
+    "var_name": "Adams Monthly $880",
+    "plan_id": "2R37BBHP4K2SIGLJMWWZP73W",
+    "plan_name": "Adams Monthly 880",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "R7ZYJRYQMZ4MY5N7IJ4WVN3E",
+    "var_name": "Adams Monthly $885",
+    "plan_id": "6ZA24SZOIJKDRKWM3OA5E6DS",
+    "plan_name": "Adams Monthly 885",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6MN2U3657FZIXVOE2TTAQG7Z",
+    "var_name": "Adams Monthly $890",
+    "plan_id": "5IR4M2PBA3MXIQ52HYKI7WC3",
+    "plan_name": "Adams Monthly 890",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "M2LKL7YFD5HFBQKGRYZNAJBY",
+    "var_name": "Adams Monthly $895",
+    "plan_id": "SAQHV6ZVM6LTCQPJMHFXZVIV",
+    "plan_name": "Adams Monthly 895",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "T525XIW3XDCVY7HUMPANPUBZ",
+    "var_name": "Adams Monthly $905",
+    "plan_id": "C4QJB4BATBWJXOJC66LE4LDE",
+    "plan_name": "Adams Monthly 905",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FUGT5NGKXQNXT26QNVCK7PSJ",
+    "var_name": "Adams Monthly $910",
+    "plan_id": "NUBDBOABBCTKXQ5OMDSGIXEN",
+    "plan_name": "Adams Monthly 910",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EUTINGMOX6ODXFQ33RUAVDCY",
+    "var_name": "Adams Monthly $915",
+    "plan_id": "DQVEIPDYGZ7AWTNFVJRQ5KD2",
+    "plan_name": "Adams Monthly 915",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BC4K7XWZYCKBEUA7VG22BSOJ",
+    "var_name": "Adams Monthly $920",
+    "plan_id": "ZGERAT7N5OIH7SE3IGB6UDYI",
+    "plan_name": "Adams Monthly 920",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EM2XQGRJUYQYJ72ZOZGIQUST",
+    "var_name": "Adams Monthly $925",
+    "plan_id": "RMRBDJJY5ZLZDRNTPQ267CSU",
+    "plan_name": "Adams Monthly 925",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6KTSTBPPT7KMGU5QSOOKSEM6",
+    "var_name": "Adams Monthly $930",
+    "plan_id": "STRYIJLSQI7EAA3KGEWZUC5O",
+    "plan_name": "Adams Monthly 930",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "37P2J3H5522WWSECTZPUTTXZ",
+    "var_name": "Adams Monthly $935",
+    "plan_id": "IRUQ3GWE55RRITRIRIEE3DAV",
+    "plan_name": "Adams Monthly 935",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HACKNUKDWUP6TM5ALE4CATYV",
+    "var_name": "Adams Monthly $940",
+    "plan_id": "K2IPULUHQKO5LVLUT2DZRJMS",
+    "plan_name": "Adams Monthly 940",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BBM5FVKQ7SMBQQZDZPJMQ5AO",
+    "var_name": "Adams Monthly $945",
+    "plan_id": "AWMOLPGEZU7Z4QREYEUZYXK6",
+    "plan_name": "Adams Monthly 945",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BCDE7F2PZYBAGG4AQHETJ4DT",
+    "var_name": "Adams Monthly $955",
+    "plan_id": "K7TV5Z35JCRFC2LSJHZVLLRR",
+    "plan_name": "Adams Monthly 955",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JM4B2YMZATYL5QJ3KYDH66V4",
+    "var_name": "Adams Monthly $960",
+    "plan_id": "TRGWQBHMSSDJQBOK467DWDD7",
+    "plan_name": "Adams Monthly 960",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5C57FVHRW2NYXRI2S4N542LQ",
+    "var_name": "Adams Monthly $965",
+    "plan_id": "2WCJ3EOAKMXQCGAU2LJVGR6O",
+    "plan_name": "Adams Monthly 965",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "P4QXYBFLN5WZR55JNL2ND2JS",
+    "var_name": "Adams Monthly $970",
+    "plan_id": "GEGP3FQOE4RWSXSKOBFZSKJG",
+    "plan_name": "Adams Monthly 970",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YPRSUR7NWNRZLZIER43NRGKX",
+    "var_name": "Adams Monthly $975",
+    "plan_id": "5WCKO5FCK2J5RBRUPZPPCFKA",
+    "plan_name": "Adams Monthly 975",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VKUF3C7LHPOY7C2CWYEF36B6",
+    "var_name": "Adams Monthly $980",
+    "plan_id": "KEVHETQMWB272LXDDQKPJMGF",
+    "plan_name": "Adams Monthly 980",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4COSYTHS7UEE4DIQHVQDUEFE",
+    "var_name": "Adams Monthly $985",
+    "plan_id": "WGQOEXNHH3PDFL4DXPWQTNF2",
+    "plan_name": "Adams Monthly 985",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "IDHHHZCEZHW5335FRGNJ3NIH",
+    "var_name": "Adams Monthly $990",
+    "plan_id": "W4GDA5U2G6WOXEERCAA46RM3",
+    "plan_name": "Adams Monthly 990",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2ECX2I6RCQAWW6TQT4JES5JT",
+    "var_name": "Adams Monthly $995",
+    "plan_id": "MBUM2HSX2DIJQZV7X23GW4ZW",
+    "plan_name": "Adams Monthly 995",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OP72RD27VV52MMWESZUVHT2Z",
+    "var_name": "Adams Monthly $1005",
+    "plan_id": "XE6VOLR7TAG52GY3LNKTLAY3",
+    "plan_name": "Adams Monthly 1005",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WVCEOSAZRUQQZMQKKOIRCTYS",
+    "var_name": "Adams Monthly $1010",
+    "plan_id": "QFMB5JS6OEAIKSNIAYSURHOP",
+    "plan_name": "Adams Monthly 1010",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "642M4VVJRAO3CHNPJUQT2VG7",
+    "var_name": "Adams Monthly $1015",
+    "plan_id": "L3A7QZRU7XMSSXDFF7RH4IA2",
+    "plan_name": "Adams Monthly 1015",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GAJME74D2GWE7FVXE7YBV3Q7",
+    "var_name": "Adams Monthly $1020",
+    "plan_id": "4N4566CPLURGFPN7RUOGGVFU",
+    "plan_name": "Adams Monthly 1020",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CQX5XSHSATUP6HSL6ANB67YR",
+    "var_name": "Adams Monthly $1025",
+    "plan_id": "BCIRGX4JBQKFVWV3UXPG2KXX",
+    "plan_name": "Adams Monthly 1025",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XWMRJJFJS4HUISEPYL4Y6OCU",
+    "var_name": "Adams Monthly $1030",
+    "plan_id": "4OAIP7BAIOTU3235CL7O3V7P",
+    "plan_name": "Adams Monthly 1030",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HJTYHNN6RY5AAQZXJINZMGEI",
+    "var_name": "Adams Monthly $1035",
+    "plan_id": "PBNITBGQIKR6UEPGEYEYMGI6",
+    "plan_name": "Adams Monthly 1035",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SVP2RGHC3EIXWFST2Y7GG6ST",
+    "var_name": "Adams Monthly $1040",
+    "plan_id": "CHIKQUNC2YL6VEHOI7ENFHAS",
+    "plan_name": "Adams Monthly 1040",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TT7WQWLBEWN6SK2KWVNNJQXR",
+    "var_name": "Adams Monthly $1045",
+    "plan_id": "WQ3MEW652VR3EYZBP4AGBBSZ",
+    "plan_name": "Adams Monthly 1045",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7WH7NGVXWALP5RWY3JOIRKLP",
+    "var_name": "Adams Monthly $1055",
+    "plan_id": "ZDZAMNYF5U2IEJBB7Q6WMMZL",
+    "plan_name": "Adams Monthly 1055",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7K5IUTVC6J2PQ5QPPHZ5MG4C",
+    "var_name": "Adams Monthly $1060",
+    "plan_id": "Y6BNTOIEIJTM5KGPWEOTCGAG",
+    "plan_name": "Adams Monthly 1060",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FZFQA3WEIFXPNJFNGNVR7ETO",
+    "var_name": "Adams Monthly $1065",
+    "plan_id": "URNBGPK3Q23N3ABHXGLFYWQE",
+    "plan_name": "Adams Monthly 1065",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PG5UHA2NOQS3NMH6QTFRIM72",
+    "var_name": "Adams Monthly $1070",
+    "plan_id": "G73KRKNFYKRSVYWCBDUJHENQ",
+    "plan_name": "Adams Monthly 1070",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LYMUVB4AY4VAXLOCKZGEVZZZ",
+    "var_name": "Adams Monthly $1075",
+    "plan_id": "F5T7TZMEQVUSHLX3KNIGB4TD",
+    "plan_name": "Adams Monthly 1075",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GMVXVIIRJC2PUUYI4F2LZCGM",
+    "var_name": "Adams Monthly $1080",
+    "plan_id": "JN4QZBPBZ23IS7SM7LZXCUAE",
+    "plan_name": "Adams Monthly 1080",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MYME4LMGUWP4DPGPGRKGYIGU",
+    "var_name": "Adams Monthly $1085",
+    "plan_id": "V434DVN4HMMYGHH37NTLYNGO",
+    "plan_name": "Adams Monthly 1085",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "V44IMTSBYTJDKVMWRDGCDZXX",
+    "var_name": "Adams Monthly $1090",
+    "plan_id": "HSQYYDVVMOTL5ADKWYCE2JKC",
+    "plan_name": "Adams Monthly 1090",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MH2TXIT57ZCN3HKFTRSKOCSV",
+    "var_name": "Adams Monthly $1095",
+    "plan_id": "YHFUTXQFZWB4S2V2KLCHPC5P",
+    "plan_name": "Adams Monthly 1095",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FQYNAQKKLM4IFRSD4IB76PYR",
+    "var_name": "Adams Monthly $1105",
+    "plan_id": "3GMOB3I2THDGS2XOG33S2CA4",
+    "plan_name": "Adams Monthly 1105",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QU2EIR2WWLRIH3FZB6EN4Z67",
+    "var_name": "Adams Monthly $1110",
+    "plan_id": "KNPHYWXPAHYVSMNHGTDWRT4L",
+    "plan_name": "Adams Monthly 1110",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BX4VKH5SBRYMWES2V5GVNU7J",
+    "var_name": "Adams Monthly $1115",
+    "plan_id": "JNENSFTZF6GG5F7QAYIBAPDG",
+    "plan_name": "Adams Monthly 1115",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WON3WWTGZZMWSA6ZTWFAHPZL",
+    "var_name": "Adams Monthly $1120",
+    "plan_id": "63TXTMQAOAROKDVSX3KKBWEQ",
+    "plan_name": "Adams Monthly 1120",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3ZPMWXAGMDEOF55NADTFGBA2",
+    "var_name": "Adams Monthly $1125",
+    "plan_id": "QNRA7KHGY2ULRTIZTCZ6CPCT",
+    "plan_name": "Adams Monthly 1125",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YE5CIHOIJ64RRY54IJ7NYXSZ",
+    "var_name": "Adams Monthly $1130",
+    "plan_id": "XSJ4TQ73IJV5W6PUP26RPMO7",
+    "plan_name": "Adams Monthly 1130",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6MF5PYUYGPXBNQ4M6WKCVTBV",
+    "var_name": "Adams Monthly $1135",
+    "plan_id": "GN3JDOU5Q3SKOYGWGSZJ7FHT",
+    "plan_name": "Adams Monthly 1135",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FIHI3CJ6LRUKW3VZREKBZHHM",
+    "var_name": "Adams Monthly $1140",
+    "plan_id": "D6GDSBSMCS7T7JUYN3WTLLKA",
+    "plan_name": "Adams Monthly 1140",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CGBZHD3ZZU5DK3DQUIDS3SRI",
+    "var_name": "Adams Monthly $1145",
+    "plan_id": "D3SYQ4YC5F4RUBA7WH4Z3PBC",
+    "plan_name": "Adams Monthly 1145",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CNJUMNMWUB6FUQFGBAZXDZPC",
+    "var_name": "Adams Monthly $1155",
+    "plan_id": "OI5VDMIRZHYHPQD5JJER6IVN",
+    "plan_name": "Adams Monthly 1155",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CVYLB2SCWWHBF42QZJ2VWLN6",
+    "var_name": "Adams Monthly $1160",
+    "plan_id": "GMPUZIRUWKMVH4Q775NMIE6F",
+    "plan_name": "Adams Monthly 1160",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "65NKHOBKKZ3WBCDP7TZVI33Z",
+    "var_name": "Adams Monthly $1165",
+    "plan_id": "AFDTMDLI4O5WWW4MNM7FEC42",
+    "plan_name": "Adams Monthly 1165",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6A2P2BXW37XQKXDVXUGRAATW",
+    "var_name": "Adams Monthly $1170",
+    "plan_id": "US4R6MWNFS4SQF4B4VHVPW2H",
+    "plan_name": "Adams Monthly 1170",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MO4SEGASICWJNVLU6WOPJWT5",
+    "var_name": "Adams Monthly $1175",
+    "plan_id": "U2P6JZEALL232W5PZHSKCLYA",
+    "plan_name": "Adams Monthly 1175",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "F6MZNO63M6EF6DBVFTURWVLR",
+    "var_name": "Adams Monthly $1180",
+    "plan_id": "DYUSCNKYTONSXNHFSQVZ5L6J",
+    "plan_name": "Adams Monthly 1180",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OZAFLKP7Q3EWDGFF5VQUMLSQ",
+    "var_name": "Adams Monthly $1185",
+    "plan_id": "DBB2RV47TLCVLL2RAWQJKZ5V",
+    "plan_name": "Adams Monthly 1185",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YVQLR4MIZJ65LQX7D4SHA5C7",
+    "var_name": "Adams Monthly $1190",
+    "plan_id": "IYJFLPALMC3J24FI4YPXD3MZ",
+    "plan_name": "Adams Monthly 1190",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YNMAOSTTPD5QLVD3IB4VGJXU",
+    "var_name": "Adams Monthly $1195",
+    "plan_id": "R3JB56FWGGWYQWB3OTTCADHQ",
+    "plan_name": "Adams Monthly 1195",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LOB4LZFOYQJN2MBNTER6ZCQK",
+    "var_name": "Adams Monthly $1205",
+    "plan_id": "6Z6OE6EVLENVOLUTUBVGUXAK",
+    "plan_name": "Adams Monthly 1205",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "KFELDRG4TXZ7P57PFGPC6DDM",
+    "var_name": "Adams Monthly $1210",
+    "plan_id": "CE3RYSGV4FOJSZTSBICGZDAR",
+    "plan_name": "Adams Monthly 1210",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HIFXAAEEEXSIFHLBBTKKCI4U",
+    "var_name": "Adams Monthly $1215",
+    "plan_id": "LYLHQFNVL63OETIBLUIL72VK",
+    "plan_name": "Adams Monthly 1215",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NW255A7M2ALEKD64N67HPHWL",
+    "var_name": "Adams Monthly $1220",
+    "plan_id": "A5Q2WCMPUFUP52RJNOCQKR4A",
+    "plan_name": "Adams Monthly 1220",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NKB63GATGPM72GVQOLX5Q2R5",
+    "var_name": "Adams Monthly $1225",
+    "plan_id": "7O4YUOEV44LBFT5RWBT4ZRGX",
+    "plan_name": "Adams Monthly 1225",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DU5T4E6YWYS56K2GGMCDQ4IN",
+    "var_name": "Adams Monthly $1230",
+    "plan_id": "THOZAV7MWWQBWAHWX7QHCPNS",
+    "plan_name": "Adams Monthly 1230",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3FJ5ILFYP3JWOZ653ZZSIETN",
+    "var_name": "Adams Monthly $1235",
+    "plan_id": "LPKNMPCS62UC2CRYRMTFR6DE",
+    "plan_name": "Adams Monthly 1235",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "L4YOO2TSJ3ENJZQ773A57WGY",
+    "var_name": "Adams Monthly $1240",
+    "plan_id": "L53NN24RXYHC7OK26EDLDTOH",
+    "plan_name": "Adams Monthly 1240",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SCHSQXQASTHA2JNO5YUORHIS",
+    "var_name": "Adams Monthly $1245",
+    "plan_id": "AEBX3WXTJYEARVYTY37V7BOK",
+    "plan_name": "Adams Monthly 1245",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CMWC6ALT4UFTDN7TXNUVJN3L",
+    "var_name": "Adams Monthly $1255",
+    "plan_id": "NDMK7WXOI5RZY2DGIVPYVL4N",
+    "plan_name": "Adams Monthly 1255",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZB4KRACMFQ2A7RJGSZK3HGCW",
+    "var_name": "Adams Monthly $1260",
+    "plan_id": "RLRVQLNKYHC3INWVYMYYMHGD",
+    "plan_name": "Adams Monthly 1260",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DYDKLBRUBT3T4MEX5FEGBSGY",
+    "var_name": "Adams Monthly $1265",
+    "plan_id": "UK6KHHM6A6HIIDRD5XWZGDAD",
+    "plan_name": "Adams Monthly 1265",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VST3P4LHBUUBKACUOEFSW26R",
+    "var_name": "Adams Monthly $1270",
+    "plan_id": "SHATVSWT2A3RTOE3UO652SSK",
+    "plan_name": "Adams Monthly 1270",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FWWCXC2T4CVQAWYOKY2TSI4R",
+    "var_name": "Adams Monthly $1275",
+    "plan_id": "DE2F4C7YAQ7W7WODEV55TDYW",
+    "plan_name": "Adams Monthly 1275",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "K5GF3DBFXWFY77X37ROBZ4KM",
+    "var_name": "Adams Monthly $1280",
+    "plan_id": "4PDAJ7BTJA7K3PSTF33LY7GB",
+    "plan_name": "Adams Monthly 1280",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CZ5H4TZ37IRGVFO3J562PJCR",
+    "var_name": "Adams Monthly $1285",
+    "plan_id": "6MR5XUHFNX5R6F2XCQMM426J",
+    "plan_name": "Adams Monthly 1285",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TWHOVIM7I6Q3ITQQBX56B2BF",
+    "var_name": "Adams Monthly $1290",
+    "plan_id": "YY4BUJBOZD3PQUGJF5PRNXH7",
+    "plan_name": "Adams Monthly 1290",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "F6FXWTZUN7MVNDCLJWSUG5KP",
+    "var_name": "Adams Monthly $1295",
+    "plan_id": "DBD653KMXUHZDW2TNPXA5R6F",
+    "plan_name": "Adams Monthly 1295",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QTSONOLQF6H6ZGMYJEJHLMRU",
+    "var_name": "Adams Monthly $1305",
+    "plan_id": "Z37NNQF4KPIK5SGYOQ6QUZ77",
+    "plan_name": "Adams Monthly 1305",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JYXQES35VCV7AIXAG6Z4PQ4C",
+    "var_name": "Adams Monthly $1310",
+    "plan_id": "RXSYAGCEI6MDV3LWJLICKQY7",
+    "plan_name": "Adams Monthly 1310",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6XGC242JKY32BAHYKSKOATKZ",
+    "var_name": "Adams Monthly $1315",
+    "plan_id": "P7M3S5ELY4DVSDZJHN6QQX6R",
+    "plan_name": "Adams Monthly 1315",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "S7MJ2THNIJ3ROZBKVM7HLAKY",
+    "var_name": "Adams Monthly $1320",
+    "plan_id": "QFGBIMJANVPMVFPCRJ562WHY",
+    "plan_name": "Adams Monthly 1320",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WMCYFJQA3P3Q5OYNAQZELEUM",
+    "var_name": "Adams Monthly $1325",
+    "plan_id": "I2YB5D2JOAZKVCIRG76SUBRI",
+    "plan_name": "Adams Monthly 1325",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "257DNFS6NWUIMBQM552KU5OS",
+    "var_name": "Adams Monthly $1330",
+    "plan_id": "KMIGMGW5YPSZBRXJ6UO6T2QN",
+    "plan_name": "Adams Monthly 1330",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XLUB62LZTWBVSFPSLEJFD7G4",
+    "var_name": "Adams Monthly $1335",
+    "plan_id": "M523WAOIV7BAP5KSXUTZNZC5",
+    "plan_name": "Adams Monthly 1335",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "V6AVJZDWUQ7ZUJMFYSTZWQGH",
+    "var_name": "Adams Monthly $1340",
+    "plan_id": "ATQIBOH7WZSR4WPU7VK7Y6TH",
+    "plan_name": "Adams Monthly 1340",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TH6BMBKYK6OGFUNTCX6Q6KBY",
+    "var_name": "Adams Monthly $1345",
+    "plan_id": "V3UBHDOTK6B37KL7B6YKLGWK",
+    "plan_name": "Adams Monthly 1345",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EDE5JFMU2OEMUAFK26SC2ZSN",
+    "var_name": "Adams Monthly $1355",
+    "plan_id": "YVANFZV5U4NFL6O5IFCN6ONM",
+    "plan_name": "Adams Monthly 1355",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "T6TKF6DOFAP4PGEWFYXL2QEA",
+    "var_name": "Adams Monthly $1360",
+    "plan_id": "GJ6KVYXIGOAYXQIAJNRJSOE2",
+    "plan_name": "Adams Monthly 1360",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2AB3DYI42ZBPSZH5NVLVFP4J",
+    "var_name": "Adams Monthly $1365",
+    "plan_id": "6WCUJCDKO7NOWGP5CH2EWLNF",
+    "plan_name": "Adams Monthly 1365",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BKBI74TU6RQ4O54ZE5FPR3VF",
+    "var_name": "Adams Monthly $1370",
+    "plan_id": "F5F4ERHNTKC3E3ILALF776G3",
+    "plan_name": "Adams Monthly 1370",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VARPTU3N7PNKH7FGNXI4SUPN",
+    "var_name": "Adams Monthly $1375",
+    "plan_id": "5F6PD2LQMNCUBJHWLZCF4RTW",
+    "plan_name": "Adams Monthly 1375",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FX3DVIEEERT57B6RG44EIL54",
+    "var_name": "Adams Monthly $1380",
+    "plan_id": "PHUPTPTS2RGX6HULDHQZ2K4S",
+    "plan_name": "Adams Monthly 1380",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Y5D6BWD36UXJWCWJSE5XKAP5",
+    "var_name": "Adams Monthly $1385",
+    "plan_id": "ZSVJYKQB6BTSDHLBJSINUOSL",
+    "plan_name": "Adams Monthly 1385",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GNZCBI4U3ERVILV6WU2HYPXA",
+    "var_name": "Adams Monthly $1390",
+    "plan_id": "3A7WJGR4V433OSDEEEJU7BED",
+    "plan_name": "Adams Monthly 1390",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HYXTV5TTUVUGVOJYVS2GJCV4",
+    "var_name": "Adams Monthly $1395",
+    "plan_id": "XK6BTLJR4V5IMCBKDGRVUZE3",
+    "plan_name": "Adams Monthly 1395",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4RZPB7LV3AOOOEH4Y2YH6PFY",
+    "var_name": "Adams Monthly $1405",
+    "plan_id": "WXHTOXPKOWEYQGJZKKPSXX23",
+    "plan_name": "Adams Monthly 1405",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UDIXNRVBAL2EO7ST32GZ755T",
+    "var_name": "Adams Monthly $1410",
+    "plan_id": "5HWF26BDCSVLH6634GHI2KNP",
+    "plan_name": "Adams Monthly 1410",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "E5HR25D7D7VXSUPJTZORBOZS",
+    "var_name": "Adams Monthly $1415",
+    "plan_id": "44JGXHTUUITQ4MYXJS7FLKIC",
+    "plan_name": "Adams Monthly 1415",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZNLDU7CNL57QWNYS7FRG7OPR",
+    "var_name": "Adams Monthly $1420",
+    "plan_id": "ZAERQ46XZS5NJPVSPIVZK6LQ",
+    "plan_name": "Adams Monthly 1420",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DHMTY4BDTCLZHYUTQ2QVHOEQ",
+    "var_name": "Adams Monthly $1425",
+    "plan_id": "PUPWVYIGXFYDQHUXOHYESXC2",
+    "plan_name": "Adams Monthly 1425",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "36BR7WLHLOH6UWEAZGXRAZD6",
+    "var_name": "Adams Monthly $1430",
+    "plan_id": "GWUP5XXSEE5JTUYJKNJ6E7KC",
+    "plan_name": "Adams Monthly 1430",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "42TCWLYMS23WIGO2A7NOT42E",
+    "var_name": "Adams Monthly $1435",
+    "plan_id": "N2LLCP7ACMNGJ3ZKRWD7MLS3",
+    "plan_name": "Adams Monthly 1435",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MOT3QXHRGCNTK4VMETRNZAYV",
+    "var_name": "Adams Monthly $1440",
+    "plan_id": "M66NCBQJI6Z5PRRFRJZHHETP",
+    "plan_name": "Adams Monthly 1440",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "66CTOY6OTDWJ6W6XTTE4SYXG",
+    "var_name": "Adams Monthly $1445",
+    "plan_id": "BHWHFROR6OUGCCRWKYJVTSMV",
+    "plan_name": "Adams Monthly 1445",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RFBTAGQ3H6G2ORIF7PTPSHXB",
+    "var_name": "Adams Monthly $1455",
+    "plan_id": "46HU3GQNLLUHEV3G734YD2HW",
+    "plan_name": "Adams Monthly 1455",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "IBRWSPYVKCNJGD5Z7QQHM7AQ",
+    "var_name": "Adams Monthly $1460",
+    "plan_id": "OT4RWMIAXVORBU4ZF5RE2MB3",
+    "plan_name": "Adams Monthly 1460",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZCPXXDJLP6IQEVPQ2NCNIUB7",
+    "var_name": "Adams Monthly $1465",
+    "plan_id": "DZW4P6MR34ZG254PABI55U3D",
+    "plan_name": "Adams Monthly 1465",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UZA37OXQG4LMGVP5YROWISYF",
+    "var_name": "Adams Monthly $1470",
+    "plan_id": "7N52XHDJVHDJKVZL5GE342XB",
+    "plan_name": "Adams Monthly 1470",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "V7WSY6FPE6BTGF6VKCQTPJHO",
+    "var_name": "Adams Monthly $1475",
+    "plan_id": "XXQG6DBLHHGP4SIST374ZHVK",
+    "plan_name": "Adams Monthly 1475",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "O7YN2GOYPWF367UEBXJ3TQZ2",
+    "var_name": "Adams Monthly $1480",
+    "plan_id": "J5CGZS46JTA5HPZTYQSR7BVC",
+    "plan_name": "Adams Monthly 1480",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NHOKMG7XHF743N2BDN7CTPKT",
+    "var_name": "Adams Monthly $1485",
+    "plan_id": "RFRICVUC7ZKZBKGGEHV5NZJF",
+    "plan_name": "Adams Monthly 1485",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LO73MZSNQWUEUKUDXPDC7VTD",
+    "var_name": "Adams Monthly $1490",
+    "plan_id": "GWBR3VVTIEGKUYN32DQ7DRQY",
+    "plan_name": "Adams Monthly 1490",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UPZG6VW5BOB25UNJ27DQZAJI",
+    "var_name": "Adams Monthly $1495",
+    "plan_id": "JFBHT6ZPI4GGZN6HFD4VXPST",
+    "plan_name": "Adams Monthly 1495",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "W7NRWWQRSGET2UU5XNSNH52H",
+    "var_name": "Adams Monthly $1505",
+    "plan_id": "4EBCYRUJ5D4YNMNDCWN2ODLK",
+    "plan_name": "Adams Monthly 1505",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HQ44X7CHSHN7JOKTJ3FMTQ5Z",
+    "var_name": "Adams Monthly $1510",
+    "plan_id": "7QZD6KINS4NJMWZTAEJOVDPA",
+    "plan_name": "Adams Monthly 1510",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "73LFI7T2X7QM4SH3ZN65YF4U",
+    "var_name": "Adams Monthly $1515",
+    "plan_id": "23YEHIL6QXUGUH5LZET5FO3V",
+    "plan_name": "Adams Monthly 1515",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FLZI55GFK4RO26M5SLG7CKQF",
+    "var_name": "Adams Monthly $1520",
+    "plan_id": "MRLTQGMYM4I7K75SNZZ2QAXU",
+    "plan_name": "Adams Monthly 1520",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YDLSAQ7IVTPA4IC7PGY2FCOL",
+    "var_name": "Adams Monthly $1525",
+    "plan_id": "EQPF5CT76Q563YZMVVAEKCCH",
+    "plan_name": "Adams Monthly 1525",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QSK23PQRGW5BMRVHQKAAVF4K",
+    "var_name": "Adams Monthly $1530",
+    "plan_id": "EETJCBBL3NJOJLIZSJEU3L2O",
+    "plan_name": "Adams Monthly 1530",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "P3XM7P2A6XCCEXJNJLXQWMMK",
+    "var_name": "Adams Monthly $1535",
+    "plan_id": "C3CAN4X2LOMXLASET4UBIX52",
+    "plan_name": "Adams Monthly 1535",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4ZDXVWZWA4D73D67K2ZT4ZU3",
+    "var_name": "Adams Monthly $1540",
+    "plan_id": "6B4WH6KDIC5RNW4EIN5ZLB46",
+    "plan_name": "Adams Monthly 1540",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SAXVXN3GSSENCPVZBIMHECJE",
+    "var_name": "Adams Monthly $1545",
+    "plan_id": "IPH6V5PP3HXRO3EP6X2IDRWU",
+    "plan_name": "Adams Monthly 1545",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SKUT4SQO77SNF4R2ZHLBEPKL",
+    "var_name": "Adams Monthly $60",
+    "plan_id": "3Y2EROGTOXEASTNBOGI3GMGV",
+    "plan_name": "Adams Monthly 60",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SFUDB247WWHQTBVY2GSCQRGQ",
+    "var_name": "Adams Monthly $135",
+    "plan_id": "SBATSOV3ZOMKXC2W4ONWT7IP",
+    "plan_name": "Adams Monthly 135",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YDE7Q6M6FSSO5ZQLW3H53HOB",
+    "var_name": "Adams Monthly $140",
+    "plan_id": "TXCGPWHTSEAGLNT2ETCGGBLR",
+    "plan_name": "Adams Monthly 140",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EEY6OZ7GPLUD7UY2W3WZYC7Z",
+    "var_name": "Adams Monthly $145",
+    "plan_id": "TH6JANRWCRBTWQBLASJOR3DV",
+    "plan_name": "Adams Monthly 145",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Q5OZIUCYIMC56QMH4WAECL3Q",
+    "var_name": "Adams Monthly $1500",
+    "plan_id": "IMZZLFPKFNMLFG262TYUDBT5",
+    "plan_name": "Adams Monthly 1500",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ON65YBYU7YYE5G5LCKWTM7KO",
+    "var_name": "Adams Monthly $1550",
+    "plan_id": "WKYB7JTFHZTEQF234LYOZPQ7",
+    "plan_name": "Adams Monthly 1550",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QJEFB7L63EWTUAHHKLZFAUAP",
+    "var_name": "Adams Monthly $1555",
+    "plan_id": "MAUW7SNQ6D6XLAWSED2B5LI2",
+    "plan_name": "Adams Monthly 1555",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XHGQKO6FUTJXOHPSGTUPBROY",
+    "var_name": "Adams Monthly $1560",
+    "plan_id": "NVY7MY55MKNXT6FP6PT62DJ4",
+    "plan_name": "Adams Monthly 1560",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "REW5MF2CHHUYFPUNGMDASL6E",
+    "var_name": "Adams Monthly $1565",
+    "plan_id": "KNJDCLDNMIFAHYVCKPTI67LB",
+    "plan_name": "Adams Monthly 1565",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3WLET6SSR6WJPWXRYZ453DRA",
+    "var_name": "Adams Monthly $1570",
+    "plan_id": "DPJXE7HUQUPE64EA22GWO2H5",
+    "plan_name": "Adams Monthly 1570",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZLHQXQFFMPIEOZZWK2QDILGO",
+    "var_name": "Adams Monthly $1575",
+    "plan_id": "CE5NASV3UUQREMFNQUD5ZKMT",
+    "plan_name": "Adams Monthly 1575",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EQVDH6RLW5M7TDJ2MGMRQQ5D",
+    "var_name": "Adams Monthly $1580",
+    "plan_id": "64LQG2LHVDCQBNXOM672EFSP",
+    "plan_name": "Adams Monthly 1580",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WKFKDEFH2BV6G2V4U5LFYDKW",
+    "var_name": "Adams Monthly $1585",
+    "plan_id": "NLLT62W5WHTKKMYYSZZ2E6LT",
+    "plan_name": "Adams Monthly 1585",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PP3IMCNDJXEVRRW3KOAYS25C",
+    "var_name": "Adams Monthly $1590",
+    "plan_id": "OUOFQQTENDVFX22YKVMZVUWR",
+    "plan_name": "Adams Monthly 1590",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LHQBQHLJREBHMZYVIJG32RWW",
+    "var_name": "Adams Monthly $1595",
+    "plan_id": "XLKLSO53HUVANRW3BBLBJSQX",
+    "plan_name": "Adams Monthly 1595",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DKC3OVOZJXDSCNSZRV4CPP5U",
+    "var_name": "Adams Monthly $1600",
+    "plan_id": "6MEJIFH4TZHEEW3NKGNAQEVM",
+    "plan_name": "Adams Monthly 1600",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ADW63C6TSPQPTSTIQWJYBU7I",
+    "var_name": "Adams Monthly $1605",
+    "plan_id": "J4LMJFRIVLY2KBMKOCP5GUZ2",
+    "plan_name": "Adams Monthly 1605",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MVKZQR5SFDVIFY3RM6OWE2SW",
+    "var_name": "Adams Monthly $1610",
+    "plan_id": "SY2OD7Y4QSED7Z4GWYWLU5R3",
+    "plan_name": "Adams Monthly 1610",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PSVIRFHGOM44N5V5NMCBXAEY",
+    "var_name": "Adams Monthly $1615",
+    "plan_id": "AMF7DAJAAYABOPFO2FDTDYK7",
+    "plan_name": "Adams Monthly 1615",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "C66NOVRMMYN6GB2QYMB3KQHB",
+    "var_name": "Adams Monthly $1620",
+    "plan_id": "BOMRVTAEDU2RDWCBQ7KXJWVW",
+    "plan_name": "Adams Monthly 1620",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "OFOPCSVWGJ7T7UR5Q3JDLOX5",
+    "var_name": "Adams Monthly $1625",
+    "plan_id": "ZIDARLHAXTSPB2WUHQJ5GL66",
+    "plan_name": "Adams Monthly 1625",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7SRHBULBJJXC6KFHVHH5MQYH",
+    "var_name": "Adams Monthly $1630",
+    "plan_id": "5HIZLZ6NFO5DUSQYV6LHMT3C",
+    "plan_name": "Adams Monthly 1630",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WKD5L24ZSGTKKY5J6ISWFYKV",
+    "var_name": "Adams Monthly $1635",
+    "plan_id": "OKCVOYGYUSIX35NISAS3CIPL",
+    "plan_name": "Adams Monthly 1635",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LE3HDQF5F3MITBURYSCCIZDJ",
+    "var_name": "Adams Monthly $1640",
+    "plan_id": "B5EJ5SMH5RXWYMDSLVGRQMAD",
+    "plan_name": "Adams Monthly 1640",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "B2M5LG6S7ROEUEOO4HFJKJSF",
+    "var_name": "Adams Monthly $1645",
+    "plan_id": "UEO33NO44OYPJQVO5HYPKEMH",
+    "plan_name": "Adams Monthly 1645",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "D5HPFPUIWYKTTQIQDWQGE72K",
+    "var_name": "Adams Monthly $1650",
+    "plan_id": "IQ62UYIWY4TJ56YFX2CR6WPV",
+    "plan_name": "Adams Monthly 1650",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WU67GRGDA56CAGNNMX4DG4MQ",
+    "var_name": "Adams Monthly $1655",
+    "plan_id": "X5F564UJ7AOK5J5A4FQQ3TFU",
+    "plan_name": "Adams Monthly 1655",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DM63T3TH33XYWWNGHIC4LQ3F",
+    "var_name": "Adams Monthly $1660",
+    "plan_id": "Z5Q2BINZGJEO6L6A2QKF4R6O",
+    "plan_name": "Adams Monthly 1660",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DGNTL2AGX2OX6EF6LL6VCUWN",
+    "var_name": "Adams Monthly $1665",
+    "plan_id": "552MDI32P7WSGLDTITL7ZNQE",
+    "plan_name": "Adams Monthly 1665",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "C45GAPBMUWLPVJ4CCFNKNWEM",
+    "var_name": "Adams Monthly $1670",
+    "plan_id": "4HJMUFFHXTMSJWL66XPL2OKF",
+    "plan_name": "Adams Monthly 1670",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GWN3CNFA3P65DK3RJJDQJS2J",
+    "var_name": "Adams Monthly $1675",
+    "plan_id": "XJHLQ6DLVRW662CQSPEYVEDD",
+    "plan_name": "Adams Monthly 1675",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DIF7NSH753N5TSLH4M4BSAGM",
+    "var_name": "Adams Monthly $1680",
+    "plan_id": "ZDVEUY5GMJUXH26ZGML2UP77",
+    "plan_name": "Adams Monthly 1680",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2QQRVFA47T5QCNY2D4RHOCAT",
+    "var_name": "Adams Monthly $1685",
+    "plan_id": "IK7CZBPAV6VHV664SPTB2S56",
+    "plan_name": "Adams Monthly 1685",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4REFFPTLCEWKMYKIGVQQPQBM",
+    "var_name": "Adams Monthly $1690",
+    "plan_id": "W75NTFNMZQ2PY4ZLBJPYPIV2",
+    "plan_name": "Adams Monthly 1690",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "AF7Z6RCFKAM7GBG7C4K3ZZD6",
+    "var_name": "Adams Monthly $1695",
+    "plan_id": "LKGNK2RG5QQJK2UU6MIBEZCT",
+    "plan_name": "Adams Monthly 1695",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Q74QAWMXLSU2ELNKEWKJ4XC3",
+    "var_name": "Adams Monthly $1700",
+    "plan_id": "T2YGRRPKT3TSQEJPHNGCHWKW",
+    "plan_name": "Adams Monthly 1700",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EYEFZLK7SJRMSKPLR5USNAFN",
+    "var_name": "Adams Monthly $1705",
+    "plan_id": "JTR4WNLPOOXQ4P2LPERLFTIV",
+    "plan_name": "Adams Monthly 1705",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "R7NQNAE3THGXY42PZG6ODKHS",
+    "var_name": "Adams Monthly $1710",
+    "plan_id": "L3F7HGKG2SOFEQVRJZTGOUAT",
+    "plan_name": "Adams Monthly 1710",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RUHORCCVT73KLTX24ZYIVSJU",
+    "var_name": "Adams Monthly $1715",
+    "plan_id": "VP2L7CFQ52HZPH3BA6SUVLB3",
+    "plan_name": "Adams Monthly 1715",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TPTFHJLTDHJI3AUG5A3ZQH2G",
+    "var_name": "Adams Monthly $1720",
+    "plan_id": "24YICYOU4YKP2OGBU2CUXGUI",
+    "plan_name": "Adams Monthly 1720",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "JLA4JYTPNTXLEPS35QP4FF6U",
+    "var_name": "Adams Monthly $1725",
+    "plan_id": "XXXKWVVTBS2E5G3QYBE4EMI7",
+    "plan_name": "Adams Monthly 1725",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RL4EAXTBVLR5L42PXK6XCKDG",
+    "var_name": "Adams Monthly $1730",
+    "plan_id": "T5D3BH3HKMDBFE2WOQV3CWMB",
+    "plan_name": "Adams Monthly 1730",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Z53Z7U3I2GXLD3FDZQ4ACXLI",
+    "var_name": "Adams Monthly $1735",
+    "plan_id": "HXGS2HJSCN77YVSHWT6GCZG5",
+    "plan_name": "Adams Monthly 1735",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WCWF5BMNM6NJQHYSBD5LHQ7W",
+    "var_name": "Adams Monthly $1740",
+    "plan_id": "5VR6NAZINQ6MNU2CITI5YTAM",
+    "plan_name": "Adams Monthly 1740",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XBPFCQ245S46MVZCNKZBVPTK",
+    "var_name": "Adams Monthly $1745",
+    "plan_id": "4R26EBPLNHRZCV64LWC474UZ",
+    "plan_name": "Adams Monthly 1745",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3CYDEENC2JUWWXA5S7LJHCEY",
+    "var_name": "Adams Monthly $1750",
+    "plan_id": "PQXGDUYNOS2X2TSFVQPELWX4",
+    "plan_name": "Adams Monthly 1750",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NPGQAB4VAL5MLWROV6YCKWIS",
+    "var_name": "Adams Monthly $1755",
+    "plan_id": "LSYWR4RTVNEEZRKPWRUXB52C",
+    "plan_name": "Adams Monthly 1755",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZYF2CJHSXZLGGLAW4R2ESGMD",
+    "var_name": "Adams Monthly $1760",
+    "plan_id": "NDP4I3UWPSNVQOPGYCYYAED3",
+    "plan_name": "Adams Monthly 1760",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "3ASMNAFHUNAAIBZ7PXZXVDWJ",
+    "var_name": "Adams Monthly $1765",
+    "plan_id": "4N3XIDRCNZWR3IGYNWTAPUBK",
+    "plan_name": "Adams Monthly 1765",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VCEHQAAMEUIZ3W7RCRTMFGV5",
+    "var_name": "Adams Monthly $1770",
+    "plan_id": "6R7M7IWPKRAVVV5IH24QXTGM",
+    "plan_name": "Adams Monthly 1770",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "IF57YUBRZTCQXNUKAWWI6GHJ",
+    "var_name": "Adams Monthly $1775",
+    "plan_id": "GPE5WGNTGGEUOFVKIYJOXRAZ",
+    "plan_name": "Adams Monthly 1775",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EKH7M4JY2IJBXSHW5OTRRXEL",
+    "var_name": "Adams Monthly $1780",
+    "plan_id": "A7XZTXK3YPSPDQPEPGPVPYMP",
+    "plan_name": "Adams Monthly 1780",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6QWAYXNGPW4VKIXX7GJ2VARC",
+    "var_name": "Adams Monthly $1785",
+    "plan_id": "NMTSDBXP522SIV7SQGTJJCRH",
+    "plan_name": "Adams Monthly 1785",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "G5G6UHVZDYS3ZTAMXZ4FBNYV",
+    "var_name": "Adams Monthly $1790",
+    "plan_id": "BYINMUXK5ZJM4KI4SMNBPVHY",
+    "plan_name": "Adams Monthly 1790",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "RZLJZKO5SPHO5CEQSVHZK54F",
+    "var_name": "Adams Monthly $1795",
+    "plan_id": "ITUGFTJKSUNRPIAZDG7HA5C2",
+    "plan_name": "Adams Monthly 1795",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PG2CS6CQD5OIEX53A6LDRJT5",
+    "var_name": "Adams Monthly $1800",
+    "plan_id": "AB5IPKVTJJDBBV4A3L6HK4EQ",
+    "plan_name": "Adams Monthly 1800",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Z6LJHATMZ2IJQ7JZ5RCRZFHP",
+    "var_name": "Adams Monthly $1805",
+    "plan_id": "LBUVXLHLX55QOV2PPKUC6UZN",
+    "plan_name": "Adams Monthly 1805",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5HW56T7L4ISE3RL7YBDGBFC2",
+    "var_name": "Adams Monthly $1810",
+    "plan_id": "LVAAWWNLQN2FYBU5QYDQR4JL",
+    "plan_name": "Adams Monthly 1810",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GCSINLWEZ5FSDV7RU5THLNIV",
+    "var_name": "Adams Monthly $1815",
+    "plan_id": "PB62W3ER4KEFPINSE3KBRH5A",
+    "plan_name": "Adams Monthly 1815",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Z65IBZIF4V27HN7H5PAVABIJ",
+    "var_name": "Adams Monthly $1820",
+    "plan_id": "QQIAGXGJPMJJOOJ4HNQAG676",
+    "plan_name": "Adams Monthly 1820",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "II7ALFOFMJFT7G4QTSES4GIZ",
+    "var_name": "Adams Monthly $1825",
+    "plan_id": "XKDT6QDGRJWERELVQGO5PRUR",
+    "plan_name": "Adams Monthly 1825",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HZP53VSTK7UAWDBR2MJEYOV3",
+    "var_name": "Adams Monthly $1830",
+    "plan_id": "W5DXTUFTYVZMVBYSKRK3OGTF",
+    "plan_name": "Adams Monthly 1830",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "XBUR56HIJKWWMLP44ZQ3DJMW",
+    "var_name": "Adams Monthly $1835",
+    "plan_id": "PB2IBBO6WGESS7YPLXHA5QOH",
+    "plan_name": "Adams Monthly 1835",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "W3NW6AZV3SLA4OYYI2MIQ7MJ",
+    "var_name": "Adams Monthly $1840",
+    "plan_id": "CLY5BGGVQTGX2WC5T2KZJXN4",
+    "plan_name": "Adams Monthly 1840",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "A6EZY763G23LR2MQNZALO5WK",
+    "var_name": "Adams Monthly $1845",
+    "plan_id": "V3OR2UYX7P3NAD5CORRUWVTV",
+    "plan_name": "Adams Monthly 1845",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2MMZ76MLRLCD4D55S7ETB5PY",
+    "var_name": "Adams Monthly $1850",
+    "plan_id": "5HEIJU3GZVPJ6NNRUDVBZSOW",
+    "plan_name": "Adams Monthly 1850",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "UAMFT6J4FMJ77PJDBM6REMND",
+    "var_name": "Adams Monthly $1855",
+    "plan_id": "B7Q545TMARKLUASV7KGQIUIL",
+    "plan_name": "Adams Monthly 1855",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NT3ST6ZDS5NUQG47YN4T45R2",
+    "var_name": "Adams Monthly $1860",
+    "plan_id": "G6QHNCQXUATSUDHD4G2OE7G5",
+    "plan_name": "Adams Monthly 1860",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZY54OVLBCE5T3UJOTNJJLZ5Q",
+    "var_name": "Adams Monthly $1865",
+    "plan_id": "X3LKMBXIZBBEF3GPBHQWLWDI",
+    "plan_name": "Adams Monthly 1865",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "ZTGJI4NJXIGG6VYPKZFMCIVA",
+    "var_name": "Adams Monthly $1870",
+    "plan_id": "WN4SO5EEIVUAZXJFMKMDISPN",
+    "plan_name": "Adams Monthly 1870",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HT7BZ7E46TIXYK6KBXMT3AUG",
+    "var_name": "Adams Monthly $1875",
+    "plan_id": "W7T7D62ROWNBTSAOTCYSZE2C",
+    "plan_name": "Adams Monthly 1875",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NV2OD3JVI52KESM4XYUSE5JS",
+    "var_name": "Adams Monthly $1880",
+    "plan_id": "HVGU7N74J4NDHAGHDGPFSDHM",
+    "plan_name": "Adams Monthly 1880",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CXL5BTVLFI4C6ENXBXNVP2A6",
+    "var_name": "Adams Monthly $1885",
+    "plan_id": "ZZ7G5VNQWL2EQN6TZTIYFLXK",
+    "plan_name": "Adams Monthly 1885",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "4DM2RFXUSA4LPB2BP3QEPGWP",
+    "var_name": "Adams Monthly $1890",
+    "plan_id": "3FY7MNKZED22MPAPOSLAOQJL",
+    "plan_name": "Adams Monthly 1890",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "TORTHHXJKRNIUKHTRHVALVDY",
+    "var_name": "Adams Monthly $1895",
+    "plan_id": "YPIMB3SBP5KYQTQRRP5NUYEK",
+    "plan_name": "Adams Monthly 1895",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "HZZPO75CHIJEOS2CGCRTEFFE",
+    "var_name": "Adams Monthly $1900",
+    "plan_id": "VQB5SP35STK42MUR2FFZTITP",
+    "plan_name": "Adams Monthly 1900",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "GN2GRJKG4S52PQ6JY3KBEU6V",
+    "var_name": "Adams Monthly $1905",
+    "plan_id": "DOMCU5E2KWMRKC5NPREYCVCB",
+    "plan_name": "Adams Monthly 1905",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FHNRE4HWKHEDUCCBWTMZQRJZ",
+    "var_name": "Adams Monthly $1910",
+    "plan_id": "FJ3RDFFXYGEBWOG63RWCYZHA",
+    "plan_name": "Adams Monthly 1910",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2D4NC6TCBOC7KS77MEQDUU34",
+    "var_name": "Adams Monthly $1915",
+    "plan_id": "7QZZOICBSJRABKYVAT5GYJTP",
+    "plan_name": "Adams Monthly 1915",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7FA5EGPLNUU7RWFPQTLP237B",
+    "var_name": "Adams Monthly $1920",
+    "plan_id": "KCS5FTZUSTCIS7BQQBCM4ZYH",
+    "plan_name": "Adams Monthly 1920",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "YEXE52VCQ7H5IY5W7LRJLY57",
+    "var_name": "Adams Monthly $1925",
+    "plan_id": "JFSWAIJNWSSNCEM7XEC3ZBNH",
+    "plan_name": "Adams Monthly 1925",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "AWXY6SDI4YTPAZ3QFWHPCFXG",
+    "var_name": "Adams Monthly $1930",
+    "plan_id": "D7PNPH2YGHJ4VZU3LFS2FDU4",
+    "plan_name": "Adams Monthly 1930",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VPMMWPXGXREENX7WN3J4XR2M",
+    "var_name": "Adams Monthly $1935",
+    "plan_id": "KHJLOPJXC6MBTFHJW3Y4ZDWV",
+    "plan_name": "Adams Monthly 1935",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "P43WOFS4R557OR5HYXP3PGI2",
+    "var_name": "Adams Monthly $1940",
+    "plan_id": "W5WKIXCMBZHGFWZF5BBTCAT6",
+    "plan_name": "Adams Monthly 1940",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LLXAODFFKW4SP3LREAY4ZGIF",
+    "var_name": "Adams Monthly $1945",
+    "plan_id": "TXFRITUNNYQBHBB4NCZEZCWW",
+    "plan_name": "Adams Monthly 1945",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "C2TWN376C5EQ64O4U75WON7N",
+    "var_name": "Adams Monthly $1950",
+    "plan_id": "POQAUNJGFVRVHVMADNXQPUD6",
+    "plan_name": "Adams Monthly 1950",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NNXDKNDXUG5JCQO3U43AJ3K2",
+    "var_name": "Adams Monthly $1955",
+    "plan_id": "AJEFHB55TDQ4E5XWPJZGGUPV",
+    "plan_name": "Adams Monthly 1955",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QIF2FWWI7FGC5VDDP2N34FDU",
+    "var_name": "Adams Monthly $1960",
+    "plan_id": "EETHJ4RQK2SG5QYRXVATLJ2Q",
+    "plan_name": "Adams Monthly 1960",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "AICLJL7GWG4S5GQFZ2HZ7RAO",
+    "var_name": "Adams Monthly $1965",
+    "plan_id": "YDLHSAKN42PYRQJHM5DDLLNE",
+    "plan_name": "Adams Monthly 1965",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "NKYQWO7FXLUHWRGPKQZLX4Z4",
+    "var_name": "Adams Monthly $1970",
+    "plan_id": "ZV2L32VFWDTWKPPC2DZIOELZ",
+    "plan_name": "Adams Monthly 1970",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "F6UWUOPQDTKUGCSOGW2V5ZQL",
+    "var_name": "Adams Monthly $1975",
+    "plan_id": "AVYJQYZ22ICBNAJC7UTJFEDS",
+    "plan_name": "Adams Monthly 1975",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "VNG6J3FKCEN2EFRHWWS4ELFB",
+    "var_name": "Adams Monthly $1980",
+    "plan_id": "3BEDSZRKODONNFVB2SZZ5WHX",
+    "plan_name": "Adams Monthly 1980",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "7JVF6UXZZLKR54TOV3VLDXX2",
+    "var_name": "Adams Monthly $1985",
+    "plan_id": "EVOTY3CLHD7T6OHJ5RXIAAV6",
+    "plan_name": "Adams Monthly 1985",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "767QAHO6ES5VWKFN5DYDSPDM",
+    "var_name": "Adams Monthly $1990",
+    "plan_id": "3ZVG2RCTIPX4V4SSJGJLHCYX",
+    "plan_name": "Adams Monthly 1990",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "Y2AK2GVYHQ5U6C3WDAOPEVDG",
+    "var_name": "Adams Monthly $1995",
+    "plan_id": "5IVU2XLP2VFMT6UKH2ESZLLO",
+    "plan_name": "Adams Monthly 1995",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QCP56IDNYFJO6CFRWUHPB6WG",
+    "var_name": "Adams Monthly $2000",
+    "plan_id": "P2X6O6LVFSAZ7UMUS3JTYR4Z",
+    "plan_name": "Adams Monthly 2000",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "EJRXPGEAVAN4ACIZJYGX2Z2G",
+    "var_name": "Adams Monthly $600",
+    "plan_id": "PFTSZZ7XP6VVYJNRL7PTFCFX",
+    "plan_name": "Adams Monthly 600",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "5DYKAFOD4YIEZOQYXERIKSXF",
+    "var_name": "Adams Monthly $650",
+    "plan_id": "N5GYTQNDXLMIGRFQLUSQIZQE",
+    "plan_name": "Adams Monthly 650",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FUN7QDGWCSL6GOTMJJOX6LWR",
+    "var_name": "Adams Monthly $700",
+    "plan_id": "QJVY26CNKRZZBXG77VVU3QUA",
+    "plan_name": "Adams Monthly 700",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2CLPAIPEMQM5PKJRY76FTP72",
+    "var_name": "Adams Monthly $750",
+    "plan_id": "PB65SMLNFTOHKDTUKAZI7I72",
+    "plan_name": "Adams Monthly 750",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PM4DX3R5RE62BE4UAFTER3O3",
+    "var_name": "Adams Monthly $800",
+    "plan_id": "IPMI3GBPVVZSOPCWWO6ZWUWS",
+    "plan_name": "Adams Monthly 800",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "A5IAU2ZCRODNXVN6QUHXOYGH",
+    "var_name": "Adams Monthly $850",
+    "plan_id": "PYRDWBJISRYFMHYJQJHYAIDO",
+    "plan_name": "Adams Monthly 850",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "747FUAOSY6YYZX2YJ3DU2SMN",
+    "var_name": "Adams Monthly $900",
+    "plan_id": "PN5C7QVE7AKX5UCDNW2QKLX7",
+    "plan_name": "Adams Monthly 900",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "PIO5MCK4KMD2IQUVND4ZJJTS",
+    "var_name": "Adams Monthly $950",
+    "plan_id": "XDLUC34HA7JARJLMPLNUCNNM",
+    "plan_name": "Adams Monthly 950",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "B2UBJH65OGKQQFV3RKKMKL35",
+    "var_name": "Adams Monthly $1000",
+    "plan_id": "QL3HBEQOKCX3Y34O5AWHBB4Z",
+    "plan_name": "Adams Monthly 1000",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WHJKUNJVJMQNFHORR3BIBQWB",
+    "var_name": "Adams Monthly $1050",
+    "plan_id": "YCZEJLQE7X7JP7E6U5OV5G6C",
+    "plan_name": "Adams Monthly 1050",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "6U4AE7SUE56PHNARQY66PVDO",
+    "var_name": "Adams Monthly $1100",
+    "plan_id": "L3OG7RYKLOK4UTUFGWK4GP6N",
+    "plan_name": "Adams Monthly 1100",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "DKKVUDZNF5HPA2VCIXK6A6J4",
+    "var_name": "Adams Monthly $1150",
+    "plan_id": "5MKIAXLIXBVG6IWZYNQFJ3ZH",
+    "plan_name": "Adams Monthly 1150",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "WRJTT7LTDO2H235R75TR4GZ3",
+    "var_name": "Adams Monthly $1200",
+    "plan_id": "JQWLIQMO3TDS4XJ3A3LES5PP",
+    "plan_name": "Adams Monthly 1200",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "MKLZ3QKCTHNGCIYQ3ETXW7DW",
+    "var_name": "Adams Monthly $1250",
+    "plan_id": "ITYETTK3QAXDHTTPNGYUK6SY",
+    "plan_name": "Adams Monthly 1250",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "CZDVKNCLTDCMEERUTFMOQCN5",
+    "var_name": "Adams Monthly $1300",
+    "plan_id": "RHY4IQ4TWSACVRAFCJANEY7H",
+    "plan_name": "Adams Monthly 1300",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "LBAPGNFWCBQ6QQ5UVIGQCZME",
+    "var_name": "Adams Monthly $1350",
+    "plan_id": "CSNVGRGACKMNYWM37UGMEBNR",
+    "plan_name": "Adams Monthly 1350",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FJ6BUBJ4XDU5HML2FMVTJBOC",
+    "var_name": "Adams Monthly $1400",
+    "plan_id": "GTUWU7KOLF6EWDR7EXQALSJ6",
+    "plan_name": "Adams Monthly 1400",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "QF6TZ3CSLGAUXC3M2COS72MI",
+    "var_name": "Adams Monthly $1450",
+    "plan_id": "BT6VILCRKT3GIR7WX6NLK47N",
+    "plan_name": "Adams Monthly 1450",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "FKHSMI2OTR2QGZ3NYDYO6TXK",
+    "var_name": "Monthly $1",
+    "plan_id": "IRWUAJ5VSGMB4NWHOCKZRXPE",
+    "plan_name": "Adams Test Plan",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "2BCRPQWTYKFN7UHW3SM7ZNYT",
+    "var_name": "Monthly $1",
+    "plan_id": "DU7A5JZTUEDWNRJH3M72NEX6",
+    "plan_name": "Adams Test Plan",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "BVNBGLJQH2ROVNTVBYK5GSIG",
+    "var_name": "Monthly $1",
+    "plan_id": "YZBLYNXIXAYTRAIVZKKXHIRZ",
+    "plan_name": "Adams Test Plan",
+    "cadence": "MONTHLY"
+  },
+  {
+    "var_id": "SEFCM2S2HD7XDUR7IJLC2T6C",
+    "var_name": "Monthly $1",
+    "plan_id": "ZLZJNXUXRGARZKKKEB6FCXHZ",
+    "plan_name": "Adams Test Plan",
+    "cadence": "MONTHLY"
+  }
+]

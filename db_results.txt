@@ -1,0 +1,30 @@
+Fetching 3 customers with these subscription IDs...
+
+--- Customer: Crystal Baker (ID: 21) ---
+Plan ID in DB: 100
+Plan Variation ID in DB: 53ABOOLFZ2RXVLQB4UWNED3Y
+Selected Addons: []
+Logs:
+  - ACTIVATE at 2026-03-11 13:53:07.898839 for sub=ab793446-e780-47f6-af95-ebb7fc5bd3a9
+  - CHANGE_PLAN at 2026-03-24 14:52:12.345324 for sub=ab793446-e780-47f6-af95-ebb7fc5bd3a9
+  - CHANGE_PLAN at 2026-03-24 14:52:14.342774 for sub=ab793446-e780-47f6-af95-ebb7fc5bd3a9
+  - CHANGE_PLAN at 2026-03-24 14:54:19.039163 for sub=ab793446-e780-47f6-af95-ebb7fc5bd3a9
+
+--- Customer: Brian Keigher (ID: 23) ---
+Plan ID in DB: 100
+Plan Variation ID in DB: 53ABOOLFZ2RXVLQB4UWNED3Y
+Selected Addons: ['AYPBEZVQM2WHEZDDU3LBRYL3']
+Logs:
+  - ACTIVATE at 2026-03-14 14:10:01.457546 for sub=41c0aa4a-ff1e-4808-b053-a6211047b518
+  - CHANGE_PLAN at 2026-03-14 17:34:40.608138 for sub=41c0aa4a-ff1e-4808-b053-a6211047b518
+  - CHANGE_PLAN at 2026-03-14 17:34:41.663995 for sub=41c0aa4a-ff1e-4808-b053-a6211047b518
+
+--- Customer: Christa Fulenwider (ID: 24) ---
+Plan ID in DB: 100
+Plan Variation ID in DB: 53ABOOLFZ2RXVLQB4UWNED3Y
+Selected Addons: []
+Logs:
+  - ACTIVATE at 2026-03-16 11:59:05.303506 for sub=59385a8d-ae42-445b-b67c-1fd7877a38f5
+
+Fetching testing plan in DB...
+Testing Plan exists in DB! ID: 100, Name: Monthly Mosquito Package
