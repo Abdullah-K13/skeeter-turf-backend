@@ -134,7 +134,8 @@ def get_admin_analytics(
         if customer.selected_addons:
             for addon_id in customer.selected_addons:
                 if addon_id in addon_map:
-                    addons_cost += addon_map[addon_id].price
+                    if addon_map[addon_id].billing_type != "ONE_TIME":
+                        addons_cost += addon_map[addon_id].price
         
         total_customer_revenue = customer_plan_cost + addons_cost
         
@@ -304,7 +305,8 @@ def list_customers(
              for addon_id in c.selected_addons:
                  if addon_id in all_addons:
                      addon = all_addons[addon_id]
-                     total_monthly_amount += addon.price
+                     if addon.billing_type != "ONE_TIME":
+                         total_monthly_amount += addon.price
                      details_addons.append({"name": addon.name, "price": addon.price})
                  else:
                      details_addons.append({"name": "Unknown Addon", "price": 0.0})
