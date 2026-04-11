@@ -172,12 +172,12 @@ def forgot_password(request: ForgotPasswordRequest, req: Request, db: Session = 
         
     reset_url = f"{frontend_url}/reset-password?token={reset_token}"
     
-    html_content = f\"\"\"
+    html_content = f"""
     <p>Hello {user.first_name},</p>
     <p>You requested to reset your password. Click the link below to set a new password:</p>
     <p><a href="{reset_url}">Reset My Password</a></p>
     <p>If you didn't request this, you can safely ignore this email.</p>
-    \"\"\"
+    """
     
     send_brevo_email(user.email, "Reset your Skeeterman Password", html_content)
     
