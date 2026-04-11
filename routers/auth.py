@@ -146,7 +146,11 @@ def send_brevo_email(to_email: str, subject: str, html_content: str):
         "htmlContent": html_content
     }
     try:
-        requests.post(url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        print(f"Brevo email sent successfully to {to_email}")
+    except requests.exceptions.HTTPError as he:
+        print(f"Brevo API Error ({he.response.status_code}): {he.response.text}")
     except Exception as e:
         print(f"Error sending email: {e}")
 
