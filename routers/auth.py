@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from typing import Optional, List
 from sqlalchemy.orm import Session
 from db.init import get_db
 from models.user import Customer, Admin
-from utils.security import hash_password, verify_password, create_access_token
+from utils.security import hash_password, verify_password, create_access_token, decode_token
 from pydantic import BaseModel, EmailStr
+import requests
+import os
 
 router = APIRouter()
 
@@ -25,6 +27,13 @@ class SignUpRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
 
 @router.post("/signup")
 def signup(request: SignUpRequest, db: Session = Depends(get_db)):
@@ -117,3 +126,76 @@ def admin_login(request: LoginRequest, db: Session = Depends(get_db)):
         "name": admin.name,
         "role": "admin"
     }}
+
+def send_brevo_email(to_email: str, subject: str, html_content: str):
+    api_key = os.getenv("BREVO_API_KEY")
+    if not api_key:
+        print(f"Mock Email to {to_email}:\nSubject: {subject}\nBody: {html_content}")
+        return
+    
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
+    }
+    payload = {
+        "sender": {"email": "hello@skeetermanturfninja.com", "name": "Skeeterman & Turf Ninja"},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "htmlContent": html_content
+    }
+    try:
+        requests.post(url, headers=headers, json=payload)
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+@router.post("/forgot-password")
+def forgot_password(request: ForgotPasswordRequest, req: Request, db: Session = Depends(get_db)):
+    user = db.query(Customer).filter(Customer.email == request.email).first()
+    if not user:
+        # We don't want to reveal if a user exists or not
+        return {"message": "If an account with that email exists, we have sent a reset link"}
+    
+    # Generate token valid for 15 minutes
+    from datetime import timedelta
+    reset_token = create_access_token(
+        data={"sub": user.email, "purpose": "reset_password"},
+        expires_delta=timedelta(minutes=15)
+    )
+    
+    frontend_url = os.getenv("FRONTEND_URL")
+    if not frontend_url:
+        # Try to use origin if available
+        origin = req.headers.get("origin")
+        frontend_url = origin if origin else "http://localhost:5173"
+        
+    reset_url = f"{frontend_url}/reset-password?token={reset_token}"
+    
+    html_content = f\"\"\"
+    <p>Hello {user.first_name},</p>
+    <p>You requested to reset your password. Click the link below to set a new password:</p>
+    <p><a href="{reset_url}">Reset My Password</a></p>
+    <p>If you didn't request this, you can safely ignore this email.</p>
+    \"\"\"
+    
+    send_brevo_email(user.email, "Reset your Skeeterman Password", html_content)
+    
+    return {"message": "If an account with that email exists, we have sent a reset link"}
+
+@router.post("/reset-password")
+def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+    payload = decode_token(request.token)
+    if not payload or payload.get("purpose") != "reset_password":
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    email = payload.get("sub")
+    user = db.query(Customer).filter(Customer.email == email).first()
+    
+    if not user:
+        raise HTTPException(status_code=400, detail="User not found")
+    
+    user.password_hash = hash_password(request.new_password)
+    db.commit()
+    
+    return {"message": "Password has been successfully reset"}
