@@ -140,7 +140,7 @@ def send_brevo_email(to_email: str, subject: str, html_content: str):
         "content-type": "application/json"
     }
     payload = {
-        "sender": {"email": "hello@skeetermanturfninja.com", "name": "Skeeterman & Turf Ninja"},
+        "sender": {"email": "info@skeetermanandturfninja.net", "name": "Skeeterman & Turf Ninja"},
         "to": [{"email": to_email}],
         "subject": subject,
         "htmlContent": html_content
