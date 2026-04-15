@@ -151,8 +151,10 @@ def send_brevo_email(to_email: str, subject: str, html_content: str):
         print(f"Brevo email sent successfully to {to_email}")
     except requests.exceptions.HTTPError as he:
         print(f"Brevo API Error ({he.response.status_code}): {he.response.text}")
+        print(f"Fallback Mock Email Body:\n{html_content}")
     except Exception as e:
         print(f"Error sending email: {e}")
+        print(f"Fallback Mock Email Body:\n{html_content}")
 
 @router.post("/forgot-password")
 def forgot_password(request: ForgotPasswordRequest, req: Request, db: Session = Depends(get_db)):

@@ -620,7 +620,7 @@ def admin_change_subscription(
         raise HTTPException(status_code=404, detail="Customer not found")
 
     from utils.subscription_logic import prepare_subscription_order_items
-    from utils.square_client import create_order, update_subscription, create_subscription, get_catalog_prices
+    from utils.square_client import create_order, update_subscription, swap_subscription_plan, create_subscription, get_catalog_prices
     
     # 1. Fetch and Filter Addons
     recurring_addon_ids = []
@@ -715,10 +715,19 @@ def admin_change_subscription(
 
     # 4. Update or Create Subscription
     if customer.square_subscription_id:
-        # EXISTING SUBSCRIPTION -> UPDATE
+        # EXISTING SUBSCRIPTION -> SWAP plan (plan_variation_id is immutable on UpdateSubscription)
+        # First swap the plan if it's different from the current one
+        if customer.plan_variation_id and customer.plan_variation_id != request.new_plan_variation_id:
+            swap_res = swap_subscription_plan(
+                subscription_id=customer.square_subscription_id,
+                new_plan_variation_id=request.new_plan_variation_id
+            )
+            if not swap_res.get("success"):
+                raise HTTPException(status_code=400, detail=f"Square error swapping plan: {swap_res.get('error')}")
+        
+        # Then update the order template separately
         res = update_subscription(
             subscription_id=customer.square_subscription_id,
-            plan_variation_id=request.new_plan_variation_id,
             order_template_id=order_id
         )
         action = "CHANGE_PLAN"
@@ -859,8 +868,9 @@ def resume_customer_subscription(
     from utils.square_client import resume_subscription
     res = resume_subscription(customer.square_subscription_id)
 
-    if "errors" in res:
-        raise HTTPException(status_code=400, detail=str(res["errors"]))
+    if not res.get("success"):
+        error_detail = res.get("error") or str(res.get("errors", "Unknown error"))
+        raise HTTPException(status_code=400, detail=f"Square error: {error_detail}")
 
     customer.subscription_status = "ACTIVE"
     customer.subscription_active = True

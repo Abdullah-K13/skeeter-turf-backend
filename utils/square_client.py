@@ -571,15 +571,28 @@ def pause_subscription(subscription_id: str) -> Dict[str, Any]:
     except Exception as e:
         return {"errors": [{"detail": str(e)}]}
 
-def resume_subscription(subscription_id: str) -> Dict[str, Any]:
-    """Resume a subscription in Square."""
+def resume_subscription(subscription_id: str, resume_date: Optional[str] = None) -> Dict[str, Any]:
+    """Resume a subscription in Square.
+    
+    Args:
+        subscription_id: The Square subscription ID to resume.
+        resume_date: Optional date string (YYYY-MM-DD). Defaults to today.
+    """
     try:
+        from datetime import date as date_cls
         url = f"{get_square_base_url()}/v2/subscriptions/{subscription_id}/resume"
         headers = get_square_headers()
-        response = requests.post(url, json={}, headers=headers, timeout=10)
-        return response.json()
+        payload = {
+            "resume_effective_date": resume_date or str(date_cls.today()),
+            "resume_change_timing": "IMMEDIATE"
+        }
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        data = response.json()
+        if "subscription" in data:
+            return {"success": True, "subscription": data["subscription"]}
+        return {"success": False, "errors": data.get("errors", []), "error": str(data.get("errors", "Unknown error"))}
     except Exception as e:
-        return {"errors": [{"detail": str(e)}]}
+        return {"success": False, "errors": [{"detail": str(e)}], "error": str(e)}
 
 # --- Invoice Operations ---
 
