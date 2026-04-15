@@ -179,13 +179,112 @@ def forgot_password(request: ForgotPasswordRequest, req: Request, db: Session = 
     reset_url = f"{frontend_url}/reset-password?token={reset_token}"
     
     html_content = f"""
-    <p>Hello {user.first_name},</p>
-    <p>You requested to reset your password. Click the link below to set a new password:</p>
-    <p><a href="{reset_url}">Reset My Password</a></p>
-    <p>If you didn't request this, you can safely ignore this email.</p>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin:0; padding:0; background-color:#f4f7f6; font-family: 'Segoe UI', Arial, Helvetica, sans-serif;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f7f6; padding:40px 20px;">
+            <tr>
+                <td align="center">
+                    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+                        
+                        <!-- Header -->
+                        <tr>
+                            <td style="background: linear-gradient(135deg, #1a5c2e 0%, #2d8a4e 100%); padding:36px 40px; text-align:center;">
+                                <h1 style="margin:0; color:#ffffff; font-size:26px; font-weight:700; letter-spacing:0.5px;">
+                                    🌿 Skeeterman &amp; Turf Ninja
+                                </h1>
+                            </td>
+                        </tr>
+
+                        <!-- Body -->
+                        <tr>
+                            <td style="padding:40px 40px 20px;">
+                                <h2 style="margin:0 0 8px; color:#1a1a1a; font-size:22px; font-weight:600;">
+                                    Password Reset Request
+                                </h2>
+                                <div style="width:50px; height:3px; background-color:#2d8a4e; border-radius:2px; margin-bottom:24px;"></div>
+                                
+                                <p style="margin:0 0 16px; color:#4a4a4a; font-size:15px; line-height:1.7;">
+                                    Hi <strong>{user.first_name}</strong>,
+                                </p>
+                                <p style="margin:0 0 24px; color:#4a4a4a; font-size:15px; line-height:1.7;">
+                                    We received a request to reset the password for your account. Click the button below to create a new password:
+                                </p>
+                            </td>
+                        </tr>
+
+                        <!-- CTA Button -->
+                        <tr>
+                            <td align="center" style="padding:0 40px 24px;">
+                                <a href="{reset_url}" 
+                                   style="display:inline-block; background: linear-gradient(135deg, #2d8a4e 0%, #1a5c2e 100%); color:#ffffff; text-decoration:none; padding:14px 40px; border-radius:8px; font-size:16px; font-weight:600; letter-spacing:0.3px; box-shadow: 0 4px 14px rgba(45,138,78,0.35);">
+                                    Reset My Password
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Link fallback -->
+                        <tr>
+                            <td style="padding:0 40px 16px;">
+                                <p style="margin:0; color:#888; font-size:13px; line-height:1.6;">
+                                    If the button doesn't work, copy and paste this link into your browser:
+                                </p>
+                                <p style="margin:6px 0 0; word-break:break-all;">
+                                    <a href="{reset_url}" style="color:#2d8a4e; font-size:13px; text-decoration:underline;">{reset_url}</a>
+                                </p>
+                            </td>
+                        </tr>
+
+                        <!-- Expiry notice -->
+                        <tr>
+                            <td style="padding:16px 40px 32px;">
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#fef9e7; border-left:4px solid #f0b429; border-radius:4px;">
+                                    <tr>
+                                        <td style="padding:12px 16px;">
+                                            <p style="margin:0; color:#7a6215; font-size:13px; line-height:1.5;">
+                                                ⏰ This link expires in <strong>15 minutes</strong>. If you didn't request a password reset, you can safely ignore this email.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- Divider -->
+                        <tr>
+                            <td style="padding:0 40px;">
+                                <div style="border-top:1px solid #e8e8e8;"></div>
+                            </td>
+                        </tr>
+
+                        <!-- Footer -->
+                        <tr>
+                            <td style="padding:24px 40px 32px; text-align:center;">
+                                <p style="margin:0 0 6px; color:#999; font-size:12px;">
+                                    Skeeterman &amp; Turf Ninja · Wilmington, NC
+                                </p>
+                                <p style="margin:0 0 6px; color:#999; font-size:12px;">
+                                    📞 <a href="tel:9109982281" style="color:#2d8a4e; text-decoration:none;">910-998-2281</a>
+                                </p>
+                                <p style="margin:0; color:#bbb; font-size:11px;">
+                                    You're receiving this because a password reset was requested for your account.
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
     """
     
-    send_brevo_email(user.email, "Reset your Skeeterman Password", html_content)
+    send_brevo_email(user.email, "Reset Your Password - Skeeterman & Turf Ninja", html_content)
     
     return {"message": "If an account with that email exists, we have sent a reset link"}
 
