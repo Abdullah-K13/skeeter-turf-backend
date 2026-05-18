@@ -565,7 +565,16 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
         raise HTTPException(status_code=400, detail="Square customer ID missing")
 
     location_id = request.location_id or os.getenv("SQUARE_LOCATION_ID")
-    
+
+    # Cancel existing subscription before creating a new one
+    if customer and customer.square_subscription_id:
+        from utils.square_client import cancel_subscription
+        cancel_res = cancel_subscription(customer.square_subscription_id)
+        if not cancel_res.get("success"):
+            logger.warning(f"Failed to cancel previous subscription {customer.square_subscription_id}: {cancel_res.get('error')}")
+        else:
+            logger.info(f"Cancelled previous subscription {customer.square_subscription_id} for customer {customer.id}")
+
     # 1. Filter Addons
     recurring_addon_ids = []
     one_time_addons = []
