@@ -158,6 +158,20 @@ def update_square_customer(customer_id: str, **kwargs) -> Dict[str, Any]:
         logger.error(f"Error updating customer: {str(e)}")
         return {"success": False, "error": str(e)}
 
+def delete_square_customer(customer_id: str) -> Dict[str, Any]:
+    """Delete a customer in Square. A 404 (already gone) counts as success."""
+    try:
+        url = f"{get_square_base_url()}/v2/customers/{customer_id}"
+        headers = get_square_headers()
+        response = requests.delete(url, headers=headers, timeout=10)
+        if response.status_code in (200, 404):
+            return {"success": True}
+        data = response.json()
+        return {"success": False, "error": str(data.get("errors", "Unknown error"))}
+    except Exception as e:
+        logger.error(f"Error deleting customer: {str(e)}")
+        return {"success": False, "error": str(e)}
+
 # --- Card Operations ---
 
 def create_card_on_file(source_id: str, customer_id: str, idempotency_key: Optional[str] = None) -> Dict[str, Any]:

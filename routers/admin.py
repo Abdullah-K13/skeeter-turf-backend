@@ -523,6 +523,42 @@ def admin_save_card(
     db.commit()
     return {"success": True, "message": "Card saved successfully"}
 
+@router.delete("/customer/{customer_id}")
+def delete_customer(
+    customer_id: int,
+    db: Session = Depends(get_db),
+    current_user: Admin = Depends(get_current_user)
+):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    customer = db.query(Customer).get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+
+    from utils.square_client import cancel_subscription, delete_square_customer
+    from models.subscription import OneTimeOrder
+
+    if customer.square_subscription_id and customer.subscription_active:
+        cancel_res = cancel_subscription(customer.square_subscription_id)
+        if not cancel_res.get("success"):
+            raise HTTPException(status_code=400, detail=f"Failed to cancel Square subscription: {cancel_res.get('error')}")
+
+    if customer.square_customer_id:
+        delete_res = delete_square_customer(customer.square_customer_id)
+        if not delete_res.get("success"):
+            raise HTTPException(status_code=400, detail=f"Failed to delete Square customer: {delete_res.get('error')}")
+
+    db.query(Payment).filter(Payment.customer_id == customer_id).delete()
+    db.query(PaymentMethod).filter(PaymentMethod.customer_id == customer_id).delete()
+    db.query(SubscriptionLog).filter(SubscriptionLog.customer_id == customer_id).delete()
+    db.query(Invoice).filter(Invoice.customer_id == customer_id).delete()
+    db.query(OneTimeOrder).filter(OneTimeOrder.customer_id == customer_id).delete()
+    db.delete(customer)
+    db.commit()
+
+    return {"success": True, "message": "Customer deleted"}
+
 class UpdateCustomerRequest(BaseModel):
     first_name: str
     last_name: str
