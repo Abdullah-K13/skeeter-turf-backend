@@ -8,7 +8,7 @@ from models.subscription_schedule import SubscriptionPlanSchedule
 from utils.deps import get_current_user, get_db_user
 from utils.square_client import (
     get_subscription_plans,
-    create_square_customer,
+    get_or_create_square_customer,
     create_card_on_file,
     get_customer_cards,
     disable_card,
@@ -79,7 +79,7 @@ def get_one_time_plans(db: Session = Depends(get_db)):
 @router.post("/one-time-payment")
 def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_db)):
     """Process a one-time payment and record the order."""
-    from utils.square_client import process_payment, create_square_customer
+    from utils.square_client import process_payment, get_or_create_square_customer
     from models.subscription import OneTimeOrder, Payment, ItemVariation
     
     # 1. Create/Get Square Customer
@@ -107,7 +107,7 @@ def one_time_payment(request: OneTimePaymentRequest, db: Session = Depends(get_d
         given_name = name_parts[0]
         family_name = name_parts[1] if len(name_parts) > 1 else ""
         
-        sq_res = create_square_customer(
+        sq_res = get_or_create_square_customer(
             given_name=given_name,
             family_name=family_name,
             email=customer_info.get("email")
@@ -352,13 +352,13 @@ def validate_card(request: ValidateCardRequest, db: Session = Depends(get_db)):
         email = request.email or (customer.email if customer else f"guest_{uuid.uuid4().hex[:8]}@example.com")
         
         print(f"DEBUG: Creating Square customer for {email}")
-        res = create_square_customer(
+        res = get_or_create_square_customer(
+            email=email,
             given_name=given_name,
             family_name=family_name,
-            email=email,
             phone_number=request.phone_number or (customer.phone_number if customer else None)
         )
-        print(f"DEBUG: create_square_customer result: {res}")
+        print(f"DEBUG: get_or_create_square_customer result: {res}")
         
         if not res.get("success"):
             raise HTTPException(status_code=400, detail=f"Square customer creation failed: {res.get('error')}")
@@ -469,10 +469,10 @@ def save_card(request: SaveCardRequest, user: Customer = Depends(get_db_user), d
     """
     if not user.square_customer_id:
         # Should ideally have one by now if they reached dashboard, but let's be safe
-        res = create_square_customer(
+        res = get_or_create_square_customer(
+            email=user.email,
             given_name=user.first_name,
             family_name=user.last_name,
-            email=user.email,
             phone_number=user.phone_number
         )
         if not res.get("success"):
@@ -696,8 +696,11 @@ def activate_sub(request: ActivateSubscriptionRequest, db: Session = Depends(get
     if customer:
         customer.square_subscription_id = res.get("subscription_id")
         customer.order_template_id = order_id # Store the order template ID
-        customer.subscription_active = True
-        customer.subscription_status = "ACTIVE"
+        # Take the status Square returned. An out-of-season plan gets a future start_date
+        # and comes back PENDING, not ACTIVE - recording "ACTIVE" here made the DB lie.
+        sq_status = (res.get("subscription") or {}).get("status", "ACTIVE")
+        customer.subscription_active = sq_status == "ACTIVE"
+        customer.subscription_status = sq_status
         customer.selected_addons = request.addons # Store ALL selected addons for reference
         
         # Explicitly assign their plan in case they migrated from one-time or had an error during initial signup

@@ -144,6 +144,42 @@ def get_square_customer_by_email(email: str) -> Dict[str, Any]:
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def get_or_create_square_customer(
+    email: str,
+    given_name: str,
+    family_name: str,
+    phone_number: Optional[str] = None,
+    address: Optional[Dict[str, Any]] = None
+) -> Dict[str, Any]:
+    """Reuse this account's existing Square customer for an email, or create one.
+
+    Square customer records are account-wide while subscriptions belong to a location,
+    so one person buying from several brands in this account (Skeeterman, Adams,
+    Pro Town, ...) must keep ONE customer record with their cards on it. Creating a
+    second record is what split customer 15 across two records in March 2026 and left
+    this backend pointing at an id that was later deleted.
+
+    Returns the usual {"success", "customer_id"} plus "reused": True when an existing
+    record was found.
+    """
+    found = get_square_customer_by_email(email) if email else {"success": False}
+    if found.get("success") and found.get("customer_id"):
+        logger.info(f"Reusing existing Square customer {found['customer_id']} for {email}")
+        return {"success": True, "customer_id": found["customer_id"],
+                "customer": found.get("customer"), "reused": True}
+
+    res = create_square_customer(
+        given_name=given_name,
+        family_name=family_name,
+        email=email,
+        phone_number=phone_number,
+        address=address,
+    )
+    if res.get("success"):
+        res["reused"] = False
+    return res
+
+
 def update_square_customer(customer_id: str, **kwargs) -> Dict[str, Any]:
     """Update a customer in Square."""
     try:
@@ -261,21 +297,12 @@ def create_card_on_file(source_id: str, customer_id: str, idempotency_key: Optio
 def get_customer_cards(customer_id: str) -> Dict[str, Any]:
     """Fetch all cards on file for a customer."""
     try:
-        # Try the newer Cards Search API first
-        url = f"{get_square_base_url()}/v2/cards/search"
+        # ListCards. There is no /v2/cards/search endpoint - it 404s on every call,
+        # which silently emptied the Square half of the admin card list.
+        url = f"{get_square_base_url()}/v2/cards"
         headers = get_square_headers()
-        
-        payload = {
-            "query": {
-                "filter": {
-                    "customer_id": {
-                        "exact": customer_id
-                    }
-                }
-            }
-        }
-        
-        response = requests.post(url, json=payload, headers=headers, timeout=10)
+
+        response = requests.get(url, params={"customer_id": customer_id}, headers=headers, timeout=10)
         
         if response.status_code not in [200, 201]:
             return {"success": False, "error": response.text, "cards": []}
@@ -501,10 +528,12 @@ def cancel_subscription(subscription_id: str) -> Dict[str, Any]:
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-def retrieve_subscription(subscription_id: str) -> Dict[str, Any]:
-    """Retrieve a single subscription by ID."""
+def retrieve_subscription(subscription_id: str, include_actions: bool = False) -> Dict[str, Any]:
+    """Retrieve a single subscription by ID. include_actions also returns queued actions (e.g. a pending SWAP_PLAN)."""
     try:
         url = f"{get_square_base_url()}/v2/subscriptions/{subscription_id}"
+        if include_actions:
+            url += "?include=actions"
         headers = get_square_headers()
         response = requests.get(url, headers=headers, timeout=10)
         data = response.json()

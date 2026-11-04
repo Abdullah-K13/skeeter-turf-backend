@@ -4,25 +4,54 @@ from db.init import get_db
 from models.user import Customer
 from models.subscription import SubscriptionLog
 from datetime import date
+import base64
+import hashlib
+import hmac
+import json
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+
+def verify_square_signature(signature: str, body: bytes) -> bool:
+    """Square signs HMAC-SHA256 over (notification_url + raw body), base64 encoded.
+
+    Fails closed: without both env vars configured, no webhook is accepted. Nothing
+    breaks by doing this today because Square currently has zero webhook subscriptions
+    pointed at this backend - set both when you create one.
+    """
+    key = os.getenv("SQUARE_WEBHOOK_SIGNATURE_KEY")
+    url = os.getenv("SQUARE_WEBHOOK_URL")
+    if not key or not url:
+        logger.error("SQUARE_WEBHOOK_SIGNATURE_KEY / SQUARE_WEBHOOK_URL not set - rejecting webhook")
+        return False
+    expected = base64.b64encode(
+        hmac.new(key.encode(), url.encode() + body, hashlib.sha256).digest()
+    ).decode()
+    return hmac.compare_digest(expected, signature or "")
+
 @router.post("/square")
 async def square_webhook(request: Request, db: Session = Depends(get_db)):
     """
     Handle webhooks from Square.
-    Events: invoice.payment_failed, invoice.payment_succeeded
+    Events: invoice.scheduled_charge_failed, invoice.payment_made, subscription.updated
+    (names taken from GET /v2/webhooks/event-types - "invoice.payment_failed" and
+    "invoice.payment_succeeded" are not events Square emits and never fired.)
     """
-    payload = await request.json()
+    body = await request.body()
+    if not verify_square_signature(request.headers.get("x-square-hmacsha256-signature"), body):
+        raise HTTPException(status_code=403, detail="Invalid webhook signature")
+
+    payload = json.loads(body)
     event_type = payload.get("type")
     data = payload.get("data", {}).get("object", {})
     
     logger.info(f"Received Square webhook: {event_type}")
 
-    if event_type == "invoice.payment_failed":
+    if event_type == "invoice.scheduled_charge_failed":
         invoice = data.get("invoice", {})
         customer_id = invoice.get("customer_id")
         
@@ -41,16 +70,35 @@ async def square_webhook(request: Request, db: Session = Depends(get_db)):
                     log = SubscriptionLog(
                         customer_id=customer.id,
                         subscription_id=customer.square_subscription_id,
-                        action="SUSPEND",
+                        action="SUSPEND_3_FAILED_PAYMENTS",
                         effective_date=date.today(),
-                        details="Suspended after 3 failed payment attempts"
                     )
                     db.add(log)
                     logger.error(f"Customer {customer.id} has been SUSPENDED due to 3 failed payments.")
                 
                 db.commit()
 
-    elif event_type == "invoice.payment_succeeded":
+    elif event_type == "subscription.updated":
+        # Keeps the local status honest when a subscription is canceled/paused/resumed
+        # anywhere other than this backend (e.g. the Square dashboard).
+        sub = data.get("subscription", {})
+        status = sub.get("status")
+        if sub.get("id") and status:
+            customer = db.query(Customer).filter(Customer.square_subscription_id == sub["id"]).first()
+            if customer and customer.subscription_status != status:
+                logger.info(f"Customer {customer.id}: subscription {sub['id']} is {status} in Square, was {customer.subscription_status}")
+                customer.subscription_status = status
+                customer.subscription_active = status == "ACTIVE"
+                log = SubscriptionLog(
+                    customer_id=customer.id,
+                    subscription_id=sub["id"],
+                    action=f"SQUARE_{status}",
+                    effective_date=date.today(),
+                )
+                db.add(log)
+                db.commit()
+
+    elif event_type == "invoice.payment_made":
         invoice = data.get("invoice", {})
         customer_id = invoice.get("customer_id")
         

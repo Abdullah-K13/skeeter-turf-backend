@@ -476,8 +476,8 @@ def admin_save_card(
     
     # Ensure Square Customer exists
     if not customer.square_customer_id:
-        from utils.square_client import create_square_customer
-        res = create_square_customer(
+        from utils.square_client import get_or_create_square_customer
+        res = get_or_create_square_customer(
             given_name=customer.first_name,
             family_name=customer.last_name,
             email=customer.email,
@@ -656,7 +656,7 @@ def admin_change_subscription(
         raise HTTPException(status_code=404, detail="Customer not found")
 
     from utils.subscription_logic import prepare_subscription_order_items
-    from utils.square_client import create_order, update_subscription, swap_subscription_plan, create_subscription, get_catalog_prices
+    from utils.square_client import create_order, update_subscription, swap_subscription_plan, create_subscription, get_catalog_prices, retrieve_subscription, get_subscriptions
     
     # 1. Fetch and Filter Addons
     recurring_addon_ids = []
@@ -750,10 +750,30 @@ def admin_change_subscription(
     order_id = order_res.get("order_id")
 
     # 4. Update or Create Subscription
+    # Ask Square for the real status first. The local columns drift: a cancellation made in the
+    # Square dashboard never reaches us (no subscription.updated webhook handler existed), so
+    # subscription_status can read ACTIVE for months after Square killed the subscription.
+    live_status = None
+    live_variation = None
     if customer.square_subscription_id:
-        # EXISTING SUBSCRIPTION -> SWAP plan (plan_variation_id is immutable on UpdateSubscription)
-        # First swap the plan if it's different from the current one
-        if customer.plan_variation_id and customer.plan_variation_id != request.new_plan_variation_id:
+        live = retrieve_subscription(customer.square_subscription_id)
+        if not live.get("success"):
+            raise HTTPException(status_code=400, detail=f"Square error reading subscription: {live.get('error')}")
+        live_sub = live["subscription"]
+        live_status = live_sub.get("status")
+        live_variation = live_sub.get("plan_variation_id")
+        # Square is the source of truth - resync before acting on it
+        customer.subscription_status = live_status
+        customer.subscription_active = live_status == "ACTIVE"
+        db.commit()
+
+    if live_status == "PAUSED":
+        raise HTTPException(status_code=400, detail="Subscription is paused in Square. Resume it before changing the plan.")
+
+    if live_status and live_status not in ("CANCELED", "DEACTIVATED"):
+        # LIVE SUBSCRIPTION -> SWAP plan (plan_variation_id is immutable on UpdateSubscription)
+        # Compare against Square's variation, not the local column, which can be stale.
+        if live_variation != request.new_plan_variation_id:
             swap_res = swap_subscription_plan(
                 subscription_id=customer.square_subscription_id,
                 new_plan_variation_id=request.new_plan_variation_id
@@ -768,7 +788,7 @@ def admin_change_subscription(
         )
         action = "CHANGE_PLAN"
     else:
-        # NO SUBSCRIPTION -> CREATE (One-time to Subscription conversion)
+        # NO SUBSCRIPTION, or it is dead in Square -> CREATE a fresh one
         # Check for card again if not checked above
         default_card = db.query(PaymentMethod).filter(
             PaymentMethod.customer_id == customer.id,
@@ -777,6 +797,23 @@ def admin_change_subscription(
 
         if not default_card:
             raise HTTPException(status_code=400, detail="No saved payment method found for this customer. Please add a card first.")
+
+        # Money guard: a stale square_subscription_id must never cause a SECOND live
+        # subscription to be billed alongside one Square already has for this customer.
+        # Scoped to THIS location: one person may legitimately hold subscriptions at
+        # several of the group's brands (Skeeterman, Adams, ...), each in its own backend.
+        # Only a duplicate at the same location is double billing.
+        if customer.square_customer_id:
+            existing = get_subscriptions(customer_id=customer.square_customer_id)
+            live_subs = [x for x in (existing.get("subscriptions") or [])
+                         if x.get("status") in ("ACTIVE", "PENDING", "PAUSED")
+                         and x.get("location_id") == location_id]
+            if live_subs:
+                raise HTTPException(
+                    status_code=400,
+                    detail=(f"Square already has a live subscription ({live_subs[0].get('id')}, "
+                            f"{live_subs[0].get('status')}) for this customer at this location. "
+                            "Link it to this record instead of creating a second one."))
 
         res = create_subscription(
             customer_id=customer.square_customer_id,
@@ -803,7 +840,8 @@ def admin_change_subscription(
         customer.selected_addons = recurring_addon_ids 
         customer.order_template_id = order_id
         
-        if not customer.square_subscription_id:
+        if action == "ACTIVATE":
+            # Covers both "never had one" and "the old one was dead in Square"
             customer.square_subscription_id = res.get("subscription_id")
             customer.subscription_active = True
             customer.subscription_status = "ACTIVE"
