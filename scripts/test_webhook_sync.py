@@ -102,4 +102,17 @@ except HTTPException as e:
 os.environ["SQUARE_WEBHOOK_SIGNATURE_KEY"] = "test-signature-key"
 print("4. No signing key configured -> fails closed, not open                   OK")
 
+# 5. Invoice events must read the customer id from primary_recipient. Square invoices
+#    have no top-level customer_id, so invoice.get("customer_id") always found nobody.
+CUST = "C19T02WWWXM5B0KP8FHYABY7RR"
+fail_event = {"type": "invoice.scheduled_charge_failed",
+              "data": {"object": {"invoice": {"primary_recipient": {"customer_id": CUST}}}}}
+c = customer(); c.square_customer_id = CUST; c.failed_payment_attempts = 2
+body = json.dumps(fail_event).encode()
+db = FakeDB(c)
+asyncio.run(wh.square_webhook(FakeRequest(body, sign(body)), db=db))
+assert c.failed_payment_attempts == 3, c.failed_payment_attempts
+assert c.subscription_status == "SUSPENDED", c.subscription_status
+print("5. Invoice events resolve the customer via primary_recipient              OK")
+
 print("\nall checks passed")

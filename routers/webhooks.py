@@ -53,7 +53,8 @@ async def square_webhook(request: Request, db: Session = Depends(get_db)):
 
     if event_type == "invoice.scheduled_charge_failed":
         invoice = data.get("invoice", {})
-        customer_id = invoice.get("customer_id")
+        # Square invoices carry no top-level customer_id - it lives on primary_recipient.
+        customer_id = (invoice.get("primary_recipient") or {}).get("customer_id")
         
         if customer_id:
             customer = db.query(Customer).filter(Customer.square_customer_id == customer_id).first()
@@ -100,7 +101,8 @@ async def square_webhook(request: Request, db: Session = Depends(get_db)):
 
     elif event_type == "invoice.payment_made":
         invoice = data.get("invoice", {})
-        customer_id = invoice.get("customer_id")
+        # Square invoices carry no top-level customer_id - it lives on primary_recipient.
+        customer_id = (invoice.get("primary_recipient") or {}).get("customer_id")
         
         if customer_id:
             customer = db.query(Customer).filter(Customer.square_customer_id == customer_id).first()
