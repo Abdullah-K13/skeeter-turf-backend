@@ -870,61 +870,11 @@ def sync_customer_invoices(
     if not customer or not customer.square_customer_id:
         raise HTTPException(status_code=404, detail="Customer not found or no Square ID")
     
-    from utils.square_client import search_invoices
-    res = search_invoices(customer.square_customer_id)
-    
+    from utils.invoice_sync import sync_invoices_for_customer
+    res = sync_invoices_for_customer(db, customer)
     if not res.get("success"):
         raise HTTPException(status_code=400, detail=f"Square error: {res.get('error')}")
-    
-    sq_invoices = res.get("invoices", [])
-    synced_count = 0
-    
-    for sq_inv in sq_invoices:
-        inv_id = sq_inv.get("id")
-        
-        # Robust amount extraction
-        amount_data = {}
-        if sq_inv.get("payment_requests"):
-            amount_data = sq_inv.get("payment_requests")[0].get("computed_amount_money", {})
-        if not amount_data.get("amount") and sq_inv.get("next_payment_amount_money"):
-             amount_data = sq_inv.get("next_payment_amount_money")
-             
-        amount = float(amount_data.get("amount", 0)) / 100.0
-        
-        # Check if already exists
-        existing = db.query(Invoice).filter(Invoice.square_invoice_id == inv_id).first()
-        
-        # Date parsing
-        due_date_str = sq_inv.get("scheduled_at") or sq_inv.get("created_at", datetime.now().isoformat())
-        try:
-            # Square dates can be ISO formats
-            if "T" in due_date_str:
-                due_date = datetime.fromisoformat(due_date_str.replace("Z", "+00:00")).date()
-            else:
-                due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
-        except:
-            due_date = datetime.now().date()
-
-        if not existing:
-            new_inv = Invoice(
-                square_invoice_id=inv_id,
-                customer_id=customer.id,
-                subscription_id=sq_inv.get("subscription_id"),
-                amount=amount,
-                status=sq_inv.get("status"),
-                due_date=due_date,
-                public_url=sq_inv.get("public_url")
-            )
-            db.add(new_inv)
-            synced_count += 1
-        else:
-            # Update status and URL if changed
-            existing.status = sq_inv.get("status")
-            existing.public_url = sq_inv.get("public_url")
-            existing.amount = amount # Keep amount updated too
-    
-    db.commit()
-    return {"success": True, "synced": synced_count}
+    return res
 
 @router.post("/resume-subscription/{customer_id}")
 def resume_customer_subscription(

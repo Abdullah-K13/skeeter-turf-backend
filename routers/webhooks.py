@@ -117,7 +117,16 @@ async def square_webhook(request: Request, db: Session = Depends(get_db)):
                     if customer.subscription_status == "SUSPENDED":
                          customer.subscription_status = "ACTIVE"
                          customer.subscription_active = True
-                
+
                 db.commit()
+
+                # Record the invoice itself. Nothing else does this automatically:
+                # the invoices table used to be filled only when an admin opened the
+                # View Invoices dialog for one customer at a time, so customers nobody
+                # clicked on had no local billing history at all.
+                from utils.invoice_sync import sync_invoices_for_customer
+                sync_res = sync_invoices_for_customer(db, customer)
+                if not sync_res.get("success"):
+                    logger.error(f"Invoice sync failed for customer {customer.id}: {sync_res.get('error')}")
 
     return {"status": "ok"}
