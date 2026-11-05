@@ -23,6 +23,7 @@ from models.user import Customer
 from utils.square_client import (
     get_square_base_url, get_square_headers,
     retrieve_subscription, get_square_customer_by_id, get_subscriptions,
+    get_square_customer_by_email, search_invoices,
 )
 import requests
 
@@ -64,6 +65,21 @@ def check(cust, dupes):
     if len(dupes.get(email, [])) > 1:
         ids = ", ".join(c["id"] for c in dupes[email])
         problems.append(f"email has {len(dupes[email])} Square customer records: {ids}")
+
+    # Square merges duplicate customers. The merged-away id still resolves and still
+    # returns the subscription, but invoice search under it returns nothing - so
+    # invoices silently stop syncing. Detect it by asking for the email's record.
+    inv = search_invoices(cust.square_customer_id)
+    if inv.get("success") and not inv.get("invoices"):
+        found = get_square_customer_by_email(cust.email) if cust.email else {"success": False}
+        current = found.get("customer_id") if found.get("success") else None
+        if current and current != cust.square_customer_id:
+            other = search_invoices(current)
+            n = len(other.get("invoices") or []) if other.get("success") else 0
+            if n:
+                problems.append(
+                    f"stored Square id {cust.square_customer_id} has no invoices, but {current} "
+                    f"(same email) has {n} - looks merged away; see scripts/fix_square_customer_ids.py")
 
     if not cust.square_subscription_id:
         if cust.subscription_active:
