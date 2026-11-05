@@ -16,6 +16,15 @@ from models.subscription import Invoice
 from models.user import Customer
 from utils.square_client import search_invoices
 
+try:
+    # Some backends give Invoice a ForeignKey("properties.id"). SQLAlchemy resolves that
+    # when the mapper configures, so the table must be registered even when this module
+    # is used outside the app (a script run via docker exec, say, where init_db and the
+    # routers that import Property never run). Absent elsewhere, which is fine.
+    from models import property as _property  # noqa: F401
+except ImportError:
+    pass
+
 logger = logging.getLogger(__name__)
 
 
